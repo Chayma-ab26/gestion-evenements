@@ -1,0 +1,77 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <div class="signup-header">
+      <h1>Inscription</h1>
+      <p>Rejoignez notre communauté dès maintenant</p>
+    </div>
+
+    <form class="signup-form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <input formControlName="firstname" placeholder="Prénom" [class.error]="getFieldError('firstname')">
+          <span class="error-message" *ngIf="getFieldError('firstname')">{{getFieldError('firstname')}}</span>
+        </div>
+
+        <div class="form-group">
+          <input formControlName="lastname" placeholder="Nom" [class.error]="getFieldError('lastname')">
+          <span class="error-message" *ngIf="getFieldError('lastname')">{{getFieldError('lastname')}}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input formControlName="username" placeholder="Nom d'utilisateur" [class.error]="getFieldError('username')">
+        <span class="error-message" *ngIf="getFieldError('username')">{{getFieldError('username')}}</span>
+      </div>
+
+      <div class="form-group">
+        <input formControlName="email" placeholder="Email" [class.error]="getFieldError('email')">
+        <span class="error-message" *ngIf="getFieldError('email')">{{getFieldError('email')}}</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <div class="password-input">
+            <input type="password" formControlName="password" placeholder="Mot de passe" [class.error]="getFieldError('password')">
+            <button type="button" class="password-toggle">👁️</button>
+          </div>
+          <span class="error-message" *ngIf="getFieldError('password')">{{getFieldError('password')}}</span>
+        </div>
+
+        <div class="form-group">
+          <div class="password-input">
+            <input type="password" formControlName="confirmPassword" placeholder="Confirmer" [class.error]="getFieldError('confirmPassword')">
+            <button type="button" class="password-toggle">👁️</button>
+          </div>
+          <span class="error-message" *ngIf="getFieldError('confirmPassword')">{{getFieldError('confirmPassword')}}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input formControlName="phone" placeholder="Téléphone">
+      </div>
+
+      <div class="form-group">
+        <label for="avatar">Photo de profil (optionnel)</label>
+        <input type="file" id="avatar" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+      </div>
+
+      <div class="form-group">
+        <select formControlName="role" class="role-select">
+          <option value="" disabled selected>Choisir un rôle</option>
+          <option *ngFor="let role of roles" [value]="role">{{role}}</option>
+        </select>
+      </div>
+
+      <button class="submit-btn" [disabled]="isLoading || signupForm.invalid">
+        <span *ngIf="isLoading" class="loading">
+          <span class="spin">⏳</span> Création en cours...
+        </span>
+        <span *ngIf="!isLoading">S'inscrire</span>
+      </button>
+    </form>
+
+    <div class="login-link">
+      <p>Déjà un compte? <a routerLink="/login" class="link">Se connecter</a></p>
+    </div>
+  </div>
+</div>

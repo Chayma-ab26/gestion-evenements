@@ -1,0 +1,78 @@
+
+
+<body>
+  <app-header></app-header>
+  
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="bi bi-tags"></i>
+        List of Categories
+      </h1>
+      <button (click)="createCategory()" class="add-button">
+        <i class="bi bi-plus-circle"></i>
+        Add New Category
+      </button>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of listcategory">
+            <td class="id-column">{{category.id}}</td>
+            <td class="name-column">{{category.name}}</td>
+            <td class="description-column">{{category.description}}</td>
+            <td class="actions-column">
+              <!-- View -->
+              <button (click)="viewCategory(category.id)" 
+                      title="View Details" 
+                      class="action-button view-button">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+
+              <!-- Edit -->
+              <button (click)="editCategory(category.id)" 
+                      title="Edit Category" 
+                      class="action-button edit-button">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+
+              <!-- Delete -->
+              <button (click)="deleteCategory(category.id)" 
+                      title="Delete Category" 
+                      class="action-button delete-button">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!listcategory || listcategory.length === 0" class="empty-state">
+      <i class="bi bi-tags"></i>
+      <h3>No Categories Found</h3>
+      <p>Start by adding your first category.</p>
+      <button (click)="createCategory()" class="add-button">
+        <i class="bi bi-plus-circle"></i>
+        Add First Category
+      </button>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</body>
+
+
+

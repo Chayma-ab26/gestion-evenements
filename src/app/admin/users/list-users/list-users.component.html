@@ -1,0 +1,107 @@
+<body>
+  <app-header></app-header>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="bi bi-people"></i>
+        List of Users
+      </h1>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div class="filter-container">
+        <label for="roleFilter" class="filter-label">
+          <i class="bi bi-funnel"></i>
+          Filter by Role:
+        </label>
+        <select
+          id="roleFilter"
+          [(ngModel)]="selectedRole"
+          (change)="onRoleChange()"
+          class="filter-select">
+          <option *ngFor="let role of roles" [value]="role">
+            {{ role === 'all' ? 'All Roles' : getRoleDisplayName(role) }}
+          </option>
+        </select>
+        <div class="filter-info">
+          <span class="user-count">{{ filteredUsers.length }} user(s) found</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Phone</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td class="id-column">{{user.id}}</td>
+            <td class="photo-column">
+              <div class="user-photo">
+                <img *ngIf="user.photo" [src]="'http://localhost:8763/users/files/'+user.photo" [alt]="user.username" class="user-avatar">
+                <div *ngIf="!user.photo" class="user-avatar-placeholder">
+                  <i class="bi bi-person"></i>
+                </div>
+              </div>
+            </td>
+            <td class="name-column">
+              <div class="user-name">
+                <strong>{{user.firstname}} {{user.lastname}}</strong>
+              </div>
+            </td>
+            <td class="username-column">{{user.username}}</td>
+            <td class="email-column">{{user.email}}</td>
+            <td class="role-column">
+              <span class="role-badge role-{{getRoleBadgeClass(user.role)}}">
+                {{getRoleDisplayName(user.role)}}
+              </span>
+            </td>
+            <td class="phone-column">{{user.phone || 'N/A'}}</td>
+            <td class="actions-column">
+              <!-- View Only -->
+              <button (click)="viewUser(user.id)"
+                      title="View Details"
+                      class="action-button view-button">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!listusers || listusers.length === 0" class="empty-state">
+      <i class="bi bi-people"></i>
+      <h3>No Users Found</h3>
+      <p>No users are currently registered in the system.</p>
+    </div>
+
+    <!-- No Results State -->
+    <div *ngIf="listusers && listusers.length > 0 && filteredUsers.length === 0" class="empty-state">
+      <i class="bi bi-search"></i>
+      <h3>No Users Found</h3>
+      <p>No users match the selected role filter.</p>
+      <button (click)="selectedRole = 'all'; onRoleChange()" class="add-button">
+        <i class="bi bi-arrow-clockwise"></i>
+        Show All Users
+      </button>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</body>

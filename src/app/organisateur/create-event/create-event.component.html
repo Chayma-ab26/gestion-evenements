@@ -1,0 +1,92 @@
+<app-header-org></app-header-org>
+
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">
+      <i class="bi bi-calendar-event"></i>
+      Liste des événements
+    </h1>
+    <button (click)="createEvent()" class="add-button">
+      <i class="bi bi-plus-circle"></i>
+      Ajouter un événement
+    </button>
+  </div>
+
+  <div class="table-container">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Titre</th>
+          <th>Date début</th>
+          <th>Date fin</th>
+          <th>Status</th>
+          <th>Catégorie</th>
+          <th>Local</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+       <tbody>
+          <tr *ngFor="let event of filteredEvents">
+            <td class="id-column">{{event.id}}</td>
+            <td class="title-column">
+              <div class="event-title">
+                <strong>{{event.title}}</strong>
+              </div>
+            </td>
+
+            <td class="date-column">{{formatDate(event.datedebut)}}</td>
+            <td class="date-column">{{formatDate(event.datefin)}}</td>
+            <td class="status-column">
+              <span class="status-badge status-{{getStatusBadgeClass(event.status)}}">
+                {{getStatusDisplayName(event.status)}}
+              </span>
+            </td>
+            <td class="category-column">
+              <span *ngIf="event.category?.name; else noCategory">
+                {{event.category.name}}
+              </span>
+              <ng-template #noCategory>
+                <span class="text-muted">Chargement...</span>
+              </ng-template>
+            </td>
+            <td class="local-column">
+              <span *ngIf="event.local?.name; else noLocal">
+                {{event.local.name}}
+              </span>
+              <ng-template #noLocal>
+                <span class="text-muted">Chargement...</span>
+              </ng-template>
+            </td>
+            <td class="actions-column">
+              <!-- View Only -->
+              <button (click)="viewEvent(event.id)"
+                      title="View Details"
+                      class="action-button view-button">
+              <i class="bi bi-eye-fill"></i>
+            </button>
+            <button class="action-button edit-button" (click)="editEvent(event.id)">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="action-button delete-button" (click)="deleteEvent(event.id)">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+            </td>
+          </tr>
+        </tbody>
+
+    </table>
+  </div>
+
+  <div *ngIf="!listevents || listevents.length === 0" class="empty-state">
+    <i class="bi bi-calendar-x"></i>
+    <h3>Aucun événement trouvé</h3>
+    <p>Commencez par créer un événement.</p>
+    <button (click)="createEvent()" class="add-button">
+      <i class="bi bi-plus-circle"></i>
+      Ajouter un événement
+    </button>
+  </div>
+</div>
+
+<app-footer></app-footer>

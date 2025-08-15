@@ -1,0 +1,86 @@
+<body>
+  <app-header></app-header>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="bi bi-building"></i>
+        List of Locals
+      </h1>
+      <button (click)="createLocal()" class="add-button">
+        <i class="bi bi-plus-circle"></i>
+        Add New Local
+      </button>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Type</th>
+            <th>Capacity</th>
+            <th>Image</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let local of listlocal">
+            <td class="id-column">{{local.id}}</td>
+            <td class="name-column">{{local.name}}</td>
+            <td class="address-column">{{local.adress}}</td>
+            <td class="address-column">{{local.type}}</td>
+            <td class="address-column">{{local.capacite}}</td>
+<td class="address-column">
+  <img *ngFor="let img of parseImages(local.image)"
+       [src]="'http://localhost:8766/locals/files/' + img"
+       alt="local image"
+      
+
+       style="margin: 2px; border-radius: 6px;" />
+</td>
+            <td class="actions-column">
+              <!-- View -->
+              <button (click)="viewLocal(local.id)"
+                      title="View Details"
+                      class="action-button view-button">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+
+              <!-- Edit -->
+              <button (click)="editLocal(local.id)"
+                      title="Edit Local"
+                      class="action-button edit-button">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+
+              <!-- Delete -->
+              <button (click)="deleteLocal(local.id)"
+                      title="Delete Local"
+                      class="action-button delete-button">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!listlocal || listlocal.length === 0" class="empty-state">
+      <i class="bi bi-building-x"></i>
+      <h3>No Locals Found</h3>
+      <p>Start by adding your first local venue.</p>
+      <button (click)="createLocal()" class="add-button">
+        <i class="bi bi-plus-circle"></i>
+        Add First Local
+      </button>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</body>

@@ -1,0 +1,49 @@
+<app-header-org></app-header-org>
+<div class="dashboard">
+  <h2>📊 Tableau de bord</h2>
+
+  <div class="cards">
+    <div class="card">
+      <i class="fas fa-calendar-alt"></i>
+      <h3>Total événements</h3>
+      <p>{{ totalEvents }}</p>
+    </div>
+    <div class="card">
+      <i class="fas fa-users"></i>
+      <h3>Participants</h3>
+      <p>{{ totalParticipants }}</p>
+    </div>
+    <div class="card">
+      <i class="fas fa-clock"></i>
+      <h3>À venir</h3>
+      <p>{{ upcomingEvents }}</p>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-container">
+      <canvas #eventChart></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas #statusChart></canvas>
+    </div>
+  </div>
+
+  <h3>📅 Événements récents</h3>
+  <table class="event-table">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Date</th>
+        <th>Participants</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let event of recentEvents">
+        <td>{{ event.name }}</td>
+        <td>{{ event.date }}</td>
+        <td>{{ event.participants }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

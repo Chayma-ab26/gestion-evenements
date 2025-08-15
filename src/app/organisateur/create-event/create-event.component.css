@@ -1,0 +1,134 @@
+/* Style général */
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 32px 24px;
+}
+
+h2 {
+  margin-bottom: 24px;
+  color: #2c3e50;
+}
+
+.filter-section {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.modern-table th,
+.modern-table td {
+  border: 1px solid #e0e0e0;
+  padding: 10px 8px;
+  text-align: left;
+}
+
+.modern-table th {
+  background: #f7f7f7;
+  color: #333;
+}
+
+.status-badge {
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.95em;
+  color: #fff;
+  font-weight: 500;
+}
+
+.status-active {
+  background: #27ae60;
+}
+
+.status-inactive {
+  background: #7f8c8d;
+}
+
+.status-pending {
+  background: #f39c12;
+}
+
+.status-completed {
+  background: #2980b9;
+}
+
+.status-secondary {
+  background: #7f8c8d;
+}
+
+.empty-state {
+  text-align: center;
+  color: #888;
+  margin: 40px 0 20px 0;
+}
+
+.empty-state i {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+button {
+  background: #3085d6;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 14px;
+  margin-right: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #2563a6;
+}
+
+.add-button {
+  background: #27ae60;
+}
+
+.add-button:hover {
+  background: #219653;
+}
+
+.action-button {
+  margin: 0 4px;
+  padding: 6px 12px;
+}
+
+.btn-edit {
+  background-color: #007bff;
+}
+
+.btn-edit:hover {
+  background-color: #0056b3;
+}
+
+.view-button {
+  background-color: #17a2b8;
+}
+
+.view-button:hover {
+  background-color: #138496;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}

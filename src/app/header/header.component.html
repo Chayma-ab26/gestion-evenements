@@ -1,0 +1,67 @@
+<header class="header">
+  <div class="container">
+    <nav class="navbar">
+      <!-- Logo avec animation -->
+      <a routerLink="/" class="logo">
+        <img src="../../assets/images/images.jpg" alt="Logo" class="logo-img">
+        <span class="logo-text">Admin Portal</span>
+      </a>
+
+      <!-- Menu principal -->
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a routerLink="/" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-text">Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/category" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-tags nav-icon"></i>
+            <span class="nav-text">Category</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/local" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-map-marker-alt nav-icon"></i>
+            <span class="nav-text">Local</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/events" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-calendar-alt nav-icon"></i>
+            <span class="nav-text">Events</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/users" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-users nav-icon"></i>
+            <span class="nav-text">Users</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Menu utilisateur -->
+<div class="user-menu">
+  <div class="user-dropdown">
+    <button class="user-toggle" (click)="toggleDropdown($event)">
+      <i class="fas fa-user-circle user-icon"></i>
+      <i class="fas fa-chevron-down dropdown-arrow" [class.rotated]="isDropdownOpen"></i>
+    </button>
+    <ul class="dropdown-menu" [class.show]="isDropdownOpen">
+      <li><a routerLink="/signup" class="dropdown-item" (click)="navigate($event)"><i class="fas fa-user-plus"></i> SignUp</a></li>
+      <li><a routerLink="/login" class="dropdown-item" (click)="navigate($event)"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+      <li><a routerLink="/" class="dropdown-item" (click)="navigate($event)"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+      <!-- Menu mobile -->
+      <button class="hamburger">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </nav>
+  </div>
+</header>

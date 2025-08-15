@@ -1,0 +1,120 @@
+<body>
+  <app-header></app-header>
+  
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="bi bi-calendar-event"></i>
+        List of Events
+      </h1>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div class="filter-container">
+        <label for="statusFilter" class="filter-label">
+          <i class="bi bi-funnel"></i>
+          Filter by Status:
+        </label>
+        <select 
+          id="statusFilter" 
+          [(ngModel)]="selectedStatus" 
+          (change)="onStatusChange()" 
+          class="filter-select">
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ status === 'all' ? 'All Statuses' : getStatusDisplayName(status) }}
+          </option>
+        </select>
+        <div class="filter-info">
+          <span class="event-count">{{ filteredEvents.length }} event(s) found</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Category</th>
+            <th>Local</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of filteredEvents">
+            <td class="id-column">{{event.id}}</td>
+            <td class="title-column">
+              <div class="event-title">
+                <strong>{{event.title}}</strong>
+              </div>
+            </td>
+            <td class="description-column">
+              <div class="event-description">
+                {{event.description?.length > 50 ? (event.description | slice:0:50) + '...' : event.description}}
+              </div>
+            </td>
+            <td class="date-column">{{formatDate(event.datedebut)}}</td>
+            <td class="date-column">{{formatDate(event.datefin)}}</td>
+            <td class="status-column">
+              <span class="status-badge status-{{getStatusBadgeClass(event.status)}}">
+                {{getStatusDisplayName(event.status)}}
+              </span>
+            </td>
+            <td class="category-column">
+              <span *ngIf="event.category?.name; else noCategory">
+                {{event.category.name}}
+              </span>
+              <ng-template #noCategory>
+                <span class="text-muted">Chargement...</span>
+              </ng-template>
+            </td>
+            <td class="local-column">
+              <span *ngIf="event.local?.name; else noLocal">
+                {{event.local.name}}
+              </span>
+              <ng-template #noLocal>
+                <span class="text-muted">Chargement...</span>
+              </ng-template>
+            </td>
+            <td class="actions-column">
+              <!-- View Only -->
+              <button (click)="viewEvent(event.id)" 
+                      title="View Details" 
+                      class="action-button view-button">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!listevents || listevents.length === 0" class="empty-state">
+      <i class="bi bi-calendar-event"></i>
+      <h3>No Events Found</h3>
+      <p>No events are currently available in the system.</p>
+    </div>
+
+    <!-- No Results State -->
+    <div *ngIf="listevents && listevents.length > 0 && filteredEvents.length === 0" class="empty-state">
+      <i class="bi bi-search"></i>
+      <h3>No Events Found</h3>
+      <p>No events match the selected status filter.</p>
+      <button (click)="selectedStatus = 'all'; onStatusChange()" class="add-button">
+        <i class="bi bi-arrow-clockwise"></i>
+        Show All Events
+      </button>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</body>
