@@ -46,6 +46,9 @@ export class EventService {
   delete(id: String) {
     return this.http.delete(`${this.apiUrl}/delete/${id}`);
   }
+   participate(eventId: string, formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${eventId}/participate`, formData);
+  }
 }
 
 

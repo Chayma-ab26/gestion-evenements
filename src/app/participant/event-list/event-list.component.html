@@ -1,74 +1,36 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Événements disponibles</title>
-</head>
-<body>
-    <header>
-        <div class="logo-left">
-            <img src="angular-logo.png" alt="Angular" class="logo">
-            <span class="letter-f">F</span>
-        </div>
-        <div class="logo-right">
-            <img src="spring-logo.png" alt="Spring" class="logo">
-        </div>
-    </header>
-
-    <h1>Événements disponibles</h1>
-
-    <div class="events-container">
-        <!-- Carte 1 -->
-        <div class="event-card">
-            <img src="conf.jpg" alt="Conférence">
-            <h3>Conference sur la technologie</h3>
-            <p>Une reiedet sensoe la contrincc eut upent svo per dupout.</p>
-            <p class="date">Date: 2024-02-20</p>
-            <div class="btn-group">
-                <button class="green-btn">Pontsiper</button>
-                <button class="blue-btn">Payer</button>
-            </div>
-            <input type="text" placeholder="Labeez un avis...">
-            <div class="rating">
-                <input type="number" value="5">
-                <button class="send-btn">Envoyer l’avis</button>
-            </div>
-        </div>
-
-        <!-- Carte 2 -->
-        <div class="event-card">
-            <img src="atelier.jpg" alt="Atelier">
-            <h3>Atelie: de dèveloppement web</h3>
-            <p>Unerden somfevio san eut incisa ir dewrjoopment vats.</p>
-            <p class="date">Date: 2024-02-10</p>
-            <div class="btn-group">
-                <button class="green-btn">Pontsiper</button>
-                <button class="blue-btn">Payer</button>
-            </div>
-            <input type="text" placeholder="Lábeez un avis...">
-            <div class="rating">
-                <input type="number" value="5">
-                <button class="send-btn">Envoyer l’avis</button>
-            </div>
-        </div>
-
-        <!-- Carte 3 -->
-        <div class="event-card">
-            <img src="festival.jpg" alt="Festival">
-            <h3>Pastival de musique</h3>
-            <p>Un.lesiqod bonece e en pisin air eut ielictémenti santeres.</p>
-            <p class="date">Date: 2024-02-10</p>
-            <div class="btn-group">
-                <button class="green-btn">Portsipen</button>
-                <button class="blue-btn">Payer</button>
-            </div>
-            <input type="text" placeholder="Lábeez un avis...">
-            <div class="rating">
-                <input type="number" value="5">
-                <button class="send-btn">Envoyer l’avis</button>
-            </div>
-        </div>
+<!-- event-list.component.html -->
+<app-header-org></app-header-org>
+<h1>Événements disponibles</h1>
+<div class="events-container">
+  <div *ngFor="let event of filteredEvents" class="event-card">
+    <!-- Image du local avec gestion des cas manquants -->
+    <div *ngIf="event.local; else noLocal">
+      <img *ngIf="event.local.images?.length > 0; else noImage"
+           [src]="'http://localhost:8766/locals/files/' + event.local.images[0]"
+           alt="{{ event.local.name }}" class="img-fluid" />
+      <ng-template #noImage>
+        <p>Aucune image disponible pour ce local.</p>
+      </ng-template>
     </div>
-</body>
-</html>
+    <ng-template #noLocal>
+      <p>Aucun local défini pour cet événement.</p>
+    </ng-template>
+    <p>Lieu: {{ event.local?.name || 'Non défini' }}</p>
+    <h3>{{ event.title }}</h3>
+    <p>{{ event.description }}</p>
+    <p class="date">
+      Date début: {{ event.datedebut | date:'yyyy-MM-dd' }}<br>
+      Date fin: {{ event.datefin | date:'yyyy-MM-dd' }}
+    </p>
+    <p>Catégorie: {{ event.category?.name || 'Non défini' }}</p>
+    <div class="btn-group">
+      <button class="btn btn-primary" (click)="participateEvent(event.id + '')"> Participer </button>
+      <button class="blue-btn">Payer</button>
+    </div>
+    <input type="text" placeholder="Laissez un avis...">
+    <div class="rating">
+      <input type="number" value="5">
+      <button class="send-btn">Envoyer l’avis</button>
+    </div>
+  </div>
+</div>

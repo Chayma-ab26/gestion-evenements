@@ -1,3 +1,5 @@
+import { Local } from "./local.model";
+
 export interface Event {
     Local?: any;
     Category?: any;
@@ -10,4 +12,5 @@ export interface Event {
     userId: number;
     categoryId: number;
     localId: number;
+
   }
