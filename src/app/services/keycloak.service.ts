@@ -5,7 +5,7 @@ import Keycloak from 'keycloak-js';
   providedIn: 'root'
 })
 export class KeycloakService {
-  private keycloak: Keycloak;
+ /*  private keycloak: Keycloak;
 
   constructor() {
     this.keycloak = new Keycloak({
@@ -14,6 +14,7 @@ export class KeycloakService {
       clientId: 'event-app'
     });
   }
+
 
   init(): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -46,5 +47,38 @@ export class KeycloakService {
 
   // getUsername(): string | undefined {
   //   return this.keycloak.tokenParsed?.preferred_username;
-  // }
+  // } */
+   private keycloak: Keycloak | undefined;
+
+  init(): Promise<boolean> {
+    this.keycloak = new Keycloak({
+      url: 'http://localhost:8080/',
+      realm: 'EventProject',
+      clientId: 'event-app'
+    });
+
+    return this.keycloak.init({
+      onLoad: 'login-required',
+      checkLoginIframe: false,
+      pkceMethod: 'S256', // recommandé pour SPA
+    }).then(authenticated => {
+      console.log('✅ Authenticated:', authenticated);
+      return authenticated;
+    }).catch(err => {
+      console.error('❌ Keycloak init error', err);
+      return false;
+    });
+  }
+
+  getKeycloak() {
+    return this.keycloak;
+  }
+
+  getToken(): string | undefined {
+    return this.keycloak?.token;
+  }
+
+  logout() {
+    this.keycloak?.logout({ redirectUri: 'http://localhost:4200/' });
+  }
 }

@@ -1,3 +1,4 @@
+// signup.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -11,7 +12,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css'
+  styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
   signupForm: FormGroup;
@@ -27,7 +28,6 @@ export class SignupComponent implements OnInit {
   ) {
     this.signupForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
       firstname: ['', [Validators.required]],
@@ -54,7 +54,6 @@ export class SignupComponent implements OnInit {
     const control = this.signupForm.get(field);
     if (control?.errors && control.touched) {
       if (control.errors['required']) return 'Requis';
-      if (control.errors['email']) return 'Email invalide';
       if (control.errors['minlength']) return 'Trop court';
       if (control.errors['mismatch']) return 'Mots de passe différents';
     }
@@ -62,35 +61,36 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.signupForm.valid) {
-      this.isLoading = true;
-      const formData = new FormData();
-      formData.append('username', this.signupForm.get('username')?.value);
-      formData.append('email', this.signupForm.get('email')?.value);
-      formData.append('password', this.signupForm.get('password')?.value);
-      formData.append('firstname', this.signupForm.get('firstname')?.value);
-      formData.append('lastname', this.signupForm.get('lastname')?.value);
-      formData.append('phone', this.signupForm.get('phone')?.value || '');
-      formData.append('role', this.signupForm.get('role')?.value);
-      if (this.selectedFile) formData.append('file', this.selectedFile);
+  if (this.signupForm.valid) {
+    this.isLoading = true;
+    const formData = new FormData();
 
-      this.userService.create(formData).subscribe({
-        next: () => {
-          this.isLoading = false;
-          Swal.fire('Succès', 'Inscription réussie', 'success').then(() => this.router.navigate(['/login']));
-        },
-        error: (error:any) => {
-          this.isLoading = false;
-          console.error('Erreur:', error);
-          Swal.fire('Erreur', error.status === 401 ? 'Vérifiez CORS' : 'Problème', 'error');
-        }
-      });
-    } else {
-      this.signupForm.markAllAsTouched();
-    }
-  }
+    // Champs attendus par le backend
+    formData.append('username', this.signupForm.get('username')?.value);
+    formData.append('password', this.signupForm.get('password')?.value);
+    formData.append('firstname', this.signupForm.get('firstname')?.value);
+    formData.append('lastname', this.signupForm.get('lastname')?.value);
+    formData.append('phone', this.signupForm.get('phone')?.value || '');
+    formData.append('role', this.signupForm.get('role')?.value);
 
-  onRoleChange() {
-    console.log('Rôle:', this.signupForm.get('role')?.value);
+    if (this.selectedFile) formData.append('file', this.selectedFile);
+
+    this.userService.create(formData).subscribe({
+      next: () => {
+        this.isLoading = false;
+        Swal.fire('Succès', 'Inscription réussie', 'success').then(() =>
+          this.router.navigate(['/login'])
+        );
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        console.error('Erreur:', error);
+        Swal.fire('Erreur', 'Problème lors de l\'inscription', 'error');
+      }
+    });
+  } else {
+    this.signupForm.markAllAsTouched();
   }
+}
+
 }
