@@ -32,45 +32,35 @@ public class keycloakConfig {
     }
 */
 @Configuration
-public class keycloakConfig {
+ public class keycloakConfig {
 
-    @Value("${keycloak.auth-server-url}")
+    @Value("${keycloak.server-url}")
     private String serverUrl;
 
     @Value("${keycloak.realm}")
     private String realm;
 
-    @Value("${keycloak.resource}")  // c’est le clientId (event-app)
+    @Value("${keycloak.client-id}")
     private String clientId;
 
-    @Value("${keycloak.credentials.secret}")  // le secret du client event-app
+    @Value("${keycloak.client-secret}")
     private String clientSecret;
-
-    @Value("${keycloak.username}")
-    private String username;
-
-    @Value("${keycloak.password}")
-    private String password;
 
     @Bean
     public Keycloak keycloak() {
         return KeycloakBuilder.builder()
-                .serverUrl("http://localhost:8080")
-                .realm("EventProject")          // Realm : EventProject
-                .clientId("event-app")    // Client : event-app
-                .clientSecret("3IPc2LFiYW67zBotQFThpe3EyLGbXBzg")  // Secret du client event-app
-                .username("admin")    // User admin (ex: admin)
-                .password("admin")    // Mot de passe admin
-              //  .grantType("password")
+                .serverUrl(serverUrl)
+                .realm(realm)
                 .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-
+                .clientId(clientId)
+                .clientSecret(clientSecret)
                 .build();
     }
 
-
     public String getRealm() {
-        return "EventProject";
+        return realm;
     }
 }
+
 
 

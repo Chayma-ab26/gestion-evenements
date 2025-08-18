@@ -25,20 +25,35 @@ public class UserController {
     UserService userService;
     @Autowired
     StorageService storageService;
-     @Autowired
+    @Autowired
     KeycloakUserService keycloakUserService;
 
-    @PostMapping("/create")
-    public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new RuntimeException("Le fichier est vide");
-        }
-        String namephoto = storageService.store(file);
-        user.setPhoto(namephoto);
-
-        keycloakUserService.createUser(user.getUsername(),user.getPassword());
-        return userService.createUser(user);
+//    @PostMapping("/create")
+//    public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("file") MultipartFile file) {
+//        if (file.isEmpty()) {
+//            throw new RuntimeException("Le fichier est vide");
+//        }
+//        String namephoto = storageService.store(file);
+//        user.setPhoto(namephoto);
+//
+//        keycloakUserService.createUser(user.getUsername(),user.getPassword());
+//        return userService.createUser(user);
+//    }
+@PostMapping("/create")
+public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("file") MultipartFile file) {
+    if (file.isEmpty()) {
+        throw new RuntimeException("Le fichier est vide");
     }
+
+    String namePhoto = storageService.store(file);
+    user.setPhoto(namePhoto);
+
+    // Création de l'utilisateur dans Keycloak
+    keycloakUserService.createUser(user.getUsername(), user.getPassword(),user.getFirstname(),user.getLastname());
+
+    // Sauvegarde dans votre base locale
+    return userService.createUser(user);
+}
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDTO request) {
@@ -48,7 +63,7 @@ public class UserController {
             user.setEmail(request.getEmail());
             user.setRole(request.getRole()); // exemple
 
-            userService.register(user, request.getPassword());
+            userService.registerUser(user, request.getPassword());
 
             return ResponseEntity.ok("User registered successfully");
         } catch (Exception e) {
@@ -64,7 +79,7 @@ public class UserController {
 
     @GetMapping("/getall")
     public List<UserEntity> getAllUser() {
-        return userService.getAllUser() ;
+        return userService.getAllUsers() ;
 
     }
 
