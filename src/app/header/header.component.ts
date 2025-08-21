@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { KeycloakService } from '../services/keycloak.service';
 
 @Component({
   selector: 'app-header',
@@ -9,6 +10,8 @@ import { Router, RouterLink } from '@angular/router';
     imports:[RouterLink]
 })
 export class HeaderComponent {
+    constructor(private keycloakService: KeycloakService) {}
+
  isDropdownOpen = false;
 
   toggleDropdown(event: MouseEvent): void {
@@ -24,5 +27,15 @@ export class HeaderComponent {
   @HostListener('document:click')
   closeDropdown(): void {
     this.isDropdownOpen = false;
+  }
+login(event: Event) {
+  event.preventDefault();
+  this.keycloakService.login();
+}
+
+
+
+  logout() {
+    this.keycloakService.logout();
   }
 }

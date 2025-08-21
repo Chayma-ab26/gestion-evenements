@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = '/api/users';
+ private apiUrl = '/api/users';
 
   constructor(private http: HttpClient) {}
 
@@ -22,14 +22,14 @@ export class UserService {
     return this.http.get(`${this.apiUrl}/getbyid/${id}`);
   }
 
-  // ✅ Create new user
- // create(user: any): any {
-//    return this.http.post(`${this.apiUrl}/create`, user);
-  //}
- create(user: any): any {
-    return this.http.post(`${this.apiUrl}/create`, user);
-  }
 
+ /* create(user: any): any {
+    return this.http.post(`${this.apiUrl}/create`, user);
+  } */
+
+ create(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/create`, formData);
+  }
 
   // ✅ Update user
   update(id: String, user: any) {

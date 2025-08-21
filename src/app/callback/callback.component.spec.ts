@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DachboardOrgComponent } from './dachboard-org.component';
+import { CallbackComponent } from './callback.component';
 
-describe('DachboardOrgComponent', () => {
-  let component: DachboardOrgComponent;
-  let fixture: ComponentFixture<DachboardOrgComponent>;
+describe('CallbackComponent', () => {
+  let component: CallbackComponent;
+  let fixture: ComponentFixture<CallbackComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DachboardOrgComponent]
+      imports: [CallbackComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DachboardOrgComponent);
+    fixture = TestBed.createComponent(CallbackComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

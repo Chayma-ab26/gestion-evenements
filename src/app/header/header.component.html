@@ -48,11 +48,27 @@
       <i class="fas fa-user-circle user-icon"></i>
       <i class="fas fa-chevron-down dropdown-arrow" [class.rotated]="isDropdownOpen"></i>
     </button>
-    <ul class="dropdown-menu" [class.show]="isDropdownOpen">
-      <li><a routerLink="/signup" class="dropdown-item" (click)="navigate($event)"><i class="fas fa-user-plus"></i> SignUp</a></li>
-      <li><a routerLink="/login" class="dropdown-item" (click)="navigate($event)"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-      <li><a routerLink="/" class="dropdown-item" (click)="navigate($event)"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-    </ul>
+   <!-- src/app/header/header.component.html -->
+<ul class="dropdown-menu" [class.show]="isDropdownOpen">
+  <li>
+    <a routerLink="/signup" class="dropdown-item" (click)="navigate($event)">
+      <i class="fas fa-user-plus"></i> SignUp
+    </a>
+  </li>
+ <li>
+  <a href="#" class="dropdown-item" (click)="login($event)">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </a>
+</li>
+
+
+  <li>
+    <a class="dropdown-item" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </li>
+</ul>
+
   </div>
 </div>
 

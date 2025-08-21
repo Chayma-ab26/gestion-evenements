@@ -4,13 +4,13 @@ import Chart from 'chart.js/auto';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-dachboard-org',
+  selector: 'app-dashboard-org',
   standalone: true,
   imports: [CommonModule,HeaderOrgComponent],
-  templateUrl: './dachboard-org.component.html',
-  styleUrl: './dachboard-org.component.css'
+  templateUrl: './dashboard-org.component.html',
+  styleUrl: './dashboard-org.component.css'
 })
-export class DachboardOrgComponent implements AfterViewInit {
+export class DashboardOrgComponent implements AfterViewInit {
   @ViewChild('eventChart') chartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('statusChart') statusChartRef!: ElementRef<HTMLCanvasElement>;
 
