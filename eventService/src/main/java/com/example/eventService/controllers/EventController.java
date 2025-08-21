@@ -4,6 +4,7 @@ import com.example.eventService.entities.EventDTO;
 import com.example.eventService.entities.EventEntity;
 import com.example.eventService.Service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,26 +19,32 @@ import java.util.List;
 public class EventController {
 @Autowired
     private EventService eventService;
-
+    @PreAuthorize("hasRole('organisateur')")
     @GetMapping("/getEventWithCategoryAndLocal/{id}")
     public EventDTO getEventWithCategoryAndLocal(@PathVariable Long id) {
         return eventService.getEventWithCategoryAndLocal(id);
     }
+    @PreAuthorize("hasRole('organisateur')")
 
    @PostMapping("/createWithCategoryAndLocal")
    public EventDTO createEventWithCategoryAndLocal(@ModelAttribute EventDTO dto) {
        return eventService.createEventWithCategory(dto);
    }
 
+    @PreAuthorize("hasRole('organisateur')")
 
     @PutMapping("/updateWithCategoryAndLocal/{id}")
     public EventDTO updateEventWithCategoryAndLocal(@PathVariable Long id, @ModelAttribute  EventDTO dto) {
         return eventService.updateEventWithCategoryAndLocal(id, dto);
     }
+    @PreAuthorize("hasRole('organisateur')")
+
     @DeleteMapping("/delete/{id}")
     public void deleteEventById(@PathVariable Long id) {
         eventService.deleteEvent(id);
     }
+    @PreAuthorize("hasRole('organisateur')")
+
     @GetMapping("/getall")
     public List<EventEntity> getAllEvents() {
         return eventService.getAllEvents();

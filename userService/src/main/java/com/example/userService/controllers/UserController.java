@@ -49,7 +49,8 @@ public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("fil
     user.setPhoto(namePhoto);
 
     // Création de l'utilisateur dans Keycloak
-    keycloakUserService.createUser(user.getUsername(), user.getPassword(),user.getFirstname(),user.getLastname());
+    keycloakUserService.createUser(user.getUsername(), user.getPassword(),user.getFirstname(),
+            user.getLastname(),user.getRole());
 
     // Sauvegarde dans votre base locale
     return userService.createUser(user);

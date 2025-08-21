@@ -4,6 +4,7 @@ import com.example.eventService.entities.EventDTO;
 import com.example.reservationService.clients.EventClient;
 import com.example.reservationService.entities.ReservationDTO;
 import com.example.reservationService.entities.ReservationEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
 import com.example.reservationService.services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,19 @@ public class ReservationController {
     private ReservationService reservationService;
     @Autowired
     private EventClient eventClient;
+    @PreAuthorize("hasRole('participant')")
 
     @PostMapping("/createWithEventAndUser")
     public ReservationEntity createReservation(@ModelAttribute  ReservationDTO dto) {
         return reservationService.createReservation(dto);
     }
+    @PreAuthorize("hasRole('participant')")
+
     @PutMapping("/update/{id}")
     public ReservationEntity updateReservation(@PathVariable Long id, @ModelAttribute  ReservationDTO dto) {
         return reservationService.updateReservation(id, dto);
     }
+    @PreAuthorize("hasRole('participant')")
 
     @GetMapping("/getbyid/{id}")
     public ReservationEntity getReservationById(@PathVariable Long id) {
@@ -68,6 +73,8 @@ public class ReservationController {
         return reservationService.updateReservation(reservation);
     }
 */
+@PreAuthorize("hasRole('participant')")
+
 @GetMapping("/getall")
 public List<ReservationEntity> getAllReservations() {
     return reservationService.getAllReservations();
@@ -76,6 +83,7 @@ public List<ReservationEntity> getAllReservations() {
     public ReservationEntity updateStatus(@PathVariable Long id, @RequestParam String status) {
         return reservationService.updateStatus(id, status);
     }
+    @PreAuthorize("hasRole('participant')")
 
     @DeleteMapping("/delete/{id}")
     public void deleteReservationById(@PathVariable Long id) {

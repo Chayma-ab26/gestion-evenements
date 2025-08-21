@@ -48,6 +48,7 @@ package com.example.userService.services;
 import com.example.userService.config.keycloakConfig;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,26 +65,85 @@ public class KeycloakUserService {
     @Autowired
     private keycloakConfig keycloakConfig;
 
-    public void createUser(String username, String password,String firstname,String lastname) {
-        UserRepresentation user = new UserRepresentation();
-        user.setUsername(username);
-        user.setEnabled(true);
-        user.setEmail(username + "@gmail.com"); // email valide
-        // Optionnel : user.setFirstName("John"); user.setLastName("Doe");
-        user.setFirstName(firstname);
-        user.setLastName(lastname);
-        CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setTemporary(false);
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(password);
+//    public void createUser(String username, String password, String firstname, String lastname, String role) {
+//        UserRepresentation user = new UserRepresentation();
+//        user.setUsername(username);
+//        user.setEnabled(true);
+//        user.setEmail(username + "@gmail.com"); // email valide
+//        // Optionnel : user.setFirstName("John"); user.setLastName("Doe");
+//        user.setFirstName(firstname);
+//        user.setLastName(lastname);
+//        CredentialRepresentation credential = new CredentialRepresentation();
+//        credential.setTemporary(false);
+//        credential.setType(CredentialRepresentation.PASSWORD);
+//        credential.setValue(password);
+//
+//        user.setCredentials(List.of(credential));
+//
+//        Response response = keycloak.realm(keycloakConfig.getRealm()).users().create(user);
+//        System.out.println("Keycloak Status: " + response.getStatus());
+//
+//        if (response.getStatus() == 201) {
+//            // 🔹 2. Récupérer l’ID du nouvel utilisateur
+//            String location = response.getLocation().getPath();
+//            String userId = location.substring(location.lastIndexOf("/") + 1);
+//
+//            // 🔹 3. Récupérer le rôle par son nom
+//            var realmResource = keycloak.realm(keycloakConfig.getRealm());
+//            var roleRepresentation = realmResource.roles().get(role).toRepresentation();
+//
+//            // 🔹 4. Associer le rôle à l’utilisateur
+//            realmResource.users()
+//                    .get(userId)
+//                    .roles()
+//                    .realmLevel()
+//                    .add(List.of(roleRepresentation));
+//
+//            System.out.println("✅ Utilisateur " + username + " créé avec le rôle : " + role);
+//        } else {
+//            System.out.println("❌ Erreur Keycloak: " + response.readEntity(String.class));
+//        }
+//    }
+public void createUser(String username, String password, String firstname, String lastname, String roleName) {
+    // 1️⃣ Créer l'utilisateur
+    UserRepresentation user = new UserRepresentation();
+    user.setUsername(username);
+    user.setEnabled(true);
+    user.setEmail(username + "@gmail.com");
+    user.setFirstName(firstname);
+    user.setLastName(lastname);
 
-        user.setCredentials(List.of(credential));
+    CredentialRepresentation credential = new CredentialRepresentation();
+    credential.setTemporary(false);
+    credential.setType(CredentialRepresentation.PASSWORD);
+    credential.setValue(password);
+    user.setCredentials(List.of(credential));
 
-        Response response = keycloak.realm(keycloakConfig.getRealm()).users().create(user);
+    Response response = keycloak.realm(keycloakConfig.getRealm())
+            .users()
+            .create(user);
 
-        System.out.println("Keycloak Status: " + response.getStatus());
-        if (response.getStatus() != 201) {
-            System.out.println("Error body: " + response.readEntity(String.class));
-        }
+    System.out.println("Keycloak Status: " + response.getStatus());
+
+    if (response.getStatus() != 201) {
+        System.out.println("❌ Erreur Keycloak: " + response.readEntity(String.class));
+        return;
     }
+
+    // 2️⃣ Récupérer l'ID du nouvel utilisateur
+    String location = response.getLocation().getPath();
+    String userId = location.substring(location.lastIndexOf("/") + 1);
+
+    // 3️⃣ Assigner le rôle au niveau du realm
+    var realmResource = keycloak.realm(keycloakConfig.getRealm());
+    RoleRepresentation roleRep = realmResource.roles().get(roleName).toRepresentation();
+
+    realmResource.users()
+            .get(userId)
+            .roles()
+            .realmLevel()
+            .add(List.of(roleRep));
+
+    System.out.println("✅ Utilisateur " + username + " créé avec le rôle : " + roleName);
+}
 }

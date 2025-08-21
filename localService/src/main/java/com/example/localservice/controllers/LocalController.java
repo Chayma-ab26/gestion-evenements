@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +43,7 @@ public class LocalController {
     private StorageService storageService;
     @Autowired
     private LocalRepository localRepository;
+    @PreAuthorize("hasRole('organisateur')")
 
     // Créer un local
     @PostMapping("/create")
@@ -85,18 +87,21 @@ public class LocalController {
         return localService.createLocal(local);
     }
 
+    @PreAuthorize("hasRole('organisateur')")
 
     // Obtenir tous les locaux
     @GetMapping("/getall")
     public List<LocalEntity> getAllLocals() {
         return localService.getAllLocals();
     }
+    @PreAuthorize("hasRole('organisateur')")
 
     // Obtenir un local par ID
     @GetMapping("/getbyid/{id}")
     public LocalEntity getLocalById(@PathVariable Long id) {
         return localService.getOne(id);
     }
+    @PreAuthorize("hasRole('organisateur')")
 
     // Mettre à jour un local
     @PutMapping("/update/{id}")
@@ -147,12 +152,14 @@ public class LocalController {
 
         return localService.updateLocal(old);
     }
+    @PreAuthorize("hasRole('organisateur')")
 
     // Supprimer un local
     @DeleteMapping("/delete/{id}")
     public void deleteLocal(@PathVariable Long id) {
         localService.deleteLocal(id);
     }
+    @PreAuthorize("hasRole('organisateur')")
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
@@ -172,6 +179,7 @@ public class LocalController {
     }
 
 
+    @PreAuthorize("hasRole('organisateur')")
 
     @PostMapping("/{id}/reserver")
     public ResponseEntity<?> reserverLocal(

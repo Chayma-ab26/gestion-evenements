@@ -46,7 +46,8 @@ public class UserService {
         }
 
         // 1. Créer dans Keycloak
-        keycloakUserService.createUser(user.getUsername(), password,user.getFirstname(),user.getLastname());
+        keycloakUserService.createUser(user.getUsername(), password,user.getFirstname(),
+                user.getLastname(),user.getRole());
 
         // 2. Enregistrer dans la base de données locale
         userRepository.save(user);
