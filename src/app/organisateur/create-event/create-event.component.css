@@ -132,3 +132,11 @@ button:hover {
 .btn-delete:hover {
   background-color: #c82333;
 }
+
+.status-button {
+  background-color: #6f42c1;
+}
+
+.status-button:hover {
+  background-color: #5a32a3;
+}

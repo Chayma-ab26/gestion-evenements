@@ -58,60 +58,70 @@ import Keycloak from 'keycloak-js';
   providedIn: 'root'
 })
 export class KeycloakService {
-  private keycloak: Keycloak | undefined;
+  private keycloak: Keycloak;
 
   constructor() {
     this.keycloak = new Keycloak({
       url: 'http://localhost:8080/',
       realm: 'EventProject',
-      clientId: 'event-app'
+      clientId: 'event-front'
     });
   }
 
-  // Init sans redirection automatique
-  init(): Promise<boolean> {
-  return this.keycloak!.init({
-    onLoad: 'check-sso',  // Gardez pour login manuel, mais testez 'login-required' si vous voulez auto-rediriger au load
-    checkLoginIframe: true,  // Activez pour mieux gérer SSO via iframe
-    pkceMethod: 'S256'
-  }).then(authenticated => {
-    console.log('Init successful, authenticated:', authenticated);
-    return authenticated;
-  }).catch(err => {
-    console.error('Init error:', err);  // Loggez pour debugger
-    return false;  // Retournez false sans throw pour ne pas bloquer l'app
-  });
-}
 
- 
+  // Init sans forcer le login au démarrage
+  init(): Promise<void> {
+    return this.keycloak.init({
+      onLoad: 'check-sso', // ne force pas la redirection
+      checkLoginIframe: false,
+      pkceMethod: 'S256'
+    }).then(authenticated => {
+      console.log('Keycloak initialized. Authenticated:', authenticated);
+    }).catch(err => {
+      console.error('Keycloak init error:', err);
+    });
+  }
 
   login() {
-  if (!this.keycloak?.didInitialize) {
-    console.warn('Keycloak not initialized, calling init first');
-    this.init().then(() => this.keycloak?.login({ redirectUri: window.location.origin + '/dashboard' }));
-  } else {
-    this.keycloak?.login({ redirectUri: window.location.origin + '/dashboard' });
+    this.keycloak.login({
+      redirectUri: window.location.origin + '/callback' // redirige vers /callback après login
+    });
   }
-}
-  
 
   logout() {
-    this.keycloak?.logout({ redirectUri: window.location.origin });
+    this.keycloak.logout({ redirectUri: window.location.origin });
   }
 
   isLoggedIn(): boolean {
-    return !!this.keycloak?.token;
+    return !!this.keycloak.token;
   }
 
   getToken(): string | undefined {
-    return this.keycloak?.token;
+    return this.keycloak.token;
   }
-getRoles(): string[] {
-  const tokenParsed = this.keycloak?.tokenParsed;
-  return tokenParsed?.realm_access?.roles || [];
-}
 
-  getKeycloak(): Keycloak | undefined {
-    return this.keycloak;
+  getRoles(): string[] {
+    if (this.keycloak.authenticated) {
+      // Affichage du token pour debug
+      console.log('Token ID:', this.keycloak.idTokenParsed);
+      console.log('Token Access:', this.keycloak.tokenParsed);
+      // Récupération des rôles dans le token d'accès
+      if (this.keycloak.tokenParsed && this.keycloak.tokenParsed.realm_access) {
+        return this.keycloak.tokenParsed.realm_access.roles;
+      }
+      // Récupération des rôles dans le token d'ID (parfois utilisé)
+      if (this.keycloak.idTokenParsed && this.keycloak.idTokenParsed.realm_access) {
+        return this.keycloak.idTokenParsed.realm_access.roles;
+      }
+    }
+    return [];
+  }
+
+  getTokenParsed(): any {
+    return this.keycloak.tokenParsed;
+  }
+
+  getUserId(): string | undefined {
+    return this.keycloak.tokenParsed?.sub;
   }
 }

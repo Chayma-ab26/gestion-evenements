@@ -1,0 +1,54 @@
+<div class="container">
+  <h2>Gestion des participants</h2>
+
+  <!-- Sélection d'événement -->
+  <div class="event-selector" *ngIf="events && events.length > 0">
+    <label>Choisir un événement:</label>
+    <select (change)="selectEvent($event)">
+      <option value="">-- Sélectionner --</option>
+      <option *ngFor="let ev of events" [value]="ev.id">{{ ev.title }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="!events || events.length === 0" class="empty">Aucun événement.</div>
+
+  <!-- Détails de l'événement sélectionné -->
+  <div *ngIf="selectedEvent" class="event-details">
+    <h3>{{ selectedEvent.title }}</h3>
+          <p>
+        Capacité: <!-- {{ eventCapacity }} --> |
+        Approuvés: <!-- {{ approvedCount }} -->
+      </p>
+  </div>
+
+  <!-- Liste des participants -->
+  <div *ngIf="selectedEvent">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of participants; index as i">
+          <td>{{ i + 1 }}</td>
+          <td>{{ p.name || (p.user?.name) }}</td>
+          <td>{{ p.email || (p.user?.email) }}</td>
+          <td>
+            <span class="badge" [class.badge-approved]="p.status === 'APPROVED'" [class.badge-pending]="p.status === 'PENDING'" [class.badge-rejected]="p.status === 'REJECTED'">
+              {{ p.status }}
+            </span>
+          </td>
+          <td>
+           <!--  <button (click)="approve(p)" [disabled]="p.status === 'APPROVED' || !canApproveMore()">Accepter</button>
+            <button (click)="reject(p)" [disabled]="p.status === 'REJECTED'">Refuser</button>
+           --></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

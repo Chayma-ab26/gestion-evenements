@@ -68,6 +68,9 @@
             <button class="action-button edit-button" (click)="editEvent(event.id)">
               <i class="bi bi-pencil-fill"></i>
             </button>
+            <button class="action-button status-button" (click)="changeEventStatus(event)" title="Changer le statut">
+              <i class="bi bi-arrow-repeat"></i>
+            </button>
             <button class="action-button delete-button" (click)="deleteEvent(event.id)">
               <i class="bi bi-trash-fill"></i>
             </button>

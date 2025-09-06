@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DashboardOrgComponent } from './dashboard-org.component';
 
-describe('DachboardOrgComponent', () => {
-  let component: DashboardOrgComponent;
-  let fixture: ComponentFixture<DashboardOrgComponent>;
+import { ListParticipantComponent } from './list-participant.component';
+
+describe('ListParticipantComponent', () => {
+  let component: ListParticipantComponent;
+  let fixture: ComponentFixture<ListParticipantComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardOrgComponent]
+      imports: [ListParticipantComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DashboardOrgComponent);
+    fixture = TestBed.createComponent(ListParticipantComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

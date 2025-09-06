@@ -27,12 +27,10 @@ export class HeaderComponent {
   @HostListener('document:click')
   closeDropdown(): void {
     this.isDropdownOpen = false;
+  } 
+  login() {
+    this.keycloakService.login();  // maintenant ça marche
   }
-login(event: Event) {
-  event.preventDefault();
-  this.keycloakService.login();
-}
-
 
 
   logout() {

@@ -1,1 +1,41 @@
-<p>profil works!</p>
+<div class="profile-container">
+  <h2>Mon Profil</h2>
+
+  <div *ngIf="loading" class="loading">
+    <p>Chargement du profil...</p>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && user" class="profile-content">
+    <div class="profile-header">
+      <div class="profile-photo">
+        <img *ngIf="user?.photo" [src]="user?.photo" alt="Photo de profil" />
+        <div *ngIf="!user?.photo" class="no-photo">
+          <i class="fas fa-user"></i>
+        </div>
+      </div>
+      <div class="profile-info">
+        <h3>{{ user?.firstname }} {{ user?.lastname }}</h3>
+        <p class="username">{{ user?.username }}</p>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-item">
+        <label>Email:</label>
+        <span>{{ user?.email }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Rôle:</label>
+        <span>{{ user?.role }}</span>
+      </div>
+      <div class="detail-item" *ngIf="user?.phone">
+        <label>Téléphone:</label>
+        <span>{{ user?.phone }}</span>
+      </div>
+    </div>
+  </div>
+</div>

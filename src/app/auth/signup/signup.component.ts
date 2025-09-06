@@ -18,7 +18,7 @@ export class SignupComponent implements OnInit {
   isLoading = false;
   selectedFile: File | null = null;
 
-  roles = ['Participant', 'organisateur'];
+  roles = ['participant', 'organisateur'];
 
   constructor(
     private fb: FormBuilder,
@@ -61,7 +61,7 @@ export class SignupComponent implements OnInit {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      
+
       this.isLoading = true;
       const formData = new FormData();
 

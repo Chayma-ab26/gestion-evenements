@@ -441,4 +441,45 @@ private escapeHtml(unsafe: string): string {
       }
     });
   }
+
+  changeEventStatus(event: any) {
+    Swal.fire({
+      title: 'Changer le statut',
+      html: `
+        <select id="newStatus" class="swal2-input">
+          <option value="">-- Choisir un statut --</option>
+          <option value="ACTIVE" ${event.status === 'ACTIVE' ? 'selected' : ''}>Actif</option>
+          <option value="INACTIVE" ${event.status === 'INACTIVE' ? 'selected' : ''}>Inactif</option>
+          <option value="PENDING" ${event.status === 'PENDING' ? 'selected' : ''}>En attente</option>
+          <option value="COMPLETED" ${event.status === 'COMPLETED' ? 'selected' : ''}>Terminé</option>
+        </select>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Changer',
+      cancelButtonText: 'Annuler',
+      preConfirm: () => {
+        const newStatus = (document.getElementById('newStatus') as HTMLSelectElement)?.value;
+        if (!newStatus) {
+          Swal.showValidationMessage('Veuillez sélectionner un statut');
+          return false;
+        }
+        return newStatus;
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const newStatus = result.value;
+        
+       /*  this.eventService.updateStatus(event.id + '', newStatus).subscribe({
+          next: () => {
+            Swal.fire('Succès!', `Statut changé vers ${newStatus}`, 'success');
+            this.allmyeventsfromback(); // Recharger la liste
+          },
+          error: (err) => {
+            console.error('Erreur changement statut:', err);
+            Swal.fire('Erreur', err.error?.message || 'Échec du changement de statut', 'error');
+          }
+        }); */
+      }
+    });
+  }
 }

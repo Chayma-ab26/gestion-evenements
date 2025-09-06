@@ -1,1 +1,281 @@
-<p>participant-dshboard works!</p>
+<!-- Header simple pour le dashboard participant -->
+<div class="simple-header">
+  <h2>🎉 Espace Participant</h2>
+</div>
+
+<div class="participant-dashboard">
+  <!-- Header du dashboard participant -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1>🎉 Dashboard Participant</h1>
+      <p class="welcome-text">Bienvenue dans votre espace personnel d'événements</p>
+    </div>
+    <div class="header-actions">
+      <button (click)="goToEvents()" class="action-btn events-btn">
+        <i class="fas fa-calendar-alt"></i>
+        Voir les Événements
+      </button>
+      <button (click)="goToProfile()" class="action-btn profile-btn">
+        <i class="fas fa-user-edit"></i>
+        Mon Profil
+      </button>
+    </div>
+  </div>
+
+  <!-- Statistiques personnelles -->
+  <div class="stats-grid">
+    <div class="stat-card primary">
+      <div class="stat-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Événements Participés</h3>
+        <p class="stat-number">{{ participatedEvents }}</p>
+        <span class="stat-change" [class.positive]="participatedEvents > 0">
+          <i class="fas fa-arrow-up"></i> {{ participatedEvents > 0 ? 'Inscrits' : 'Aucun' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="stat-card success">
+      <div class="stat-icon">
+        <i class="fas fa-heart"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Événements Favoris</h3>
+        <p class="stat-number">{{ favoriteEvents }}</p>
+        <span class="stat-change" [class.positive]="favoriteEvents > 0">
+          <i class="fas fa-arrow-up"></i> {{ favoriteEvents > 0 ? 'Ajoutés' : 'Aucun' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="stat-card warning">
+      <div class="stat-icon">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Événements à Venir</h3>
+        <p class="stat-number">{{ upcomingEvents }}</p>
+        <span class="stat-change" [class.positive]="upcomingEvents > 0">
+          <i class="fas fa-arrow-up"></i> {{ upcomingEvents > 0 ? 'Programmés' : 'Aucun' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="stat-card info">
+      <div class="stat-icon">
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Note Moyenne</h3>
+        <p class="stat-number">{{ averageRating }}/5</p>
+        <span class="stat-change" [class.positive]="averageRating > 3">
+          <i class="fas fa-arrow-up"></i> {{ averageRating > 3 ? 'Excellent' : 'À améliorer' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu de navigation rapide -->
+  <div class="quick-nav">
+    <div class="nav-item" (click)="goToEvents()">
+      <i class="fas fa-calendar-alt"></i>
+      <span>Événements</span>
+    </div>
+    <div class="nav-item" (click)="goToFavorites()">
+      <i class="fas fa-heart"></i>
+      <span>Favoris</span>
+    </div>
+    <div class="nav-item" (click)="goToHistory()">
+      <i class="fas fa-history"></i>
+      <span>Historique</span>
+    </div>
+    <div class="nav-item" (click)="goToProfile()">
+      <i class="fas fa-user"></i>
+      <span>Profil</span>
+    </div>
+  </div>
+
+  <!-- Graphiques personnels -->
+  <div class="charts-section">
+    <div class="chart-container">
+      <h3>📊 Participation par Mois</h3>
+      <canvas #participationChart></canvas>
+    </div>
+    <div class="chart-container">
+      <h3>📈 Événements par Catégorie</h3>
+      <canvas #categoryChart></canvas>
+    </div>
+  </div>
+
+  <!-- Événements à venir -->
+  <div class="upcoming-section">
+    <div class="section-header">
+      <h3>📅 Mes Prochains Événements</h3>
+      <button (click)="goToEvents()" class="view-all-btn">
+        Voir tout <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <div class="events-grid">
+      <div *ngFor="let event of upcomingEventsList" class="event-card">
+        <div class="event-image">
+          <img [src]="event.image" [default]="'assets/default-event.jpg'" [alt]="event.title">
+        </div>
+        <div class="event-content">
+          <h4>{{ event.title }}</h4>
+          <p class="event-date">
+            <i class="fas fa-calendar"></i>
+            {{ formatDate(event.datedebut) }}
+          </p>
+          <p class="event-location">
+            <i class="fas fa-map-marker-alt"></i>
+            {{ event.local?.name || 'Lieu non défini' }}
+          </p>
+          <p class="event-category">
+            <i class="fas fa-tag"></i>
+            {{ event.category?.name || 'Catégorie non définie' }}
+          </p>
+          <div class="event-actions">
+            <button class="btn btn-sm btn-primary" (click)="viewEvent(event)">
+              <i class="fas fa-eye"></i> Voir
+            </button>
+            <button class="btn btn-sm btn-secondary" (click)="toggleFavorite(event)">
+              <i class="fas" [class.fa-heart]="event.isFavorite" [class.fa-heart-o]="!event.isFavorite"></i>
+              {{ event.isFavorite ? 'Retirer' : 'Favori' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!upcomingEventsList || upcomingEventsList.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-calendar-plus"></i>
+      </div>
+      <h3>Aucun événement à venir</h3>
+      <p>Découvrez et participez à de nouveaux événements !</p>
+      <button (click)="goToEvents()" class="action-btn events-btn">
+        <i class="fas fa-search"></i>
+        Découvrir des événements
+      </button>
+    </div>
+  </div>
+
+  <!-- Événements récemment participés -->
+  <div class="recent-section">
+    <div class="section-header">
+      <h3>🎯 Événements Récemment Participés</h3>
+      <button (click)="goToHistory()" class="view-all-btn">
+        Voir tout <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <div class="recent-events">
+      <div *ngFor="let event of recentParticipatedEvents" class="event-item">
+        <div class="event-info">
+          <h4>{{ event.title }}</h4>
+          <p class="event-date">
+            <i class="fas fa-calendar"></i>
+            {{ formatDate(event.datedebut) }}
+          </p>
+          <p class="event-participation">
+            <i class="fas fa-check-circle"></i>
+            Participé le {{ formatDate(event.participationDate) }}
+          </p>
+          <div class="rating-section">
+            <span class="rating-label">Votre note :</span>
+            <div class="stars">
+              <i *ngFor="let star of [1,2,3,4,5]"
+                 class="fas fa-star"
+                 [class.filled]="star <= (event.userRating || 0)"
+                 [class.unfilled]="star > (event.userRating || 0)"
+                 (click)="rateEvent(event, star)"
+                 (mouseenter)="hoverRating = star"
+                 (mouseleave)="hoverRating = 0"></i>
+            </div>
+          </div>
+        </div>
+        <div class="event-actions">
+          <button class="btn btn-sm btn-primary" (click)="viewEvent(event)">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-secondary" (click)="writeReview(event)">
+            <i class="fas fa-comment"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!recentParticipatedEvents || recentParticipatedEvents.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <h3>Aucune participation récente</h3>
+      <p>Commencez à participer à des événements pour voir votre historique ici.</p>
+    </div>
+  </div>
+
+  <!-- Recommandations -->
+  <div class="recommendations-section">
+    <h3>💡 Événements Recommandés pour Vous</h3>
+    <div class="recommendations-grid">
+      <div *ngFor="let event of recommendedEvents" class="recommendation-card">
+        <div class="event-image">
+          <img [src]="event.image" [default]="'assets/default-event.jpg'" [alt]="event.title">
+        </div>
+        <div class="event-content">
+          <h4>{{ event.title }}</h4>
+          <p class="event-date">
+            <i class="fas fa-calendar"></i>
+            {{ formatDate(event.datedebut) }}
+          </p>
+          <p class="event-category">
+            <i class="fas fa-tag"></i>
+            {{ event.category?.name || 'Catégorie non définie' }}
+          </p>
+          <div class="event-actions">
+            <button class="btn btn-sm btn-primary" (click)="viewEvent(event)">
+              <i class="fas fa-eye"></i> Voir
+            </button>
+            <button class="btn btn-sm btn-success" (click)="participateEvent(event)">
+              <i class="fas fa-plus"></i> Participer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!recommendedEvents || recommendedEvents.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-lightbulb"></i>
+      </div>
+      <h3>Aucune recommandation disponible</h3>
+      <p>Participez à plus d'événements pour recevoir des recommandations personnalisées.</p>
+    </div>
+  </div>
+
+  <!-- Actions rapides -->
+  <div class="quick-actions">
+    <h3>⚡ Actions Rapides</h3>
+    <div class="actions-grid">
+      <button class="quick-action-btn" (click)="goToEvents()">
+        <i class="fas fa-search"></i>
+        <span>Découvrir Événements</span>
+      </button>
+      <button class="quick-action-btn" (click)="goToFavorites()">
+        <i class="fas fa-heart"></i>
+        <span>Mes Favoris</span>
+      </button>
+      <button class="quick-action-btn" (click)="goToProfile()">
+        <i class="fas fa-user-edit"></i>
+        <span>Modifier Profil</span>
+      </button>
+      <button class="quick-action-btn" (click)="exportHistory()">
+        <i class="fas fa-download"></i>
+        <span>Exporter Historique</span>
+      </button>
+    </div>
+  </div>
+</div>

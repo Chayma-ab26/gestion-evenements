@@ -1,20 +1,16 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
+import { provideRouter } from '@angular/router';
+import { routes } from './app/app.routes';
 import { KeycloakService } from './app/services/keycloak.service';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
+const keycloakService = new KeycloakService();
 
-// bootstrapApplication(AppComponent, appConfig)
-//   .catch((err) => console.error(err));
-
-
-  const keycloakService = new KeycloakService();
-
-keycloakService.init()
-  .then(() => {
-    platformBrowserDynamic([{ provide: KeycloakService, useValue: keycloakService }])
-      //.bootstrapModule(AppModule)
-      bootstrapApplication(AppComponent, appConfig)
-      .catch(err => console.error(err));
-  });
+keycloakService.init().then(() => {
+  bootstrapApplication(AppComponent, {
+    providers: [
+      provideRouter(routes),
+      { provide: KeycloakService, useValue: keycloakService } // injecte la même instance partout
+    ]
+  }).catch(err => console.error(err));
+});

@@ -12,5 +12,9 @@ import { KeycloakService } from '../services/keycloak.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
- 
+  constructor(public keycloakService: KeycloakService) {}
+
+  login() {
+    this.keycloakService.login();
+  }
 }
