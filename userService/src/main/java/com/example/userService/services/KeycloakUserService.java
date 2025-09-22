@@ -104,46 +104,51 @@ public class KeycloakUserService {
 //            System.out.println("❌ Erreur Keycloak: " + response.readEntity(String.class));
 //        }
 //    }
-public void createUser(String username, String password, String firstname, String lastname, String roleName) {
-    // 1️⃣ Créer l'utilisateur
-    UserRepresentation user = new UserRepresentation();
-    user.setUsername(username);
-    user.setEnabled(true);
-    user.setEmail(username + "@gmail.com");
-    user.setFirstName(firstname);
-    user.setLastName(lastname);
 
-    CredentialRepresentation credential = new CredentialRepresentation();
-    credential.setTemporary(false);
-    credential.setType(CredentialRepresentation.PASSWORD);
-    credential.setValue(password);
-    user.setCredentials(List.of(credential));
+    public String createUser(String username, String password, String firstname, String lastname, String roleName) {
+        // 1️⃣ Créer l'utilisateur
+        UserRepresentation user = new UserRepresentation();
+        user.setUsername(username);
+        user.setEnabled(true);
+        user.setEmail((username != null ? username : "user") + "@gmail.com"); // sécurité
+        user.setFirstName(firstname != null ? firstname : "");
+        user.setLastName(lastname != null ? lastname : "");
 
-    Response response = keycloak.realm(keycloakConfig.getRealm())
-            .users()
-            .create(user);
+        CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setTemporary(false);
+        credential.setType(CredentialRepresentation.PASSWORD);
+        credential.setValue(password);
+        user.setCredentials(List.of(credential));
 
-    System.out.println("Keycloak Status: " + response.getStatus());
+        Response response = keycloak.realm(keycloakConfig.getRealm())
+                .users()
+                .create(user);
 
-    if (response.getStatus() != 201) {
-        System.out.println("❌ Erreur Keycloak: " + response.readEntity(String.class));
-        return;
+        System.out.println("Keycloak Status: " + response.getStatus());
+
+        if (response.getStatus() != 201) {
+            String error = response.readEntity(String.class);
+            throw new RuntimeException("❌ Erreur lors de la création dans Keycloak: " + error);
+        }
+
+        // 2️⃣ Récupérer l'ID du nouvel utilisateur
+        String location = response.getLocation().getPath();
+        String userId = location.substring(location.lastIndexOf("/") + 1);
+
+        // 3️⃣ Assigner le rôle au niveau du realm
+        if (roleName != null && !roleName.isBlank()) {
+            var realmResource = keycloak.realm(keycloakConfig.getRealm());
+            RoleRepresentation roleRep = realmResource.roles().get(roleName).toRepresentation();
+
+            realmResource.users()
+                    .get(userId)
+                    .roles()
+                    .realmLevel()
+                    .add(List.of(roleRep));
+        }
+
+        System.out.println("✅ Utilisateur " + username + " créé avec ID: " + userId);
+        return userId; // ✅ Toujours retourner l'ID Keycloak
     }
 
-    // 2️⃣ Récupérer l'ID du nouvel utilisateur
-    String location = response.getLocation().getPath();
-    String userId = location.substring(location.lastIndexOf("/") + 1);
-
-    // 3️⃣ Assigner le rôle au niveau du realm
-    var realmResource = keycloak.realm(keycloakConfig.getRealm());
-    RoleRepresentation roleRep = realmResource.roles().get(roleName).toRepresentation();
-
-    realmResource.users()
-            .get(userId)
-            .roles()
-            .realmLevel()
-            .add(List.of(roleRep));
-
-    System.out.println("✅ Utilisateur " + username + " créé avec le rôle : " + roleName);
-}
 }

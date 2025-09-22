@@ -3,18 +3,23 @@ package com.example.userService.controllers;
 
 import com.example.userService.entities.UserDTO;
 import com.example.userService.entities.UserEntity;
-import com.example.userService.services.KeycloakUserService;
+import com.example.userService.repositories.UserRepository;
+import com.example.userService.services.*;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.multipart.MultipartFile;
-import com.example.userService.services.StorageService;
-import com.example.userService.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 @RestController
 @RequestMapping("/users")
@@ -27,6 +32,10 @@ public class UserController {
     StorageService storageService;
     @Autowired
     KeycloakUserService keycloakUserService;
+    @Autowired
+    LocalUserRoleService localUserRoleService;
+   @Autowired
+    UserRepository userRepository;
 
 //    @PostMapping("/create")
 //    public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("file") MultipartFile file) {
@@ -49,9 +58,10 @@ public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("fil
     user.setPhoto(namePhoto);
 
     // Création de l'utilisateur dans Keycloak
-    keycloakUserService.createUser(user.getUsername(), user.getPassword(),user.getFirstname(),
+    String keycloakId= keycloakUserService.createUser(user.getUsername(), user.getPassword(),user.getFirstname(),
             user.getLastname(),user.getRole());
-
+    // 🔹 Sauvegarder le keycloakId dans ta DB locale
+    user.setKeycloakid(keycloakId);
     // Sauvegarde dans votre base locale
     return userService.createUser(user);
 }
@@ -110,6 +120,36 @@ public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("fil
 
     }
 
+//    @GetMapping("/me")
+//    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+//        return localUserRoleService.findUserByToken(jwt)
+//                .map(user -> ResponseEntity.ok().body(Map.of(
+//                        "id", user.getId(),
+//                        "firstname", user.getFirstname(),
+//                        "lastname", user.getLastname(),
+//                        "username", user.getUsername(),
+//                        "role", user.getRole()
+//                )))
+//                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                        .body(Map.of("error", "Utilisateur introuvable dans la base locale")));
+//    }
+//
+//
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+        return localUserRoleService.findUserByToken(jwt)
+                .map(user -> ResponseEntity.ok().body(Map.of(
+                        "id", user.getId(),
+                        "firstname", user.getFirstname(),
+                        "lastname", user.getLastname(),
+                        "username", user.getUsername(),
+                        "role", user.getRole(),
+                        "keycloakid", user.getKeycloakid()
+                )))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Utilisateur introuvable dans la base locale")));
+    }
 
 
 

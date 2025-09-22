@@ -23,34 +23,38 @@ public class AvisController {
     @Autowired
     private EventClient eventClient;
 
+//    @PostMapping("/create")
+//    public ResponseEntity<?> createAvis(
+//            @RequestParam Long userId,
+//            @RequestParam Long eventId,
+//            @RequestParam int note,
+//            @RequestParam(required = false) String commentaire) {
+//
+//        // Appel Feign pour récupérer l'utilisateur
+//        Object user = userClient.getUserById(userId);
+//        if (user == null) {
+//            return ResponseEntity.badRequest().body("Utilisateur non trouvé");
+//        }
+//
+//        // Appel Feign pour récupérer l'événement
+//        Object event = eventClient.getEventById(eventId);
+//        if (event == null) {
+//            return ResponseEntity.badRequest().body("Événement non trouvé");
+//        }
+//
+//        AvisEntity avis = new AvisEntity();
+//        avis.setUserId(userId);
+//        avis.setEventId(eventId);
+//        avis.setNote(note);
+//        avis.setCommentaire(commentaire);
+//
+//        return ResponseEntity.ok(avisService.createAvis(avis));
+//    }
+
     @PostMapping("/create")
-    public ResponseEntity<?> createAvis(
-            @RequestParam Long userId,
-            @RequestParam Long eventId,
-            @RequestParam int note,
-            @RequestParam(required = false) String commentaire) {
-
-        // Appel Feign pour récupérer l'utilisateur
-        Object user = userClient.getUserById(userId);
-        if (user == null) {
-            return ResponseEntity.badRequest().body("Utilisateur non trouvé");
-        }
-
-        // Appel Feign pour récupérer l'événement
-        Object event = eventClient.getEventById(eventId);
-        if (event == null) {
-            return ResponseEntity.badRequest().body("Événement non trouvé");
-        }
-
-        AvisEntity avis = new AvisEntity();
-        avis.setUserId(userId);
-        avis.setEventId(eventId);
-        avis.setNote(note);
-        avis.setCommentaire(commentaire);
-
-        return ResponseEntity.ok(avisService.createAvis(avis));
+    public AvisEntity createAvis(@RequestBody AvisEntity avis) {
+        return avisService.createAvis(avis);
     }
-
     @GetMapping("/getall")
     public List<AvisEntity> getallavis() {
         return avisService.getAll();
