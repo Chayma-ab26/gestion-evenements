@@ -38,6 +38,8 @@
   </details>
 </div>
 
+
+
 <div *ngIf="!isLoading" class="events-container">
   <div *ngFor="let event of filteredEvents; trackBy: trackByEventId" class="event-card">
     <!-- Debug de l'événement (à retirer en production) -->
@@ -53,18 +55,21 @@
 
     <!-- Image du local avec gestion des cas manquants -->
     <div class="event-image-container">
-      <img *ngIf="hasImage(event); else noImage"
-           [src]="getImageUrl(event)"
-           [alt]="getLocalName(event)"
-           class="event-image"
-           (error)="onImageError($event)"
-           (load)="onImageLoad(event)" />
-      <ng-template #noImage>
+      <ng-container *ngIf="getLocalImages(event).length > 0; else noLocalBlock">
+        <div class="local-images-gallery">
+          <img *ngFor="let img of getLocalImages(event)"
+               [src]="'api/locals/files/' + img"
+               [alt]="getLocalName(event)"
+               class="event-image"
+               (error)="onImageError($event)"
+               (load)="onImageLoad(event)" />
+        </div>
+      </ng-container>
+      <ng-template #noLocalBlock>
         <div class="no-image-placeholder">
-          <i class="fas fa-image"></i>
-          <p>Aucune image disponible</p>
+          <i class="fas fa-map-marker-alt"></i>
+          <p>Aucun local associé à cet événement</p>
           <small *ngIf="event.localId">Local ID: {{ event.localId }}</small>
-          <small *ngIf="!event.local">Aucun local associé</small>
         </div>
       </ng-template>
     </div>
@@ -83,7 +88,10 @@
         <div class="detail-item">
           <i class="fas fa-map-marker-alt"></i>
           <span class="detail-label">Lieu:</span>
-          <span class="detail-value">{{ getLocalName(event) }}</span>
+          <span class="detail-value">
+            <ng-container *ngIf="event.local; else noLocalName">{{ getLocalName(event) }}</ng-container>
+            <ng-template #noLocalName>Non défini</ng-template>
+          </span>
           <small *ngIf="event.localId && !event.local" class="error-info">
             (ID: {{ event.localId }} - Local non trouvé)
           </small>
@@ -118,7 +126,7 @@
       </div>
 
       <div class="event-actions">
-        <button class="btn btn-primary participate-btn" (click)="participateEvent(event.id + '')">
+       <button class="btn btn-primary participate-btn" (click)="participateEvent(event.id + '')">
           <i class="fas fa-user-plus"></i>
           Participer
         </button>
@@ -139,12 +147,12 @@
                  [class.active]="i < event.averageRating"></i>
             </div>
             <span class="rating-value">{{ event.averageRating.toFixed(1) }}</span>
-            <span class="rating-count">({{ event.totalReviews }} avis)</span>
-          </div>
+<!--             <span class="rating-count">({{ event.totalReviews }} avis)</span>
+ -->          </div>
         </div>
 
         <!-- Liste des avis existants -->
-        <div class="reviews-list" *ngIf="event.avis && event.avis.length > 0">
+        <!-- div class="reviews-list" *ngIf="event.avis && event.avis.length > 0">
           <div class="review-item" *ngFor="let avis of event.avis.slice(0, 3)">
             <div class="review-header">
               <div class="review-stars">
@@ -158,7 +166,7 @@
             <span>Et {{ event.avis.length - 3 }} avis supplémentaires...</span>
           </div>
         </div>
-
+ -->
         <!-- Formulaire pour ajouter un avis -->
         <div class="rating-input">
           <input #reviewInput type="text" placeholder="Laissez un avis..." class="review-input">
@@ -173,8 +181,7 @@
                (mouseleave)="hoverRating = 0"></i>
           </div>
           <button class="btn btn-outline send-review-btn"
-                  (click)="sendReview(event, reviewInput.value, selectedRating)">
-            <i class="fas fa-paper-plane"></i>
+>           <i class="fas fa-paper-plane"></i>
             Envoyer
           </button>
         </div>

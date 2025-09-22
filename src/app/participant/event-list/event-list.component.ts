@@ -47,8 +47,8 @@ export class EventListComponent implements OnInit {
       categories: this.categoryService.getAll() as Observable<any[]>,
       locals: this.localService.getAll() as Observable<any[]>,
       events: this.eventService.getAll() as Observable<any[]>,
-      avis: this.avisService.getAllAvis() as Observable<Avis[]>
-    }).subscribe({
+/*       avis: this.avisService.getAllAvis() as Observable<Avis[]>
+ */    }).subscribe({
       next: (data) => {
         console.log('=== DONNÉES BRUTES ===');
         console.log('Catégories:', data.categories);
@@ -58,8 +58,8 @@ export class EventListComponent implements OnInit {
         this.categories = data.categories || [];
         this.locals = data.locals || [];
         this.listevents = data.events || [];
-        this.avisList = data.avis || [];
-
+/*         this.avisList = data.avis || [];
+ */
         // Enrichir les événements avec les détails
         this.enrichEvents();
 
@@ -176,53 +176,46 @@ export class EventListComponent implements OnInit {
     });
   }
 
-  // Méthode utilitaire pour vérifier si une image existe
-  hasImage(event: any): boolean {
-    if (!event || !event.local) {
-      console.log('Pas de local pour l\'événement:', event);
-      return false;
-    }
 
-    const hasImages = event.local.images &&
-                     Array.isArray(event.local.images) &&
-                     event.local.images.length > 0;
-
-    console.log('Vérification image pour événement:', {
-      eventId: event.id,
-      local: event.local,
-      images: event.local.images,
-      hasImages: hasImages
-    });
-
-    return hasImages;
+  // Méthode utilitaire pour obtenir le local à partir de son id
+  getLocalById(localId: number): any {
+    return this.locals.find(l => l.id === localId);
   }
 
-  // Méthode utilitaire pour obtenir l'URL de l'image
-  getImageUrl(event: any): string {
-    if (this.hasImage(event)) {
-      const imageUrl = `http://localhost:8766/locals/files/${event.local.images[0]}`;
-      console.log('URL de l\'image générée:', imageUrl);
-      return imageUrl;
+  // Méthode utilitaire pour vérifier si une image existe
+  hasImage(event: any): boolean {
+    const local = event.local || this.getLocalById(event.localId);
+    if (!event || !local) {
+      return false;
     }
-    console.log('Pas d\'image pour l\'événement:', event.id);
+    return local.images && Array.isArray(local.images) && local.images.length > 0;
+  }
+
+  // Méthode utilitaire pour obtenir l'URL de la première image
+  getImageUrl(event: any): string {
+    const local = event.local || this.getLocalById(event.localId);
+    if (this.hasImage(event)) {
+      return `api/locals/files/${local.images[0]}`;
+    }
     return '';
   }
 
   // Méthode utilitaire pour obtenir le nom du lieu
   getLocalName(event: any): string {
-    if (!event || !event.local) {
-      console.log('Pas de local pour l\'événement:', event);
+    const local = event.local || this.getLocalById(event.localId);
+    if (!event || !local) {
       return 'Lieu non défini';
     }
+    return local.name || 'Nom du lieu manquant';
+  }
 
-    const localName = event.local.name || 'Nom du lieu manquant';
-    console.log('Nom du lieu pour événement:', {
-      eventId: event.id,
-      localName: localName,
-      local: event.local
-    });
-
-    return localName;
+  // Méthode utilitaire pour obtenir toutes les images du local
+  getLocalImages(event: any): string[] {
+    const local = event.local || this.getLocalById(event.localId);
+    if (local && local.images && Array.isArray(local.images)) {
+      return local.images;
+    }
+    return [];
   }
 
   // Méthode utilitaire pour obtenir le nom de la catégorie
@@ -427,7 +420,7 @@ export class EventListComponent implements OnInit {
   }
 
   // Méthode pour envoyer un avis
-  sendReview(event: any, reviewText: string, rating: number) {
+  /* sendReview(event: any, reviewText: string, rating: number) {
     if (!reviewText.trim()) {
       Swal.fire('Erreur', 'Veuillez saisir un avis', 'error');
       return;
@@ -437,9 +430,9 @@ export class EventListComponent implements OnInit {
       Swal.fire('Erreur', 'Veuillez sélectionner une note valide', 'error');
       return;
     }
-
+ */
     // Récupérer l'ID de l'utilisateur actuel (vous devrez l'adapter selon votre système d'authentification)
-    const currentUserId = this.getCurrentUserId();
+   /* const currentUserId = this.getCurrentUserId();
     if (!currentUserId) {
       Swal.fire('Erreur', 'Utilisateur non connecté', 'error');
       return;
@@ -470,7 +463,7 @@ export class EventListComponent implements OnInit {
       }
     });
   }
-
+ */
   // Méthode pour obtenir l'ID de l'utilisateur actuel
   private getCurrentUserId(): number | null {
     // Cette méthode doit être adaptée selon votre système d'authentification

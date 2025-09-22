@@ -4,3 +4,4 @@
 - [x] Mettre à jour ProfilComponent.html : Afficher les informations utilisateur
 - [x] Mettre à jour ProfilComponent.css : Ajouter styles de base
 - [x] Tester le composant profil - Erreurs de compilation corrigées
+- [x] Corriger les erreurs de chargement des assets CSS/JS (MIME type et 404)

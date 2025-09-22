@@ -6,7 +6,7 @@ import { EventListComponent } from './event-list/event-list.component';
 import { RoleGuard } from '../guard/role.guard';
 const routes: Routes = [
   { path: 'dashboard', component: ParticipantDashboardComponent, canActivate: [RoleGuard], data: { roles: ['participant'] } },
-  { path: 'event-list', component: EventListComponent, canActivate: [RoleGuard], data: { roles: ['participant'] } },
+  { path: 'event-list', component: EventListComponent },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
 ];
 

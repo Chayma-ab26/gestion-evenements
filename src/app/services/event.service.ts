@@ -7,48 +7,35 @@ import { Event } from '../models/event.model';
   providedIn: 'root'
 })
 export class EventService {
-  private apiUrl = '/api/events';
-  updateWithCategoryAndLocal: any;
+  private apiUrl = '/api/events'; // port backend réel
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Get all events
-  getAll() {
-    return this.http.get(`${this.apiUrl}/getall`);
+  getAll(): Observable<Event[]> {
+    return this.http.get<Event[]>(`${this.apiUrl}/getall`);
   }
 
-   //✅ Get all events with category and local
-  // getAllWithCategoryAndLocal(id: string, value: any) {
-  //  return this.http.get(`${this.apiUrl}/getallWithCategoryAndLocal`);
-  //}
-
-  // ✅ Get event by ID
-  getById(id: String) {
-    return this.http.get(`${this.apiUrl}/getbyid/${id}`);
+  getById(id: string): Observable<Event> {
+    return this.http.get<Event>(`${this.apiUrl}/getbyid/${id}`);
   }
 
-  // ✅ Get event with category and local
-  getEventWithCategoryAndLocal(id: String) {
-    return this.http.get(`${this.apiUrl}/getEventWithCategoryAndLocal/${id}`);
+  getEventWithCategoryAndLocal(id: string): Observable<Event> {
+    return this.http.get<Event>(`${this.apiUrl}/getEventWithCategoryAndLocal/${id}`);
   }
 
-  // ✅ Create new event
-  create(event: any): any {
-    return this.http.post(`${this.apiUrl}/createWithCategoryAndLocal`,event);
+  create(event: any): Observable<Event> {
+    return this.http.post<Event>(`${this.apiUrl}/createWithCategoryAndLocal`, event);
   }
 
-  // ✅ Update event
-  update(id: String, event: any) {
-    return this.http.put(`${this.apiUrl}/updateWithCategoryAndLocal/${id}`, event);
+  update(id: string, event: any): Observable<Event> {
+    return this.http.put<Event>(`${this.apiUrl}/updateWithCategoryAndLocal/${id}`, event);
   }
 
-  // ✅ Delete event
-  delete(id: String) {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+  delete(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/delete/${id}`);
   }
-   participate(eventId: string, formData: FormData): Observable<any> {
+
+  participate(eventId: string, formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/${eventId}/participate`, formData);
   }
 }
-
-

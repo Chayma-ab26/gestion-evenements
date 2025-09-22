@@ -40,4 +40,7 @@ export class UserService {
   delete(id: String) {
     return this.http.delete(`${this.apiUrl}/delete/${id}`);
   }
+
+
+
 }

@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, RouterLink } from '@angular/router';
+import { KeycloakService } from '../../services/keycloak.service';
 
 @Component({
   selector: 'app-header-org',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterLink, RouterModule],
   templateUrl: './header-org.component.html',
   styleUrls: ['./header-org.component.css']
 })
 export class HeaderOrgComponent {
   isDropdownOpen = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+    private keycloakService: KeycloakService
+  ) {}
 
   toggleDropdown(event: Event) {
     event.stopPropagation();
@@ -21,5 +24,8 @@ export class HeaderOrgComponent {
   navigate(event: Event) {
     event.stopPropagation();
     this.isDropdownOpen = false;
+  }
+  logout() {
+    this.keycloakService.logout();
   }
 }

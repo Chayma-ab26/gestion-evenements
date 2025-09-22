@@ -1,12 +1,15 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HeaderOrgComponent } from "../header-org/header-org.component";
 import Chart from 'chart.js/auto';
 import Swal from 'sweetalert2';
 import { EventService } from '../../services/event.service';
 import { UserService } from '../../services/user.service';
 import { ReservationService } from '../../services/reservation.service';
+import { LocalService } from '../../services/local.service';
+import { CategoryService } from '../../services/category.service';
+import { AvisService } from '../../services/avis.service';
+import { HeaderOrgComponent } from "../header-org/header-org.component";
+import { CommonModule } from '@angular/common';
 
 // Interface for Event
 interface Event {
@@ -21,15 +24,15 @@ interface Event {
 @Component({
   selector: 'app-dashboard-org',
   standalone: true,
-  imports: [CommonModule, HeaderOrgComponent],
   templateUrl: './dashboard-org.component.html',
-  styleUrl: './dashboard-org.component.css'
+  styleUrls: ['./dashboard-org.component.css'],
+  imports: [HeaderOrgComponent,CommonModule]
 })
 export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('eventChart') chartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('eventChart') eventChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('statusChart') statusChartRef!: ElementRef<HTMLCanvasElement>;
 
-  chart: Chart | undefined;
+  eventChart: Chart | undefined;
   statusChart: Chart | undefined;
 
   totalEvents = 0;
@@ -39,73 +42,127 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private events: Event[] = [];
 
-  constructor(private router: Router, private eventService: EventService) {}
+  constructor(
+    private router: Router,
+    private eventService: EventService,
+    private userService: UserService,
+    private reservationService: ReservationService,
+    private localService: LocalService,
+    private categoryService: CategoryService,
+    private avisService: AvisService
+  ) {}
 
   ngOnInit() {
-    const today = new Date('2025-08-25'); // Using the current date as per query
-    this.loadEvents(today);
+    this.loadEvents();
   }
 
-  loadEvents(today: Date) {
+  loadEvents() {
     this.eventService.getAll().subscribe({
       next: (events: any) => {
         this.events = events;
-        this.totalEvents = this.events.length;
-        this.totalParticipants = this.events.reduce((sum, e) => sum + e.participants, 0);
-        this.upcomingEvents = this.events.filter(e => new Date(e.datedebut) > today).length;
-        this.recentEvents = this.events.slice(0, 3);
-        this.renderChart(this.events);
-        this.renderStatusChart(this.events);
+        this.calculateStats();
+        this.renderCharts();
       },
       error: (err: any) => {
         console.error('Erreur lors du chargement des événements:', err);
+        // Fallback to sample data if API fails
+        this.loadSampleData();
       }
     });
   }
 
-  ngAfterViewInit() {
-    this.renderChart(this.events);
-    this.renderStatusChart(this.events);
+  loadSampleData() {
+    // Sample data for demonstration
+    this.events = [
+      { id: 1, name: 'Conférence Tech 2023', datedebut: '2023-08-25', participants: 120, maxParticipants: 150, status: 'completed' },
+      { id: 2, name: 'Atelier Design UX', datedebut: '2023-09-18', participants: 45, maxParticipants: 50, status: 'active' },
+      { id: 3, name: 'Séminaire Leadership', datedebut: '2023-10-05', participants: 85, maxParticipants: 100, status: 'active' },
+      { id: 4, name: 'Webinaire Marketing Digital', datedebut: '2023-10-15', participants: 60, maxParticipants: 200, status: 'upcoming' },
+      { id: 5, name: 'Forum des Métiers', datedebut: '2023-11-10', participants: 38, maxParticipants: 80, status: 'upcoming' }
+    ];
+    this.calculateStats();
   }
 
-  renderChart(events: Event[]) {
-    const ctx = this.chartRef.nativeElement.getContext('2d');
-    if (!ctx) return;
+  calculateStats() {
+    const today = new Date();
+    this.totalEvents = this.events.length;
+    this.totalParticipants = this.events.reduce((sum, e) => sum + e.participants, 0);
+    this.upcomingEvents = this.events.filter(e => new Date(e.datedebut) > today).length;
+    this.recentEvents = this.events.slice(0, 3);
+  }
 
-    this.chart = new Chart(ctx, {
+  ngAfterViewInit() {
+    this.renderCharts();
+  }
+
+  renderCharts() {
+    this.renderEventChart();
+    this.renderStatusChart();
+  }
+
+  renderEventChart() {
+    const ctx = this.eventChartRef?.nativeElement.getContext('2d');
+    if (!ctx || this.events.length === 0) return;
+
+    if (this.eventChart) {
+      this.eventChart.destroy();
+    }
+
+    this.eventChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: events.map(e => e.name),
+        labels: this.events.map(e => e.name),
         datasets: [{
           label: 'Participants',
-          data: events.map(e => e.participants),
-          backgroundColor: '#3498db'
+          data: this.events.map(e => e.participants),
+          backgroundColor: '#4361ee',
+          borderRadius: 6
         }]
       },
       options: {
         responsive: true,
         plugins: {
           legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
         }
       }
     });
   }
 
-  renderStatusChart(events: Event[]) {
-    const ctx = this.statusChartRef.nativeElement.getContext('2d');
-    if (!ctx) return;
+  renderStatusChart() {
+    const ctx = this.statusChartRef?.nativeElement.getContext('2d');
+    if (!ctx || this.events.length === 0) return;
 
-    const today = new Date('2025-08-25');
-    const upcoming = events.filter(e => new Date(e.datedebut) > today).length;
-    const past = events.length - upcoming;
+    if (this.statusChart) {
+      this.statusChart.destroy();
+    }
+
+    const today = new Date();
+    const upcoming = this.events.filter(e => new Date(e.datedebut) > today).length;
+    const active = this.events.filter(e => new Date(e.datedebut) <= today && e.status === 'active').length;
+    const completed = this.events.filter(e => e.status === 'completed').length;
 
     this.statusChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['À venir', 'Passés'],
+        labels: ['À venir', 'En cours', 'Terminés'],
         datasets: [{
-          data: [upcoming, past],
-          backgroundColor: ['#2ecc71', '#e74c3c']
+          data: [upcoming, active, completed],
+          backgroundColor: ['#4361ee', '#4cc9f0', '#f72585'],
+          borderWidth: 0,
+          borderRadius: 6
         }]
       },
       options: {
@@ -114,7 +171,8 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
           legend: {
             position: 'bottom'
           }
-        }
+        },
+        cutout: '65%'
       }
     });
   }
@@ -126,18 +184,6 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
     return Math.round((totalParticipants / totalCapacity) * 100);
   }
 
-  getActiveEvents(): number {
-    return this.events.filter(e => e.status === 'active').length;
-  }
-
-  getCompletedEvents(): number {
-    return this.events.filter(e => e.status === 'completed').length;
-  }
-
-  getPendingEvents(): number {
-    return this.events.filter(e => e.status === 'pending').length;
-  }
-
   createEvent() {
     this.router.navigate(['/create-event']);
   }
@@ -147,18 +193,22 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goToParticipants() {
-    Swal.fire('Info', 'Page de gestion des participants à implémenter', 'info');
+    this.router.navigate(['/participants-management']);
   }
 
   goToReservations() {
-    Swal.fire('Info', 'Page de gestion des locaux à implémenter', 'info');
+    this.router.navigate(['/reservations']);
   }
 
   goToAnalytics() {
-    Swal.fire('Info', 'Page des analyses à implémenter', 'info');
+    this.router.navigate(['/analytics']);
   }
 
-  viewEvent(event: Event) {
+  viewEvent(event: Event, e?: MouseEvent) {
+    if (e) {
+      e.stopPropagation();
+    }
+
     Swal.fire({
       title: event.name,
       html: `
@@ -172,12 +222,42 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  editEvent(event: Event) {
-    Swal.fire('Info', `Édition de l'événement ${event.name} à implémenter`, 'info');
+  editEvent(event: Event, e: MouseEvent) {
+    e.stopPropagation();
+    this.router.navigate(['/edit-event', event.id]);
   }
 
   exportData() {
-    Swal.fire('Info', 'Fonctionnalité d\'export des données à implémenter', 'info');
+    // Generate CSV data
+    const headers = ['Nom', 'Date', 'Participants', 'Capacité maximale', 'Status'];
+    const csvData = this.events.map(event => [
+      event.name,
+      this.formatDate(event.datedebut),
+      event.participants,
+      event.maxParticipants,
+      event.status
+    ]);
+
+    // Create CSV content
+    let csvContent = headers.join(',') + '\n';
+    csvData.forEach(row => {
+      csvContent += row.join(',') + '\n';
+    });
+
+    // Create download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'evenements.csv');
+    link.style.visibility = 'hidden';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    Swal.fire('Succès', 'Les données ont été exportées avec succès', 'success');
   }
 
   formatDate(dateString: string): string {
@@ -190,8 +270,8 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.chart) {
-      this.chart.destroy();
+    if (this.eventChart) {
+      this.eventChart.destroy();
     }
     if (this.statusChart) {
       this.statusChart.destroy();

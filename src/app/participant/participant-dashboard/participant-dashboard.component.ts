@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 // Services réels
 import { EventService } from '../../services/event.service';
 import { UserService } from '../../services/user.service';
+import { HeaderOrgComponent } from '../../organisateur/header-org/header-org.component';
 
 // Directive for fallback image
 @Directive({
@@ -51,7 +52,7 @@ interface Event {
 @Component({
   selector: 'app-participant-dashboard',
   standalone: true,
-  imports: [CommonModule, ImageFallbackDirective],
+  imports: [CommonModule, ImageFallbackDirective, HeaderOrgComponent],
   templateUrl: './participant-dashboard.component.html',
   styleUrl: './participant-dashboard.component.css'
 })

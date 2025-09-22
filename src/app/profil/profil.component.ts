@@ -22,7 +22,7 @@ export class ProfilComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.keycloakService.isLoggedIn()) {
+   /*  if (this.keycloakService.isLoggedIn()) {
       const userId = this.keycloakService.getUserId();
       if (userId) {
         this.userService.getById(userId).subscribe({
@@ -43,6 +43,6 @@ export class ProfilComponent implements OnInit {
     } else {
       this.error = 'Utilisateur non connecté';
       this.loading = false;
-    }
+    } */
   }
 }

@@ -20,7 +20,7 @@ interface Event {
 }
 
 @Component({
-  selector: 'app-dashboard-org',
+  selector: 'app-dashboard-admin',
   standalone: true,
   imports: [CommonModule, HeaderComponent],
   templateUrl: './dashboard-admin.component.html',

@@ -109,7 +109,7 @@ export class CreateEventComponent implements OnInit {
      this.filterEvents();
    }
 
-    viewEvent(id: String) {
+    viewEvent(id: string) {
        Swal.fire({
          title: 'Do you want to view details?',
          text: "This will fetch the details for this event.",
@@ -468,7 +468,7 @@ private escapeHtml(unsafe: string): string {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         const newStatus = result.value;
-        
+
        /*  this.eventService.updateStatus(event.id + '', newStatus).subscribe({
           next: () => {
             Swal.fire('Succès!', `Statut changé vers ${newStatus}`, 'success');
