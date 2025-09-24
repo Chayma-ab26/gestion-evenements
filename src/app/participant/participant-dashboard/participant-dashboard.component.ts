@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { EventService } from '../../services/event.service';
 import { UserService } from '../../services/user.service';
 import { HeaderOrgComponent } from '../../organisateur/header-org/header-org.component';
+import { NgZone } from '@angular/core';
 
 // Directive for fallback image
 @Directive({
@@ -80,7 +81,8 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private eventService: EventService,
-    private userService: UserService
+    private userService: UserService,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit() {
@@ -188,8 +190,10 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
   }
 
   // Méthodes de navigation
-  goToEvents() {
-    this.router.navigate(['/event-list']);
+   goToEvents() {
+    this.ngZone.run(() => {
+      this.router.navigate(['/event-list']);
+    });
   }
 
   goToFavorites() {

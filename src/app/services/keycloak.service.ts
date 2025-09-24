@@ -1,55 +1,4 @@
-/* /* import { Injectable } from '@angular/core';
-import Keycloak from 'keycloak-js';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class KeycloakService {
-  private keycloak: Keycloak;
-
-  constructor() {
-    this.keycloak = new Keycloak({
-      url: 'http://localhost:8080/',
-      realm: 'EventProject',
-      clientId: 'event-app'
-    });
-  }
-
-
-  init(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this.keycloak.init({
-        onLoad: 'login-required',
-        checkLoginIframe: false
-      }).then((authenticated:any) => {
-        resolve(authenticated);
-      }).catch((err:any) => {
-        reject(err);
-      });
-    });
-  }
-
-  login() {
-    this.keycloak?.login();
-  }
-
-  logout() {
-    this.keycloak.logout({ redirectUri: window.location.origin });
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.keycloak.token;
-  }
-
-  getToken(): string | undefined {
-    return this.keycloak.token;
-  }
-
-  // getUsername(): string | undefined {
-  //   return this.keycloak.tokenParsed?.preferred_username;
-  // }
-}
- */
 // keycloak.service.ts
 /* import { Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
@@ -142,70 +91,7 @@ export class KeycloakService {
   });
 }
  */
-/* import { Injectable } from '@angular/core';
-import Keycloak from 'keycloak-js';
-import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class KeycloakService {
-  private keycloak = new Keycloak({
-    url: 'http://localhost:8080/',
-    realm: 'EventProject',
-    clientId: 'event-front',
-  });
-
-  constructor(private http: HttpClient) {}
-
-  async init(): Promise<void> {
-    await this.keycloak.init({ onLoad: 'check-sso', checkLoginIframe: false });
-
-    if (!this.keycloak.authenticated) {
-      this.login();
-    }
-  }
-
-  login() {
-    console.log('[KeycloakService] login() called');
-    this.keycloak.login({ redirectUri: window.location.origin });
-  }
-
-  logout() {
-    this.keycloak.logout({ redirectUri: window.location.origin });
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.keycloak.token;
-  }
-
-  getToken(): string | undefined {
-    return this.keycloak.token;
-  }
-
-  private redirectByRole(): void {
-    if (!this.keycloak.token) return;
-
-    this.http.get<any>('api/users/me', {
-      headers: { Authorization: `Bearer ${this.keycloak.token}` }
-    }).subscribe({
-      next: user => {
-        const role = user.role;
-       switch (role) {
-  case 'admin': window.location.href = '/dashboard-admin'; break;
-  case 'organisateur': window.location.href = '/dashboard-org'; break;
-  case 'participant': window.location.href = '/participant-dashboard'; break;
-  default: window.location.href = '/not-authorized';
-}
-
-      },
-      error: err => {
-        console.error('Erreur récupération rôle:', err);
-        window.location.href = '/not-authorized';
-      }
-    });
-  }
-} */
  import { Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
@@ -246,37 +132,7 @@ export class KeycloakService {
     return this.keycloak.token;
   }
 
-  /* private redirectByRole(): void {
-    if (!this.keycloak.token) return;
-
-    this.http.get<any>('api/users/me', {
-      headers: { Authorization: `Bearer ${this.keycloak.token}` }
-    }).subscribe({
-      next: user => {
-        const role = user.role;
-
-        switch (role) {
-          case 'admin':
-            this.router.navigate(['/dashboard-admin']);
-            break;
-          case 'organisateur':
-            this.router.navigate(['/dashboard-org']);
-            break;
-          case 'participant':
-            this.router.navigate(['/participant-dashboard']);
-            break;
-          default:
-            this.router.navigate(['/not-authorized']);
-            break;
-        }
-      },
-      error: err => {
-        console.error('Erreur récupération rôle:', err);
-        this.router.navigate(['/not-authorized']);
-      }
-    });
-  } */
- // keycloak.service.ts
+ 
 private redirectByRole(): void {
   if (!this.keycloak.token) return;
 
