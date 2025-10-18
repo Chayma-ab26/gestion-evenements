@@ -14,16 +14,17 @@ public class AvisEntity {
     private String commentaire;
     private Long userId;
     private Long eventId;
-
+    private String userKeycloakId;
     public AvisEntity() {
     }
 
-    public AvisEntity(Long id, int note, String commentaire, Long userId, Long eventId) {
+    public AvisEntity(Long id, int note, String commentaire, Long userId, Long eventId,String userKeycloakId) {
         this.id = id;
         this.note = note;
         this.commentaire = commentaire;
         this.userId = userId;
         this.eventId = eventId;
+        this.userKeycloakId = userKeycloakId;
     }
 
     public Long getId() {
@@ -50,7 +51,13 @@ public class AvisEntity {
         this.commentaire = commentaire;
     }
 
+    public String getUserKeycloakId() {
+        return userKeycloakId;
+    }
 
+    public void setUserKeycloakId(String userKeycloakId) {
+        this.userKeycloakId = userKeycloakId;
+    }
 
     public Long getUserId() {
         return userId;

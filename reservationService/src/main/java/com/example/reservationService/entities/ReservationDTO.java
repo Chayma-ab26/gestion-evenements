@@ -6,6 +6,7 @@ public class ReservationDTO {
     private Long id;
     private LocalDateTime reservationDate;
     private String status;
+    private int nbParticipants;
 
     private Long userId;   // userservice
     private Long eventId;  // eventservice
@@ -48,5 +49,13 @@ public class ReservationDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getNbParticipants() {
+        return nbParticipants;
+    }
+
+    public void setNbParticipants(int nbParticipants) {
+        this.nbParticipants = nbParticipants;
     }
 }

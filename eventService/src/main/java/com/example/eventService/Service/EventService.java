@@ -29,34 +29,30 @@ public class EventService {
         return eventRepository.findAll();
     }
 /////////
-public EventDTO getEventWithCategoryAndLocal(Long id) {
-    EventEntity event = eventRepository.findById(id).orElse(null);
-    if (event == null) return null;
+// Dans EventService
+public List<EventDTO> getAllEventsWithLocal() {
+    List<EventEntity> events = eventRepository.findAll();
 
-    EventDTO dto = new EventDTO();
-    dto.setId(event.getId());
-    dto.setTitle(event.getTitle());
-    dto.setDescription(event.getDescription());
-    dto.setDatedebut(event.getDatedebut());
-    dto.setDatefin(event.getDatefin());
-    dto.setStatus(event.getStatus());
-    dto.setCategoryId(event.getCategoryId());
-    dto.setLocalId(event.getLocalId());
+    return events.stream().map(event -> {
+        EventDTO dto = new EventDTO();
+        dto.setId(event.getId());
+        dto.setTitle(event.getTitle());
+        dto.setDescription(event.getDescription());
+        dto.setDatedebut(event.getDatedebut());
+        dto.setDatefin(event.getDatefin());
+        dto.setStatus(event.getStatus());
+        dto.setCategoryId(event.getCategoryId());
+        dto.setLocalId(event.getLocalId());
 
-    // Récupération de la catégorie
-    if (event.getCategoryId() != null) {
-        CategoryDTO categoryDTO = categoryClient.getCategoryById(event.getCategoryId());
-        dto.setCategory(categoryDTO);
-    }
+        // Ajouter le local complet
+        if (event.getLocalId() != null) {
+            dto.setLocal(localClient.getLocalById(event.getLocalId()));
+        }
 
-    // Récupération du local
-    if (event.getLocalId() != null) {
-        LocalDTO localDTO = localClient.getLocalById(event.getLocalId());
-        dto.setLocal(localDTO);
-    }
-
-    return dto;
+        return dto;
+    }).toList();
 }
+
 
 public EventDTO createEventWithCategory(EventDTO dto) {
     // Vérifie la catégorie

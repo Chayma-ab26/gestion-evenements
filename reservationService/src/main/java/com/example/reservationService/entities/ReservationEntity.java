@@ -1,9 +1,6 @@
 package com.example.reservationService.entities;
 
-import com.example.eventService.entities.EventEntity;
-import com.example.userService.entities.UserEntity;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 
@@ -18,22 +15,34 @@ public class ReservationEntity {
 
     private Long userId;   // userservice
     private Long eventId;  // eventservice
-
+    private String userKeycloakId;
+    private int nbParticipants;
 
 
     public ReservationEntity() {
     }
 
-    public ReservationEntity(Long id, LocalDateTime reservationDate, String status, Long userId, Long eventId) {
+
+    public ReservationEntity(Long id, LocalDateTime reservationDate, String status, Long userId, Long eventId, String userKeycloakId, int nbParticipants) {
         this.id = id;
         this.reservationDate = reservationDate;
         this.status = status;
         this.userId = userId;
         this.eventId = eventId;
+        this.userKeycloakId = userKeycloakId;
+        this.nbParticipants = nbParticipants;
     }
 
     public Long getUserId() {
         return userId;
+    }
+
+    public int getNbParticipants() {
+        return nbParticipants;
+    }
+
+    public void setNbParticipants(int nbParticipants) {
+        this.nbParticipants = nbParticipants;
     }
 
     public void setUserId(Long userId) {
@@ -69,5 +78,13 @@ public class ReservationEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUserKeycloakId() {
+        return userKeycloakId;
+    }
+
+    public void setUserKeycloakId(String userKeycloakId) {
+        this.userKeycloakId = userKeycloakId;
     }
 }

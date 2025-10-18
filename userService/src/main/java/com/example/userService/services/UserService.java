@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 
@@ -52,6 +53,10 @@ public class UserService {
         // 2. Enregistrer dans la base de données locale
         userRepository.save(user);
     }
+    public Optional<UserEntity> findByKeycloakid(String keycloakid) {
+        return userRepository.findByKeycloakid(keycloakid);
+    }
+
 
 }
 

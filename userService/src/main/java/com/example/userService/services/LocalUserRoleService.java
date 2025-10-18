@@ -47,4 +47,10 @@ public class LocalUserRoleService {
 
         return userOpt;
     }
+    public String getRoleByKeycloakId(String keycloakId) {
+        return userRepository.findByKeycloakid(keycloakId)
+                .map(UserEntity::getRole)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé pour Keycloak ID : " + keycloakId));
+    }
+
 }

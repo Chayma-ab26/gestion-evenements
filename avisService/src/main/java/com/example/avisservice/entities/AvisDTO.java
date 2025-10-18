@@ -10,6 +10,7 @@ public class AvisDTO {
 
     private Long userId;
     private Long eventId;
+    private String userKeycloakId;
 
     public Long getId() {
         return id;
@@ -35,7 +36,13 @@ public class AvisDTO {
         this.commentaire = commentaire;
     }
 
+    public String getUserKeycloakId() {
+        return userKeycloakId;
+    }
 
+    public void setUserKeycloakId(String userKeycloakId) {
+        this.userKeycloakId = userKeycloakId;
+    }
 
     public Long getUserId() {
         return userId;

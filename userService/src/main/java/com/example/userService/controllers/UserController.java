@@ -9,21 +9,18 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
@@ -136,22 +133,70 @@ public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("fil
 //
 //
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+//    @GetMapping("/me")
+//    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+//        return localUserRoleService.findUserByToken(jwt)
+//                .map(user -> ResponseEntity.ok().body(Map.of(
+//                        "id", user.getId(),
+//                        "firstname", user.getFirstname(),
+//                        "lastname", user.getLastname(),
+//                        "username", user.getUsername(),
+//                        "role", user.getRole(),
+//                        "keycloakid", user.getKeycloakid()
+//                )))
+//                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                        .body(Map.of("error", "Utilisateur introuvable dans la base locale")));
+//    }
+//
+@GetMapping("/me")
+public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+    try {
         return localUserRoleService.findUserByToken(jwt)
-                .map(user -> ResponseEntity.ok().body(Map.of(
+                .map(user -> ResponseEntity.ok(Map.of(
                         "id", user.getId(),
+                        "keycloakid", user.getKeycloakid(),
+                        "username", user.getUsername(),
                         "firstname", user.getFirstname(),
                         "lastname", user.getLastname(),
-                        "username", user.getUsername(),
-                        "role", user.getRole(),
-                        "keycloakid", user.getKeycloakid()
+                        "role", user.getRole()
                 )))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("error", "Utilisateur introuvable dans la base locale")));
+                .orElseGet(() -> {
+                    // Si non trouvé → considéré admin
+                    String username = jwt.getClaimAsString("preferred_username");
+                    String firstname = jwt.getClaimAsString("given_name");
+                    String lastname = jwt.getClaimAsString("family_name");
+                    String email = jwt.getClaimAsString("email");
+                    String keycloakId = jwt.getSubject();
+
+                    // Défaut si claim absent
+                    if (username == null) username = "admin";
+                    if (firstname == null) firstname = "Admin";
+                    if (lastname == null) lastname = "";
+                    if (email == null) email = "admin@keycloak.local";
+
+                    return ResponseEntity.ok(Map.of(
+                            "keycloakid", keycloakId,
+                            "username", username,
+                            "firstname", firstname,
+                            "lastname", lastname,
+                            "email", email,
+                            "role", "admin"
+                    ));
+                });
+    } catch (Exception e) {
+        e.printStackTrace(); // pour debug
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Impossible de récupérer l'utilisateur"));
     }
+}
 
 
+    @GetMapping("/by-keycloak/{keycloakId}")
+    public Long getUserIdByKeycloakId(@PathVariable String keycloakId) {
+        return userRepository.findByKeycloakid(keycloakId)
+                .map(UserEntity::getId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    }
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
@@ -161,6 +206,7 @@ public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("fil
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
+
 
 }
 

@@ -15,15 +15,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/events")
-@CrossOrigin(origins = "*")
 public class EventController {
 @Autowired
     private EventService eventService;
-    @PreAuthorize("hasRole('organisateur')")
-    @GetMapping("/getEventWithCategoryAndLocal/{id}")
-    public EventDTO getEventWithCategoryAndLocal(@PathVariable Long id) {
-        return eventService.getEventWithCategoryAndLocal(id);
+    @GetMapping("/getAllWithLocal")
+    public List<EventDTO> getAllEventsWithLocal() {
+        return eventService.getAllEventsWithLocal();
     }
+
+
     @PreAuthorize("hasRole('organisateur')")
 
    @PostMapping("/createWithCategoryAndLocal")
