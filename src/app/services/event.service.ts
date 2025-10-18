@@ -12,8 +12,9 @@ export class EventService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.apiUrl}/getall`);
-  }
+  return this.http.get<Event[]>(`${this.apiUrl}/getAllWithLocal`);
+}
+
 
   getById(id: string): Observable<Event> {
     return this.http.get<Event>(`${this.apiUrl}/getbyid/${id}`);

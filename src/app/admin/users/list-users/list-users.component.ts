@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { AdminHeaderComponent } from '../../admin-header/admin-header.component';
 
 @Component({
   selector: 'app-list-users',
   standalone: true,
-  imports: [FooterComponent, HeaderComponent, CommonModule, HttpClientModule, FormsModule],
+  imports: [FooterComponent, AdminHeaderComponent, CommonModule, HttpClientModule, FormsModule],
   templateUrl: './list-users.component.html',
   styleUrl: './list-users.component.css'
 })

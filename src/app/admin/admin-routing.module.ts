@@ -9,12 +9,12 @@ import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.compo
 
 import { RoleGuard } from '../guard/role.guard';
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardAdminComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
+  /* { path: 'dashboard', component: DashboardAdminComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
   { path: 'category', component: ListCategoryComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
   { path: 'local', component: ListLocalComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
   { path: 'users', component: ListUsersComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
   { path: 'events', component: ListEventsComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' } */
 ];
 
 @NgModule({

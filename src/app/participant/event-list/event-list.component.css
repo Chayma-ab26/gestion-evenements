@@ -571,4 +571,42 @@ h1 {
   .event-image-container {
     height: 150px;
   }
+
+
+
+  .local-gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.thumbnails {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.2s;
+}
+
+.thumbnail.active {
+  border: 2px solid #007bff;
+}
+
 }

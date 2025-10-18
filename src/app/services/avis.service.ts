@@ -19,30 +19,19 @@ export class AvisService {
 
   constructor(private http: HttpClient) {}
 
-  // Créer un nouvel avis
-  createAvis(userId: number, eventId: number, note: number, commentaire?: string): Observable<Avis> {
-    const formData = new FormData();
-    formData.append('userId', userId.toString());
-    formData.append('eventId', eventId.toString());
-    formData.append('note', note.toString());
-    if (commentaire) {
-      formData.append('commentaire', commentaire);
-    }
-    return this.http.post<Avis>(`${this.apiUrl}/create`, formData);
+  // Créer un avis (plus besoin de passer userId)
+  createAvis(eventId: number, note: number, commentaire?: string): Observable<Avis> {
+    const payload = { eventId, note, commentaire };
+    return this.http.post<Avis>(`${this.apiUrl}/create`, payload);
   }
 
-  // Récupérer tous les avis
   getAllAvis(): Observable<Avis[]> {
     return this.http.get<Avis[]>(`${this.apiUrl}/getall`);
   }
 
-  // Récupérer les avis pour un événement spécifique
   getAvisByEvent(eventId: number): Observable<Avis[]> {
     return this.http.get<Avis[]>(`${this.apiUrl}/event/${eventId}`);
   }
-
-  // Récupérer les avis d'un utilisateur
-  getAvisByUser(userId: number): Observable<Avis[]> {
-    return this.http.get<Avis[]>(`${this.apiUrl}/user/${userId}`);
-  }
 }
+
+

@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { AdminHeaderComponent } from '../../admin-header/admin-header.component';
 
 @Component({
   selector: 'app-list-local',
   standalone: true,
-  imports: [FooterComponent, HeaderComponent, CommonModule, HttpClientModule],
+  imports: [FooterComponent, AdminHeaderComponent, CommonModule, HttpClientModule],
   templateUrl: './list-local.component.html',
   styleUrl: './list-local.component.css'
 })

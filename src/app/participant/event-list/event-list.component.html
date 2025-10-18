@@ -1,5 +1,4 @@
-<!-- event-list.component.html -->
-<app-header-org></app-header-org>
+<app-header-part></app-header-part>
 <h1>Événements disponibles</h1>
 
 <!-- Indicateur de chargement -->
@@ -8,191 +7,75 @@
   <p>Chargement des événements...</p>
 </div>
 
-<!-- Filtres et recherche -->
+<!-- Filtres -->
 <div *ngIf="!isLoading" class="filters-container">
   <div class="search-box">
     <input type="text" placeholder="Rechercher un événement..." class="search-input">
   </div>
-  <div class="status-filter">
-    <select class="status-select">
-      <option value="">Tous les statuts</option>
-      <option value="ACTIVE">Actif</option>
-      <option value="PENDING">En attente</option>
-      <option value="COMPLETED">Terminé</option>
-    </select>
-  </div>
 </div>
 
-<!-- Debug info (à retirer en production) -->
-<div *ngIf="!isLoading && filteredEvents.length > 0" class="debug-info">
-  <details>
-    <summary>🔍 Informations de débogage ({{ filteredEvents.length }} événements)</summary>
-    <div class="debug-content">
-      <p><strong>Catégories chargées:</strong> {{ categories.length }}</p>
-      <p><strong>Locaux chargés:</strong> {{ locals.length }}</p>
-      <p><strong>Événements chargés:</strong> {{ listevents.length }}</p>
-      <button (click)="debugEventData(filteredEvents[0])" class="debug-btn">
-        Déboguer le premier événement
-      </button>
-    </div>
-  </details>
-</div>
-
-
-
-<div *ngIf="!isLoading" class="events-container">
+<!-- Liste des événements -->
+<div *ngIf="!isLoading && filteredEvents.length > 0" class="events-container">
   <div *ngFor="let event of filteredEvents; trackBy: trackByEventId" class="event-card">
-    <!-- Debug de l'événement (à retirer en production) -->
-    <div class="event-debug" *ngIf="false">
-      <small>
-        ID: {{ event.id }} |
-        LocalID: {{ event.localId }} |
-        CategoryID: {{ event.categoryId }} |
-        HasLocal: {{ !!event.local }} |
-        HasCategory: {{ !!event.category }}
-      </small>
-    </div>
-
-    <!-- Image du local avec gestion des cas manquants -->
     <div class="event-image-container">
       <ng-container *ngIf="getLocalImages(event).length > 0; else noLocalBlock">
-        <div class="local-images-gallery">
-          <img *ngFor="let img of getLocalImages(event)"
-               [src]="'api/locals/files/' + img"
-               [alt]="getLocalName(event)"
-               class="event-image"
-               (error)="onImageError($event)"
-               (load)="onImageLoad(event)" />
+        <div class="local-gallery">
+          <div class="main-image">
+            <img [src]="getMainImage(event)" [alt]="getLocalName(event)" class="event-image" />
+          </div>
+          <div class="thumbnails">
+            <img *ngFor="let img of getLocalImages(event); let i = index"
+                 [src]="'api/locals/files/' + img"
+                 [class.active]="i === (selectedImageIndex[event.id] || 0)"
+                 (click)="selectImage(event.id, i)" />
+          </div>
         </div>
       </ng-container>
       <ng-template #noLocalBlock>
         <div class="no-image-placeholder">
           <i class="fas fa-map-marker-alt"></i>
           <p>Aucun local associé à cet événement</p>
-          <small *ngIf="event.localId">Local ID: {{ event.localId }}</small>
         </div>
       </ng-template>
     </div>
 
     <div class="event-content">
-      <div class="event-header">
-        <h3 class="event-title">{{ event.title }}</h3>
-        <span class="event-status status-{{ event.status?.toLowerCase() || 'default' }}">
-          {{ event.status || 'Non défini' }}
-        </span>
-      </div>
+      <h3>{{ event.title }}</h3>
+      <p>{{ event.description }}</p>
 
-      <p class="event-description">{{ event.description }}</p>
-
-      <div class="event-details">
-        <div class="detail-item">
-          <i class="fas fa-map-marker-alt"></i>
-          <span class="detail-label">Lieu:</span>
-          <span class="detail-value">
-            <ng-container *ngIf="event.local; else noLocalName">{{ getLocalName(event) }}</ng-container>
-            <ng-template #noLocalName>Non défini</ng-template>
-          </span>
-          <small *ngIf="event.localId && !event.local" class="error-info">
-            (ID: {{ event.localId }} - Local non trouvé)
-          </small>
-        </div>
-
-        <div class="detail-item">
-          <i class="fas fa-calendar"></i>
-          <span class="detail-label">Date début:</span>
-          <span class="detail-value">{{ event.datedebut | date:'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-
-        <div class="detail-item">
-          <i class="fas fa-calendar-check"></i>
-          <span class="detail-label">Date fin:</span>
-          <span class="detail-value">{{ event.datefin | date:'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-
-        <div class="detail-item">
-          <i class="fas fa-tag"></i>
-          <span class="detail-label">Catégorie:</span>
-          <span class="detail-value">{{ getCategoryName(event) }}</span>
-          <small *ngIf="event.categoryId && !event.category" class="error-info">
-            (ID: {{ event.categoryId }} - Catégorie non trouvée)
-          </small>
-        </div>
-
-        <div class="detail-item">
-          <i class="fas fa-euro-sign"></i>
-          <span class="detail-label">Prix:</span>
-          <span class="detail-value">25.00 €</span>
-        </div>
-      </div>
-
+      <!-- Actions -->
       <div class="event-actions">
-       <button class="btn btn-primary participate-btn" (click)="participateEvent(event.id + '')">
-          <i class="fas fa-user-plus"></i>
-          Participer
+        
+        <button class="btn btn-primary" (click)="participateEvent(event.id)">
+          <i class="fas fa-user-plus"></i> Participer
         </button>
-        <button class="btn btn-secondary payment-btn" (click)="payOnline(event)">
-          <i class="fas fa-credit-card"></i>
-          Payer en ligne
+        <button class="btn btn-secondary" (click)="payOnline(event)">
+          <i class="fas fa-credit-card"></i> Payer en ligne
         </button>
       </div>
 
-      <!-- Section avis et notation -->
+      <!-- Avis -->
       <div class="rating-section">
-        <!-- Affichage de la note moyenne -->
-        <div class="average-rating" *ngIf="event.averageRating > 0">
-          <div class="rating-display">
-            <div class="stars">
-              <i class="fas fa-star"
-                 *ngFor="let star of [1,2,3,4,5]; let i = index"
-                 [class.active]="i < event.averageRating"></i>
-            </div>
-            <span class="rating-value">{{ event.averageRating.toFixed(1) }}</span>
-<!--             <span class="rating-count">({{ event.totalReviews }} avis)</span>
- -->          </div>
+        <input [(ngModel)]="newCommentaire[event.id]" placeholder="Laissez un avis..." class="review-input" />
+        <div class="star-rating">
+          <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]; let i = index"
+             [class.active]="i < (newRating[event.id] || 0)"
+             (click)="newRating[event.id] = i + 1"
+             (mouseenter)="hoverRating[event.id] = i + 1"
+             (mouseleave)="hoverRating[event.id] = 0"></i>
         </div>
-
-        <!-- Liste des avis existants -->
-        <!-- div class="reviews-list" *ngIf="event.avis && event.avis.length > 0">
-          <div class="review-item" *ngFor="let avis of event.avis.slice(0, 3)">
-            <div class="review-header">
-              <div class="review-stars">
-                <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]; let i = index" [class.active]="i < avis.note"></i>
-              </div>
-              <span class="review-date">{{ avis.createdAt | date:'dd/MM/yyyy' }}</span>
-            </div>
-            <p class="review-text">{{ avis.commentaire }}</p>
-          </div>
-          <div *ngIf="event.avis.length > 3" class="more-reviews">
-            <span>Et {{ event.avis.length - 3 }} avis supplémentaires...</span>
-          </div>
-        </div>
- -->
-        <!-- Formulaire pour ajouter un avis -->
-        <div class="rating-input">
-          <input #reviewInput type="text" placeholder="Laissez un avis..." class="review-input">
-        </div>
-        <div class="rating-controls">
-          <div class="star-rating">
-            <i class="fas fa-star star-item"
-               *ngFor="let star of [1,2,3,4,5]; let i = index"
-               [class.active]="i < selectedRating"
-               (click)="selectedRating = i + 1"
-               (mouseenter)="hoverRating = i + 1"
-               (mouseleave)="hoverRating = 0"></i>
-          </div>
-          <button class="btn btn-outline send-review-btn"
->           <i class="fas fa-paper-plane"></i>
-            Envoyer
-          </button>
-        </div>
+        <button class="btn btn-outline" (click)="submitAvis(event.id, newRating[event.id], newCommentaire[event.id])">
+          Envoyer
+        </button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- État vide -->
-<div *ngIf="!isLoading && (!filteredEvents || filteredEvents.length === 0)" class="empty-state">
+<div *ngIf="!isLoading && filteredEvents.length === 0" class="empty-state">
   <i class="fas fa-calendar-times"></i>
   <h3>Aucun événement trouvé</h3>
-  <p>Il n'y a actuellement aucun événement disponible.</p>
 </div>
+
+<app-footer></app-footer>

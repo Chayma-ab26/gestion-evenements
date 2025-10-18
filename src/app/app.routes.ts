@@ -114,6 +114,8 @@ import { ListLocalComponent } from './admin/local/list-local/list-local.componen
 import { ReservationLocalComponent } from './organisateur/reservation-local/reservation-local.component';
 import { ListParticipantComponent } from './organisateur/list-participant/list-participant.component';
 import { CreateEventComponent } from './organisateur/create-event/create-event.component';
+import { ListUsersComponent } from './admin/users/list-users/list-users.component';
+import { ListCategoryComponent } from './admin/category/list-category/list-category.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -127,7 +129,15 @@ export const routes: Routes = [
     {path:'reservationlocal',component:ReservationLocalComponent},
     {path:'participant',component :ListParticipantComponent},
     {path:'createevent',component :CreateEventComponent},
+    {path: 'users', component: ListUsersComponent},
+    { path: 'category', component: ListCategoryComponent},
+    
   /*   {
+
+
+
+
+
   // Lazy-loaded modules
  /*  {
     path: 'admin',

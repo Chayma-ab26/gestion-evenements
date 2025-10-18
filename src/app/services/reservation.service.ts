@@ -1,58 +1,54 @@
-// src/app/services/reservation.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Reservation } from '../models/reservation.model';
+import { KeycloakService } from './keycloak.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationService {
-  private apiUrl = 'http://localhost:8070/reservations'; // Update if needed
+  private apiUrl = 'http://localhost:8070/reservations'; // Port backend
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private keycloakService: KeycloakService
+  ) {}
 
-  // Create reservation
-  createReservation(reservation: Reservation): Observable<Reservation> {
-    const formData = new FormData();
-    formData.append('reservationDate', reservation.reservationDate);
-    formData.append('userId', reservation.userId.toString());
-    formData.append('eventId', reservation.eventId.toString());
+  // Créer une réservation d'événement
+  createEventReservation(eventId: number, nbParticipants: number = 1): Observable<any> {
+    const token = this.keycloakService.getToken(); // Récupère le token JWT
 
-    return this.http.post<Reservation>(`${this.apiUrl}/createWithEventAndUser`, formData);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    const reservation = {
+      eventId: eventId,
+      nbParticipants: nbParticipants,
+      // userId sera rempli côté backend via le token
+    };
+
+    return this.http.post<any>(`${this.apiUrl}/create`, reservation, { headers });
   }
 
-  // Update reservation
-  updateReservation(id: number, reservation: Reservation): Observable<Reservation> {
-    const formData = new FormData();
-    formData.append('reservationDate', reservation.reservationDate);
-    formData.append('userId', reservation.userId.toString());
-    formData.append('eventId', reservation.eventId.toString());
-
-    if (reservation.status) {
-      formData.append('status', reservation.status);
-    }
-
-    return this.http.put<Reservation>(`${this.apiUrl}/update/${id}`, formData);
-  }
-
-  // Get one reservation by ID
-  getReservationById(id: number): Observable<Reservation> {
-    return this.http.get<Reservation>(`${this.apiUrl}/getbyid/${id}`);
-  }
-
-  // Get all reservations
+  // Obtenir toutes les réservations
   getAllReservations(): Observable<Reservation[]> {
     return this.http.get<Reservation[]>(`${this.apiUrl}/getall`);
   }
 
-  // Update only status
-  updateStatus(id: number, status: string): Observable<Reservation> {
-    const params = new HttpParams().set('status', status);
-    return this.http.put<Reservation>(`${this.apiUrl}/updatestatus/${id}`, null, { params });
+  // Obtenir une réservation par ID
+  getReservationById(id: number): Observable<Reservation> {
+    return this.http.get<Reservation>(`${this.apiUrl}/getbyid/${id}`);
   }
 
-  // Delete reservation
+  // Mettre à jour le statut d'une réservation
+  updateStatus(id: number, status: string): Observable<Reservation> {
+    return this.http.put<Reservation>(`${this.apiUrl}/updatestatus/${id}?status=${status}`, null);
+  }
+
+  // Supprimer une réservation
   deleteReservation(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }

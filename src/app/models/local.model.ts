@@ -7,7 +7,7 @@ export interface Local {
     adress: string;
      type: string;
   capacite: number;
-  images?: string;
+  images?: string[];
    dateReservation:Date;
   statut: string;
   }

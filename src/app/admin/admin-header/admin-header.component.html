@@ -1,0 +1,87 @@
+<header class="admin-header">
+  <div class="header-container">
+    <!-- Logo et titre -->
+    <div class="header-brand">
+      <a routerLink="/" class="logo">
+        <img src="../../assets/images/images.jpg" alt="Logo" class="logo-img">
+        <span class="brand-text">Admin Portal</span>
+      </a>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="header-nav" [class.active]="isMenuOpen">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a routerLink="/" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-text">Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/category" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-tags nav-icon"></i>
+            <span class="nav-text">Category</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/local" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-map-marker-alt nav-icon"></i>
+            <span class="nav-text">Local</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/events" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-calendar-alt nav-icon"></i>
+            <span class="nav-text">Events</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/users" routerLinkActive="active" class="nav-link">
+            <i class="fas fa-users nav-icon"></i>
+            <span class="nav-text">Users</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Section utilisateur et actions -->
+    <div class="header-actions">
+      <!-- Bouton site principal -->
+      <button class="action-btn site-btn" (click)="goToMainSite()">
+        <i class="fas fa-external-link-alt"></i>
+        <span class="btn-text">Site Principal</span>
+      </button>
+
+      <!-- Menu utilisateur -->
+      <div class="user-menu">
+        <button class="user-toggle" (click)="toggleDropdown($event)">
+          <i class="fas fa-user-circle user-icon"></i>
+          <i class="fas fa-chevron-down dropdown-arrow" [class.rotated]="isDropdownOpen"></i>
+        </button>
+        
+        <ul class="dropdown-menu" [class.show]="isDropdownOpen">
+          <li>
+            <a routerLink="/signup" class="dropdown-item" (click)="navigateToSignup()">
+              <i class="fas fa-user-plus"></i> SignUp
+            </a>
+          </li>
+          <li>
+            <button class="dropdown-item" (click)="navigateToLogin()" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+          </li>
+          <li>
+            <a class="dropdown-item" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Bouton menu mobile -->
+      <button class="mobile-menu-btn" (click)="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </div>
+</header>

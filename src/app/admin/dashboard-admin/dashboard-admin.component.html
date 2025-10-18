@@ -1,184 +1,180 @@
-<!-- <!-- Header simple pour le dashboard admin -->
-<div class="simple-header">
-  <h2>🏛️ Administration</h2>
-</div>
 
-<div class="admin-dashboard">
-  <!-- Header du dashboard admin -->
+<app-admin-header></app-admin-header>
+
+<div class="modern-dashboard">
+  <!-- Header du dashboard -->
   <div class="dashboard-header">
     <div class="header-content">
-      <h1>👑 Dashboard Administrateur</h1>
+      <h1>Tableau de bord administrateur</h1>
       <p class="welcome-text">Gestion complète de la plateforme d'événements</p>
     </div>
     <div class="header-actions">
-      <button  class="action-btn users-btn">
+      <button class="action-btn users-btn" (click)="navigateToUsers()">
         <i class="fas fa-users-cog"></i>
         Gérer Utilisateurs
       </button>
-      <button class="action-btn events-btn">
+      <button class="action-btn events-btn" (click)="navigateToEvents()">
         <i class="fas fa-calendar-check"></i>
         Gérer Événements
       </button>
     </div>
   </div>
 
+  <!-- Chargement -->
+  <div *ngIf="isLoading" class="loading-section">
+    <div class="loading-spinner"></div>
+    <p>Chargement des données...</p>
+  </div>
+
   <!-- Statistiques principales -->
-  <div class="stats-grid">
-    <div class="stat-card primary">
+  <div *ngIf="!isLoading" class="stats-grid">
+    <div class="stat-card">
       <div class="stat-icon">
         <i class="fas fa-users"></i>
       </div>
       <div class="stat-content">
         <h3>Total Utilisateurs</h3>
-        <p class="stat-number"></p>
-        <span class="stat-change" >
-          <i class="fas fa-arrow-up"></i>
+        <p class="stat-number">{{ totalUsers }}</p>
+        <span class="stat-change positive">
+          <i class="fas fa-users"></i> Inscrits
         </span>
       </div>
     </div>
 
-    <div class="stat-card success">
+    <div class="stat-card">
       <div class="stat-icon">
         <i class="fas fa-calendar-alt"></i>
       </div>
       <div class="stat-content">
         <h3>Total Événements</h3>
         <p class="stat-number">{{ totalEvents }}</p>
-        <span class="stat-change" [class.positive]="totalEvents > 0">
-          <i class="fas fa-arrow-up"></i> {{ totalEvents > 0 ? 'Créés' : 'Aucun' }}
+        <span class="stat-change positive">
+          <i class="fas fa-calendar"></i> Créés
         </span>
       </div>
     </div>
 
-    <div class="stat-card warning">
+    <div class="stat-card">
       <div class="stat-icon">
         <i class="fas fa-building"></i>
       </div>
       <div class="stat-content">
         <h3>Total Locaux</h3>
-        <p class="stat-number"></p>
+        <p class="stat-number">{{ totalLocals }}</p>
         <span class="stat-change">
-          <i class="fas fa-arrow-up"></i>
+          <i class="fas fa-building"></i> Disponibles
         </span>
       </div>
     </div>
 
-    <div class="stat-card info">
+    <div class="stat-card">
       <div class="stat-icon">
         <i class="fas fa-tags"></i>
       </div>
       <div class="stat-content">
         <h3>Total Catégories</h3>
-        <p class="stat-number"></p>
-        <span class="stat-change">
-          <i class="fas fa-arrow-up"></i>
+        <p class="stat-number">{{ totalCategories }}</p>
+        <span class="stat-change positive">
+          <i class="fas fa-tag"></i> Configurées
         </span>
       </div>
     </div>
   </div>
 
   <!-- Menu de navigation rapide -->
-  <div class="quick-nav">
-    <div class="nav-item" >
-      <i class="fas fa-users-cog"></i>
-      <span>Utilisateurs</span>
+  <div *ngIf="!isLoading" class="quick-nav">
+    <div class="nav-item" (click)="navigateToUsers()">
+      <div class="nav-icon">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <span>Utilisateurs ({{totalUsers}})</span>
     </div>
-    <div class="nav-item" >
-      <i class="fas fa-calendar-check"></i>
-      <span>Événements</span>
+    <div class="nav-item" (click)="navigateToEvents()">
+      <div class="nav-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <span>Événements ({{totalEvents}})</span>
     </div>
-    <div class="nav-item" >
-      <i class="fas fa-tags"></i>
-      <span>Catégories</span>
+    <div class="nav-item" (click)="navigateToCategories()">
+      <div class="nav-icon">
+        <i class="fas fa-tags"></i>
+      </div>
+      <span>Catégories ({{totalCategories}})</span>
     </div>
-    <div class="nav-item">
-      <i class="fas fa-building"></i>
-      <span>Locaux</span>
+    <div class="nav-item" (click)="navigateToLocals()">
+      <div class="nav-icon">
+        <i class="fas fa-building"></i>
+      </div>
+      <span>Locaux ({{totalLocals}})</span>
     </div>
   </div>
 
-  <!-- Graphiques -->
-  <div class="charts-section">
-    <div class="chart-container">
-      <h3>📊 Utilisateurs par Rôle</h3>
-      <canvas #usersChart></canvas>
-    </div>
-    <div class="chart-container">
-      <h3>📈 Événements par Statut</h3>
-      <canvas #eventsChart></canvas>
-    </div>
-  </div>
-
-  <!-- Statistiques détaillées -->
-  <div class="detailed-stats">
-    <div class="stat-row">
-      <div class="stat-item">
-        <h4>Organisateurs</h4>
-        <p></p>
+  <!-- Graphiques et tableau récent -->
+  <div *ngIf="!isLoading" class="dashboard-content">
+    <!-- Graphiques -->
+    <div class="charts-section">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Utilisateurs par Rôle</h3>
+        </div>
+        <canvas #eventChart></canvas>
       </div>
-      <div class="stat-item">
-        <h4>Participants</h4>
-        <p></p>
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Événements par Statut</h3>
+        </div>
+        <canvas #statusChart></canvas>
       </div>
-      <div class="stat-item">
-        <h4>Événements Actifs</h4>
-        <p></p>
-      </div>
-      <div class="stat-item">
-        <h4>Événements en Attente</h4>
-        <p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Derniers utilisateurs -->
-  <div class="recent-section">
-    <div class="section-header">
-      <h3>👥 Derniers Utilisateurs Inscrits</h3>
-      <button  class="view-all-btn">
-        Voir tout <i class="fas fa-arrow-right"></i>
-      </button>
     </div>
 
-    <div class="users-list">
-      <div class="user-item">
-        <div class="user-info">
-          <div class="user-avatar">
-            <i class="fas fa-user"></i>
+    <!-- Derniers utilisateurs -->
+    <div class="recent-section">
+      <div class="section-header">
+        <h3>Derniers utilisateurs inscrits</h3>
+        <button class="view-all-btn" (click)="navigateToUsers()">
+          Voir tout <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      <div class="users-list">
+        <div *ngFor="let user of recentUsers" class="user-item">
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+              <h4>{{ user.firstName }} {{ user.lastName }}</h4>
+              <p class="user-email">{{ user.email }}</p>
+              <span [class]="getRoleBadgeClass(user.role)" class="role-badge">
+                {{ user.role || 'Non défini' }}
+              </span>
+            </div>
           </div>
-          <div class="user-details">
-            <h4></h4>
-            <p class="user-email"></p>
-            <span class="role-badge role- || 'default' ">
-
-            </span>
+          <div class="user-actions">
+            <button class="btn btn-sm btn-primary" (click)="viewUser(user)">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-secondary" (click)="editUser(user)">
+              <i class="fas fa-edit"></i>
+            </button>
           </div>
         </div>
-        <div class="user-actions">
-          <button class="btn btn-sm btn-primary" >
-            <i class="fas fa-eye"></i>
-          </button>
-          <button class="btn btn-sm btn-secondary" >
-            <i class="fas fa-edit"></i>
-          </button>
-        </div>
       </div>
-    </div>
 
-    <div >
-      <div class="empty-icon">
-        <i class="fas fa-users-slash"></i>
+      <div *ngIf="recentUsers.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-users-slash"></i>
+        </div>
+        <h3>Aucun utilisateur trouvé</h3>
+        <p>Les nouveaux utilisateurs apparaîtront ici.</p>
       </div>
-      <h3>Aucun utilisateur trouvé</h3>
-      <p>Les nouveaux utilisateurs apparaîtront ici.</p>
     </div>
   </div>
 
   <!-- Derniers événements -->
-  <div class="recent-section">
+  <div *ngIf="!isLoading" class="recent-section">
     <div class="section-header">
-      <h3>📅 Derniers Événements Créés</h3>
-      <button class="view-all-btn">
+      <h3>Derniers Événements Créés</h3>
+      <button class="view-all-btn" (click)="navigateToEvents()">
         Voir tout <i class="fas fa-arrow-right"></i>
       </button>
     </div>
@@ -186,16 +182,16 @@
     <div class="events-list">
       <div *ngFor="let event of recentEvents" class="event-item">
         <div class="event-info">
-          <h4></h4>
+          <h4>{{ getEventName(event) }}</h4>
           <p class="event-date">
             <i class="fas fa-calendar"></i>
-            {{ formatDate(event.datedebut) }}
+            {{ formatDate(getEventDate(event)) }}
           </p>
           <p class="event-organizer">
             <i class="fas fa-user-tie"></i>
-            {{  'Organisateur inconnu' }}
+            {{ getEventOrganizer(event) }}
           </p>
-          <span class="status-badge status-{{ event.status.toLowerCase() || 'default' }}">
+          <span [class]="getStatusBadgeClass(event.status)" class="status-badge">
             {{ event.status || 'Non défini' }}
           </span>
         </div>
@@ -210,7 +206,7 @@
       </div>
     </div>
 
-    <div *ngIf="!recentEvents || recentEvents.length === 0" class="empty-state">
+    <div *ngIf="recentEvents.length === 0" class="empty-state">
       <div class="empty-icon">
         <i class="fas fa-calendar-x"></i>
       </div>
@@ -220,18 +216,18 @@
   </div>
 
   <!-- Actions rapides -->
-  <div class="quick-actions">
-    <h3>⚡ Actions Rapides</h3>
+  <div *ngIf="!isLoading" class="quick-actions">
+    <h3>Actions rapides</h3>
     <div class="actions-grid">
-      <button class="quick-action-btn" >
+      <button class="quick-action-btn" (click)="addUser()">
         <i class="fas fa-user-plus"></i>
         <span>Ajouter Utilisateur</span>
       </button>
-      <button class="quick-action-btn">
+      <button class="quick-action-btn" (click)="manageCategories()">
         <i class="fas fa-tag"></i>
         <span>Gérer Catégories</span>
       </button>
-      <button class="quick-action-btn" >
+      <button class="quick-action-btn" (click)="manageLocals()">
         <i class="fas fa-building"></i>
         <span>Gérer Locaux</span>
       </button>
@@ -242,4 +238,3 @@
     </div>
   </div>
 </div>
-

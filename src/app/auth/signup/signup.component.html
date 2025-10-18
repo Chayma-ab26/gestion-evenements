@@ -42,7 +42,7 @@
 
       <div class="form-group">
         <label for="avatar">Photo de profil (optionnel)</label>
-        <input type="file" id="avatar" (change)="onFileSelected($event)" accept="image/*">
+        <input type="file" id="avatar" (change)="onFileSelected($event)" accept="image/*" class="file-input">
       </div>
 
       <div class="form-group">
@@ -52,11 +52,10 @@
         </select>
       </div>
 
-      <button type="submit" [disabled]="isLoading || signupForm.invalid">
+      <button type="submit" class="submit-btn" [disabled]="isLoading || signupForm.invalid">
         <span *ngIf="isLoading">⏳ Création en cours...</span>
         <span *ngIf="!isLoading">S'inscrire</span>
       </button>
-
     </form>
 
     <div class="login-link">

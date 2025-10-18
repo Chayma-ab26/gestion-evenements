@@ -45,7 +45,7 @@ export class ListParticipantComponent implements OnInit {
     }
   }
 
-  /* loadParticipants(eventId: string) {
+  /*loadParticipants(eventId: string) {
     this.isLoading = true;
     this.eventService.getParticipants(eventId).subscribe({
       next: (list: any[]) => {
