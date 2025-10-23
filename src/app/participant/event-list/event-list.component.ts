@@ -6,7 +6,6 @@ import { AvisService, Avis } from '../../services/avis.service';
 import { FooterComponent } from '../../footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { HeaderOrgComponent } from '../../organisateur/header-org/header-org.component';
 import { forkJoin, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ReservationService } from '../../services/reservation.service';
@@ -29,16 +28,13 @@ export class EventListComponent implements OnInit {
   locals: any[] = [];
   avisList: Avis[] = [];
   isLoading = true;
-  selectedRating = 0;
 
-selectedEventId: number | null = null;
-note: number = 0;
-commentaire: string = '';
-  // 🔹 Propriétés manquantes corrigées
+  // Propriétés pour avis et rating
   newCommentaire: { [eventId: number]: string } = {};
   newRating: { [eventId: number]: number } = {};
   hoverRating: { [eventId: number]: number } = {};
   selectedImageIndex: { [eventId: number]: number } = {};
+  avisParEvent: { [key: number]: any[] } = {};
 
   constructor(
     private eventService: EventService,
@@ -50,25 +46,13 @@ commentaire: string = '';
     private router: Router,
     private keycloakService: KeycloakService,
     private http: HttpClient
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
   }
 
-  // 📌 Gestion images
-  selectImage(eventId: number, index: number) {
-    this.selectedImageIndex[eventId] = index;
-  }
-
-  getMainImage(event: any): string {
-    const images = this.getLocalImages(event);
-    if (images.length === 0) return '';
-    const index = this.selectedImageIndex[event.id] || 0;
-    return `api/locals/files/${images[index]}`;
-  }
-
-  // 🔹 Chargement des données
+  // Chargement des données
   loadData() {
     this.isLoading = true;
 
@@ -81,10 +65,8 @@ commentaire: string = '';
         this.categories = data.categories || [];
         this.locals = data.locals || [];
         this.listevents = data.events || [];
-
         this.enrichEvents();
         this.associateAvis();
-
         this.isLoading = false;
       },
       error: (error) => {
@@ -98,8 +80,8 @@ commentaire: string = '';
     this.filteredEvents = this.listevents.map(event => {
       const category = this.categories.find(c => c.id == event.categoryId);
       const local = this.locals.find(l => l.id == event.localId);
-
       let imagesArray: string[] = [];
+
       if (local && typeof local.image === 'string') {
         try {
           imagesArray = JSON.parse(local.image);
@@ -122,13 +104,82 @@ commentaire: string = '';
       return {
         ...event,
         avis: eventAvis,
-        averageRating: eventAvis.length > 0 ? eventAvis.reduce((sum, avis) => sum + avis.note, 0) / eventAvis.length : 0,
+        averageRating: eventAvis.length > 0
+          ? eventAvis.reduce((sum, avis) => sum + avis.note, 0) / eventAvis.length
+          : 0,
         totalReviews: eventAvis.length
       };
     });
   }
 
-  // 🔹 Participer à un événement
+  // ✅ Correction ici : accepte 3 paramètres cohérents avec ton HTML
+ submitAvis(eventId: number, note: number, commentaire: string) {
+  if (!note || !commentaire) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Champs manquants',
+      text: 'Veuillez noter et commenter avant d\'envoyer votre avis.',
+      confirmButtonColor: '#f39c12'
+    });
+    return;
+  }
+
+  const avis = { eventId, note, commentaire };
+
+  console.log("🔹 Envoi de l'avis :", avis);
+
+  this.http.post('http://localhost:8070/avis/create', avis).subscribe({
+    next: (response: any) => {
+      console.log("✅ Avis créé sur le backend :", response);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Merci !',
+        text: 'Votre avis a été enregistré avec succès.',
+        confirmButtonColor: '#28a745'
+      });
+
+      // 🔹 Trouver l'événement correspondant
+      const event = this.filteredEvents.find(e => e.id === eventId);
+
+      if (event) {
+        // 🔹 Créer la liste des avis si elle n'existe pas
+        if (!event.avis) {
+          event.avis = [];
+        }
+
+        // 🔹 Ajouter l’avis localement (pour affichage immédiat)
+        const nouvelAvis = {
+          note: avis.note,
+          commentaire: avis.commentaire,
+          idTemp: Date.now() // identifiant temporaire
+        };
+
+        event.avis.unshift(nouvelAvis);
+        event.totalReviews = event.avis.length;
+        event.averageRating = event.avis.reduce((sum: number, a: any) => sum + a.note, 0) / event.avis.length;
+
+        // 🔹 Réinitialiser les champs du formulaire
+        this.newCommentaire[eventId] = '';
+        this.newRating[eventId] = 0;
+      } else {
+        console.warn("⚠️ Aucun événement trouvé avec l'id :", eventId);
+      }
+    },
+    error: (error) => {
+      console.error("❌ Erreur lors de l'envoi de l'avis :", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Impossible d\'envoyer votre avis. Vérifiez le backend.',
+        confirmButtonColor: '#e74c3c'
+      });
+    }
+  });
+}
+
+
+
   participateEvent(eventId: number) {
     Swal.fire({
       title: 'Confirmer la participation',
@@ -145,33 +196,18 @@ commentaire: string = '';
           next: (response) => {
             Swal.fire({
               title: 'Participation confirmée !',
-              html: `
-                <div class="success-reservation">
-                  <i class="fas fa-check-circle" style="color: #28a745; font-size: 3rem;"></i>
-                  <h4>Réservation réussie</h4>
-                  <p>Votre participation à l'événement a été enregistrée.</p>
-                  <p><strong>Statut:</strong> ${response.status || 'En attente'}</p>
-                  <p><strong>Référence:</strong> ${response.id ? `RES-${response.id}` : 'Génération en cours'}</p>
-                </div>
-              `,
+              text: 'Votre réservation a été enregistrée.',
               icon: 'success',
-              confirmButtonText: 'Parfait !',
+              confirmButtonText: 'OK',
               confirmButtonColor: '#28a745'
             });
           },
           error: (error) => {
-            let errorMessage = 'Une erreur est survenue lors de la réservation.';
-            if (error.status === 400) errorMessage = 'Données de réservation invalides.';
-            if (error.status === 409) errorMessage = 'Vous participez déjà à cet événement.';
-            if (error.status === 404) errorMessage = 'Événement non trouvé.';
-            if (error.status === 0) errorMessage = 'Impossible de contacter le serveur. Vérifiez votre connexion.';
-            
             Swal.fire({
               title: 'Erreur',
-              text: errorMessage,
+              text: 'Impossible d\'enregistrer votre participation.',
               icon: 'error',
-              confirmButtonText: 'OK',
-              confirmButtonColor: '#ef233c'
+              confirmButtonColor: '#e74c3c'
             });
           }
         });
@@ -179,98 +215,47 @@ commentaire: string = '';
     });
   }
 
-  // 🔹 Avis / notation
- submitAvis(eventId: number, note: number, commentaire: string) {
-  const avisData = {
-    commentaire: commentaire,
-    note: note,
-    eventId: eventId
-  };
-
-  this.http.post('http://localhost:8070/avis/create', avisData, {
-    headers: { 'Content-Type': 'application/json' }
-  }).subscribe({
-    next: (response) => {
-      console.log('Avis envoyé avec succès:', response);
-      Swal.fire({
-        title: 'Merci pour votre avis !',
-        text: 'Votre avis a été soumis avec succès.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-      // Clear the inputs for this event
-      this.newCommentaire[eventId] = '';
-      this.newRating[eventId] = 0;
-      // Reload avis for the event
-      this.loadAvisForEvent(eventId);
-    },
-    error: (err) => {
-      console.error('Erreur lors de l\'envoi de l\'avis:', err);
-      Swal.fire({
-        title: 'Erreur',
-        text: 'Une erreur est survenue lors de l\'envoi de l\'avis.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    }
-  });
-}
-
-  loadAvisForEvent(eventId: number) {
-    this.avisService.getAvisByEvent(eventId).subscribe({
-      next: (avisList) => {
-        const eventIndex = this.filteredEvents.findIndex(e => e.id === eventId);
-        if (eventIndex >= 0) {
-          this.filteredEvents[eventIndex].avis = avisList;
-          this.filteredEvents[eventIndex].averageRating = avisList.length > 0
-            ? avisList.reduce((sum, a) => sum + a.note, 0) / avisList.length
-            : 0;
-          this.filteredEvents[eventIndex].totalReviews = avisList.length;
-        }
-      }
-    });
+  // Méthodes utilitaires images et infos
+  selectImage(eventId: number, index: number) {
+    this.selectedImageIndex[eventId] = index;
   }
 
-  // 🔹 Méthode pour le paiement
-  payOnline(event: any) {
-    Swal.fire({
-      title: 'Paiement en ligne',
-      text: `Vous allez payer pour l'événement "${event.title}"`,
-      icon: 'info',
-      confirmButtonText: 'OK'
-    });
-  }
-
-  // 🔹 Méthodes utilitaires
-  getLocalById(localId: number): any {
-    return this.locals.find(l => l.id === localId);
-  }
-
-  hasImage(event: any): boolean {
-    const local = event.local || this.getLocalById(event.localId);
-    return local && local.images && Array.isArray(local.images) && local.images.length > 0;
-  }
-
-  getImageUrl(event: any): string {
-    const local = event.local || this.getLocalById(event.localId);
-    return this.hasImage(event) ? `api/locals/files/${local.images[0]}` : '';
-  }
-
-  getLocalName(event: any): string {
-    const local = event.local || this.getLocalById(event.localId);
-    return local?.name || 'Nom du lieu manquant';
+  getMainImage(event: any): string {
+    const images = this.getLocalImages(event);
+    if (images.length === 0) return '';
+    const index = this.selectedImageIndex[event.id] || 0;
+    return `api/locals/files/${images[index]}`;
   }
 
   getLocalImages(event: any): string[] {
-    const local = event.local || this.getLocalById(event.localId);
+    const local = event.local || this.locals.find(l => l.id === event.localId);
     return local?.images || [];
   }
 
-  getCategoryName(event: any): string {
-    return event.category?.name || 'Nom de catégorie manquant';
+  getLocalName(event: any): string {
+    const local = event.local || this.locals.find(l => l.id === event.localId);
+    return local?.name || 'Nom du lieu manquant';
   }
 
   trackByEventId(index: number, event: any): any {
     return event ? event.id : undefined;
   }
+
+viewDetails(event: any) {
+  Swal.fire({
+    title: event.title,
+    html: `
+      <strong>Description :</strong> ${event.description}<br>
+      <strong>Lieu :</strong> ${this.getLocalName(event)}<br>
+      <strong>Date :</strong> ${new Date(event.date).toLocaleDateString()}
+    `,
+    imageUrl: this.getMainImage(event),
+    imageWidth: 300,
+    imageAlt: event.title,
+    confirmButtonText: 'Fermer',
+    confirmButtonColor: '#3498db'
+  });
+}
+
+
 }

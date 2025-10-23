@@ -1,4 +1,4 @@
-import { Component, Directive, Input, HostBinding, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
+import { Component, Directive, Input, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
@@ -67,7 +67,6 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
   // Statistiques personnelles
   participatedEvents = 0;
   favoriteEvents = 0;
-  upcomingEvents = 0;
   averageRating = 0;
 
   // Données des événements
@@ -178,10 +177,9 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
   }
 
   calculateStats() {
-    // Calculer les statistiques réelles
+    // Calculer les statistiques réelles basées sur le HTML existant
     this.participatedEvents = this.recentParticipatedEvents.length;
     this.favoriteEvents = this.upcomingEventsList.filter(e => e.isFavorite).length;
-    this.upcomingEvents = this.upcomingEventsList.length;
 
     if (this.recentParticipatedEvents.length > 0) {
       const totalRating = this.recentParticipatedEvents.reduce((sum, event) => sum + (event.userRating || 0), 0);
@@ -190,7 +188,7 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
   }
 
   // Méthodes de navigation
-   goToEvents() {
+  goToEvents() {
     this.ngZone.run(() => {
       this.router.navigate(['/event-list']);
     });
@@ -294,17 +292,21 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
   // Méthodes utilitaires
   formatDate(dateString: string | undefined): string {
     if (!dateString) return 'Date non définie';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Date invalide';
+    }
   }
 
   // Méthodes des graphiques
   renderParticipationChart() {
-    if (!this.participationChartRef) return;
+    if (!this.participationChartRef?.nativeElement) return;
 
     const ctx = this.participationChartRef.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -322,7 +324,8 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
           data: participations,
           borderColor: '#667eea',
           backgroundColor: 'rgba(102, 126, 234, 0.1)',
-          tension: 0.4
+          tension: 0.4,
+          fill: true
         }]
       },
       options: {
@@ -337,7 +340,7 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
   }
 
   renderCategoryChart() {
-    if (!this.categoryChartRef) return;
+    if (!this.categoryChartRef?.nativeElement) return;
 
     const ctx = this.categoryChartRef.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -381,4 +384,3 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 }
-
