@@ -109,46 +109,51 @@ export class CreateEventComponent implements OnInit {
      this.filterEvents();
    }
 
-    viewEvent(id: string) {
-       Swal.fire({
-         title: 'Do you want to view details?',
-         text: "This will fetch the details for this event.",
-         icon: 'info',
-         showCancelButton: true,
-         confirmButtonColor: '#3085D6',
-         cancelButtonColor: '#d33',
-         confirmButtonText: 'Yes, show me!'
-       }).then((result) => {
-         if (result.isConfirmed) {
-           this.eventService.getEventWithCategoryAndLocal(id).subscribe(
-             (res: any) => {
-               console.log('Fetched event data:', res);
-               Swal.fire({
-                 title: 'Event Details',
-                 html: `
-                   <div style="text-align: left;">
-                     <strong>ID:</strong> ${res.id}<br>
-                     <strong>Title:</strong> ${res.title}<br>
-                     <strong>Description:</strong> ${res.description}<br>
-                     <strong>Start Date:</strong> ${res.datedebut}<br>
-                     <strong>End Date:</strong> ${res.datefin}<br>
-                     <strong>Status:</strong> <span class="badge badge-${this.getStatusBadgeClass(res.status)}">${res.status}</span><br>
-                     <strong>Category:</strong> ${res.category?.name || 'N/A'}<br>
-                     <strong>Local:</strong> ${res.local?.name || 'N/A'}<br>
-                     <strong>Organizer ID:</strong> ${res.userId || 'N/A'}
-                   </div>
-                 `,
-                 icon: 'info'
-               });
-             },
-             (error: any) => {
-               console.error("Error fetching data", error);
-               Swal.fire('Error', 'Could not fetch event data.', 'error');
-             }
-           );
-         }
-       });
-     }
+   viewEvent(id: string) {
+  Swal.fire({
+    title: 'Do you want to view details?',
+    text: "This will fetch the details for this event.",
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonColor: '#3085D6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, show me!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.eventService.getEventWithCategoryAndLocal(id).subscribe(
+        (res: any) => {
+          console.log('Fetched event data:', res);
+         const priceDisplay = res.prix > 0 ? 
+     `${res.prix} €` : 
+      '<span style="color: green; font-weight: bold;">Gratuit</span>';
+
+          Swal.fire({
+            title: 'Event Details',
+            html: `
+              <div style="text-align: left;">
+                <strong>ID:</strong> ${res.id}<br>
+                <strong>Title:</strong> ${res.title}<br>
+                <strong>Description:</strong> ${res.description}<br>
+                <strong>Start Date:</strong> ${res.datedebut}<br>
+                <strong>End Date:</strong> ${res.datefin}<br>
+                <strong>Price:</strong> ${priceDisplay}<br>
+                <strong>Status:</strong> <span class="badge badge-${this.getStatusBadgeClass(res.status)}">${res.status}</span><br>
+                <strong>Category:</strong> ${res.category?.name || 'N/A'}<br>
+                <strong>Local:</strong> ${res.local?.name || 'N/A'}<br>
+                <strong>Organizer ID:</strong> ${res.userId || 'N/A'}
+              </div>
+            `,
+            icon: 'info'
+          });
+        },
+        (error: any) => {
+          console.error("Error fetching data", error);
+          Swal.fire('Error', 'Could not fetch event data.', 'error');
+        }
+      );
+    }
+  });
+}
 
      getStatusBadgeClass(status: string): string {
        switch (status) {
@@ -191,6 +196,16 @@ createEvent() {
       <textarea id="description" class="swal2-textarea" placeholder="Description" required></textarea>
       <input id="datedebut" type="datetime-local" class="swal2-input" required>
       <input id="datefin" type="datetime-local" class="swal2-input" required>
+      
+      <!-- CORRECTION : Checkbox NON coché par défaut -->
+      <div class="price-container" style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+        <input id="price" type="number" class="swal2-input" placeholder="Prix (€)" min="0" step="0.01" style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 5px;">
+          <input id="isFree" type="checkbox" style="margin: 0;"> <!-- Pas de 'checked' -->
+          <label for="isFree" style="font-size: 14px; color: #666;">Gratuit</label>
+        </div>
+      </div>
+      
       <select id="status" class="swal2-input" required>
         <option value="">-- Statut --</option>
         <option value="ACTIVE">Active</option>
@@ -210,34 +225,84 @@ createEvent() {
     focusConfirm: false,
     showCancelButton: true,
     confirmButtonText: 'Créer',
+    didOpen: () => {
+      // CORRECTION : Le checkbox n'est PAS coché par défaut
+      const priceInput = document.getElementById('price') as HTMLInputElement;
+      const freeCheckbox = document.getElementById('isFree') as HTMLInputElement;
+      
+      // Par défaut, le prix n'est pas désactivé
+      priceInput.disabled = false;
+      freeCheckbox.checked = false; // S'assurer qu'il n'est pas coché
+      
+      freeCheckbox.addEventListener('change', () => {
+        if (freeCheckbox.checked) {
+          priceInput.value = '0';
+          priceInput.disabled = true;
+          priceInput.placeholder = 'Gratuit';
+        } else {
+          priceInput.disabled = false;
+          priceInput.placeholder = 'Prix (€)';
+          priceInput.value = ''; // Réinitialiser
+        }
+      });
+    },
     preConfirm: () => {
       const getValue = (id: string) => {
         const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
         return el?.value?.trim();
       };
 
+      const getNumberValue = (id: string) => {
+        const el = document.getElementById(id) as HTMLInputElement;
+        return el?.value ? parseFloat(el.value) : null;
+      };
+
+      const freeCheckbox = document.getElementById('isFree') as HTMLInputElement;
+      const isFree = freeCheckbox?.checked;
+
+      // CORRECTION : Toujours récupérer la valeur du champ prix
+      const priceValue = getNumberValue('price');
+      
+      console.log('Checkbox gratuit:', isFree);
+      console.log('Valeur prix:', priceValue);
+
       const values = {
         title: getValue('title'),
         description: getValue('description'),
         datedebut: getValue('datedebut'),
         datefin: getValue('datefin'),
+        prix: isFree ? 0 : (priceValue !== null && priceValue !== undefined ? priceValue : 0),
         status: getValue('status'),
         categoryId: getValue('categoryId'),
         localId: getValue('localId'),
-        userId: "1" // À remplacer par l'ID utilisateur réel
+        userId: "1"
       };
 
+      console.log('Données finales:', values);
+
       // Validation des champs requis
-      for (const [key, value] of Object.entries(values)) {
-        if (!value && key !== 'userId') {
-          Swal.showValidationMessage(`Le champ ${key} est requis`);
+      const requiredFields = ['title', 'description', 'datedebut', 'datefin', 'status', 'categoryId', 'localId'];
+      for (const field of requiredFields) {
+        if (!values[field as keyof typeof values]) {
+          Swal.showValidationMessage(`Le champ ${field} est requis`);
+          return false;
+        }
+      }
+
+      // CORRECTION : Validation du prix seulement si NON gratuit
+      if (!isFree) {
+        if (priceValue === null || priceValue === undefined || priceValue === 0) {
+          Swal.showValidationMessage('Veuillez saisir un prix supérieur à 0 ou cocher "Gratuit"');
+          return false;
+        }
+        if (priceValue < 0) {
+          Swal.showValidationMessage('Le prix doit être un nombre positif');
           return false;
         }
       }
 
       // Conversion et validation des dates
       try {
-        // Formatage spécifique pour votre backend
         const formatForBackend = (dateString: string) => {
           if (!dateString) return '';
           const date = new Date(dateString);
@@ -272,18 +337,19 @@ createEvent() {
   }).then((result) => {
     if (result.isConfirmed && result.value) {
       const eventData = result.value;
-      console.log('Données à envoyer:', eventData);
+      console.log('Données FINALES à envoyer:', eventData);
 
-      // Création du FormData
       const formData = new FormData();
       Object.entries(eventData).forEach(([key, value]) => {
-        formData.append(key, value as string);
+        if (value !== null && value !== undefined) {
+          formData.append(key, value.toString());
+        }
       });
 
       this.eventService.create(formData).subscribe({
         next: (res:any) => {
           Swal.fire('Succès!', 'Événement créé avec succès', 'success');
-          this.allmyeventsfromback(); // Recharger la liste
+          this.allmyeventsfromback();
         },
         error: (err:any) => {
           console.error('Erreur création:', err);
@@ -309,6 +375,10 @@ editEvent(id: string) {
         return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
       };
 
+      // CORRECTION : Déterminer si c'est gratuit
+      const isFree = event.price === 0 || event.price === null || event.price === undefined;
+      const priceValue = isFree ? '' : event.price;
+
       Swal.fire({
         title: 'Modifier événement',
         html: `
@@ -316,6 +386,19 @@ editEvent(id: string) {
           <textarea id="description" class="swal2-textarea" placeholder="Description" required>${this.escapeHtml(event.description) || ''}</textarea>
           <input id="datedebut" type="datetime-local" class="swal2-input" value="${event.datedebut ? formatForInput(event.datedebut) : ''}" required>
           <input id="datefin" type="datetime-local" class="swal2-input" value="${event.datefin ? formatForInput(event.datefin) : ''}" required>
+          
+          <!-- Champ Prix corrigé -->
+          <div class="price-container" style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+            <input id="price" type="number" class="swal2-input" 
+                   value="${priceValue}" 
+                   placeholder="Prix (€)" min="0" step="0.01" style="flex: 1;"
+                   ${isFree ? 'disabled' : ''}>
+            <div style="display: flex; align-items: center; gap: 5px;">
+              <input id="isFree" type="checkbox" ${isFree ? 'checked' : ''} style="margin: 0;">
+              <label for="isFree" style="font-size: 14px; color: #666;">Gratuit</label>
+            </div>
+          </div>
+          
           <select id="status" class="swal2-input" required>
             <option value="">-- Statut --</option>
             ${this.statuses
@@ -334,17 +417,49 @@ editEvent(id: string) {
         focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: 'Modifier',
+        didOpen: () => {
+          // Gérer la logique du checkbox "Gratuit" - CORRIGÉ
+          const priceInput = document.getElementById('price') as HTMLInputElement;
+          const freeCheckbox = document.getElementById('isFree') as HTMLInputElement;
+          
+          freeCheckbox.addEventListener('change', () => {
+            if (freeCheckbox.checked) {
+              priceInput.value = '0';
+              priceInput.disabled = true;
+              priceInput.placeholder = 'Gratuit';
+            } else {
+              priceInput.disabled = false;
+              priceInput.placeholder = 'Prix (€)';
+              // Ne pas réinitialiser si l'utilisateur avait déjà saisi un prix
+              if (priceInput.value === '0') {
+                priceInput.value = '';
+              }
+            }
+          });
+        },
         preConfirm: () => {
           const getValue = (id: string) => {
             const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
             return el?.value?.trim();
           };
 
+          const getNumberValue = (id: string) => {
+            const el = document.getElementById(id) as HTMLInputElement;
+            return el?.value ? parseFloat(el.value) : null;
+          };
+
+          const freeCheckbox = document.getElementById('isFree') as HTMLInputElement;
+          const isFree = freeCheckbox?.checked;
+
+          // CORRECTION : Récupérer la valeur AVANT de décider
+          const priceValue = getNumberValue('price');
+
           const rawValues = {
             title: getValue('title'),
             description: getValue('description'),
             datedebut: getValue('datedebut'),
             datefin: getValue('datefin'),
+            prix: isFree ? 0 : (priceValue !== null ? priceValue : 0), 
             status: getValue('status'),
             categoryId: getValue('categoryId'),
             localId: getValue('localId'),
@@ -352,8 +467,20 @@ editEvent(id: string) {
           };
 
           for (const [key, value] of Object.entries(rawValues)) {
-            if (!value && key !== 'userId') {
+            if (!value && key !== 'userId' && key !== 'price') {
               Swal.showValidationMessage(`Le champ ${key} est requis`);
+              return false;
+            }
+          }
+
+          // Validation du prix - CORRIGÉ
+          if (!isFree) {
+            if (priceValue === null || priceValue === undefined) {
+              Swal.showValidationMessage('Veuillez saisir un prix ou cocher "Gratuit"');
+              return false;
+            }
+            if (priceValue < 0) {
+              Swal.showValidationMessage('Le prix doit être un nombre positif');
               return false;
             }
           }
@@ -386,7 +513,9 @@ editEvent(id: string) {
         if (result.isConfirmed && result.value) {
           const formData = new FormData();
           Object.entries(result.value).forEach(([key, value]) => {
-            formData.append(key, value as string);
+            if (value !== null && value !== undefined) {
+              formData.append(key, value.toString());
+            }
           });
 
           this.eventService.update(id, formData).subscribe({
@@ -408,8 +537,6 @@ editEvent(id: string) {
     }
   });
 }
-
-
 // Méthode utilitaire pour échapper le HTML
 private escapeHtml(unsafe: string): string {
   if (!unsafe) return '';

@@ -8,6 +8,7 @@ export interface Event {
     description: string;
     datedebut: string; // format: yyyy-MM-ddTHH:mm:ss
     datefin: string;
+    prix:number;
     status?: string;
     userId: number;
     categoryId: number;

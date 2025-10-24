@@ -38,6 +38,14 @@
 
             <td class="date-column">{{formatDate(event.datedebut)}}</td>
             <td class="date-column">{{formatDate(event.datefin)}}</td>
+             <td class="price-column">
+            <span *ngIf="event.price !== null && event.price !== undefined; else freeEvent">
+              {{event.price | currency:'EUR':'symbol':'1.2-2'}}
+            </span>
+            <ng-template #freeEvent>
+              <span class="free-badge">Gratuit</span>
+            </ng-template>
+          </td>
             <td class="status-column">
               <span class="status-badge status-{{getStatusBadgeClass(event.status)}}">
                 {{getStatusDisplayName(event.status)}}

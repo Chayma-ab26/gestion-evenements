@@ -1,54 +1,157 @@
-<div class="container">
-  <h2>Gestion des participants</h2>
+<app-header-org class="fixed-header"></app-header-org>
 
-  <!-- Sélection d'événement -->
-  <div class="event-selector" *ngIf="events && events.length > 0">
-    <label>Choisir un événement:</label>
-    <select (change)="selectEvent($event)">
-      <option value="">-- Sélectionner --</option>
-      <option *ngFor="let ev of events" [value]="ev.id">{{ ev.title }}</option>
-    </select>
+<div class="modern-container content-with-header">
+  
+  <!-- Header avec statistiques -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Gestion des Participants</h1>
+      <div class="header-stats" *ngIf="selectedEvent">
+        <div class="stat-card">
+          <div class="stat-value">{{ reservations.length }}</div>
+          <div class="stat-label">Total Réservations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ approvedCount }}</div>
+          <div class="stat-label">Approuvés</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ eventCapacity }}</div>
+          <div class="stat-label">Capacité</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div *ngIf="!events || events.length === 0" class="empty">Aucun événement.</div>
-
-  <!-- Détails de l'événement sélectionné -->
-  <div *ngIf="selectedEvent" class="event-details">
-    <h3>{{ selectedEvent.title }}</h3>
-          <p>
-        Capacité: <!-- {{ eventCapacity }} --> |
-        Approuvés: <!-- {{ approvedCount }} -->
-      </p>
+  <!-- Carte de sélection d'événement -->
+  <div class="card event-selector-card" *ngIf="events && events.length > 0">
+    <div class="card-header">
+      <h3 class="card-title">📅 Sélectionner un Événement</h3>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <label class="form-label">Choisir un événement</label>
+        <select (change)="selectEvent($event)" class="modern-select">
+          <option value="">-- Sélectionner un événement --</option>
+          <option *ngFor="let ev of events" [value]="ev.id">
+            {{ ev.title }} (ID: {{ ev.id }})
+          </option>
+        </select>
+      </div>
+    </div>
   </div>
 
-  <!-- Liste des participants -->
-  <div *ngIf="selectedEvent">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nom</th>
-          <th>Email</th>
-          <th>Statut</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let p of participants; index as i">
-          <td>{{ i + 1 }}</td>
-          <td>{{ p.name || (p.user?.name) }}</td>
-          <td>{{ p.email || (p.user?.email) }}</td>
-          <td>
-            <span class="badge" [class.badge-approved]="p.status === 'APPROVED'" [class.badge-pending]="p.status === 'PENDING'" [class.badge-rejected]="p.status === 'REJECTED'">
-              {{ p.status }}
-            </span>
-          </td>
-          <td>
-           <!--  <button (click)="approve(p)" [disabled]="p.status === 'APPROVED' || !canApproveMore()">Accepter</button>
-            <button (click)="reject(p)" [disabled]="p.status === 'REJECTED'">Refuser</button>
-           --></td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Carte détails de l'événement -->
+  <div *ngIf="selectedEvent" class="card event-details-card">
+    <div class="card-header">
+      <h3 class="card-title">🎯 Détails de l'Événement</h3>
+    </div>
+    <div class="card-body">
+      <div class="event-info-grid">
+        <div class="info-item">
+          <span class="info-label">Titre</span>
+          <span class="info-value">{{ selectedEvent.title }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Description</span>
+          <span class="info-value">{{ selectedEvent.description }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Capacité</span>
+          <span class="info-value">{{ eventCapacity }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Statut</span>
+          <span class="status-indicator" [class.status-full]="!canApproveMore()">
+            {{ canApproveMore() ? 'Disponible' : 'Complet' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section participants -->
+  <div *ngIf="selectedEvent" class="participants-section">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Chargement des participants...</p>
+    </div>
+    
+    <!-- Content -->
+    <div *ngIf="!isLoading">
+      <!-- Empty State -->
+      <div *ngIf="reservations.length === 0" class="empty-state-modern">
+        <div class="empty-icon">👥</div>
+        <h3>Aucun participant</h3>
+        <p>Aucune réservation trouvée pour cet événement.</p>
+      </div>
+
+      <!-- Table des participants -->
+      <div *ngIf="reservations.length > 0" class="card participants-card">
+        <div class="card-header">
+          <h3 class="card-title">👥 Liste des Participants ({{ reservations.length }})</h3>
+          <div class="header-actions">
+            <span class="approved-count">{{ approvedCount }} approuvés</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th class="text-center">#</th>
+                  <th>Participant</th>
+                  <th>Contact</th>
+                  <th>Statut</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of reservations; index as i" class="table-row">
+                  <td class="text-center serial-number">{{ i + 1 }}</td>
+                  <td class="participant-info">
+                    <div class="participant-name">
+                      {{ getUserFirstName(r) }} {{ getUserLastName(r) }}
+                    </div>
+                    <div class="participant-id">ID: {{ r.id }}</div>
+                  </td>
+                  <td class="contact-info">
+                    <div class="contact-phone">📱 {{ getUserPhone(r) }}</div>
+                  </td>
+                  <td>
+                    <span class="status-badge" 
+                          [class.status-pending]="r.status === 'PENDING'" 
+                          [class.status-approved]="r.status === 'APPROVED'" 
+                          [class.status-rejected]="r.status === 'REJECTED'">
+                      <span class="status-dot"></span>
+                      {{ getStatusText(r.status) }}
+                    </span>
+                  </td>
+                  <td class="actions-cell">
+                    <div class="action-buttons">
+                      <button (click)="approve(r)" 
+                              [disabled]="r.status === 'APPROVED' || !canApproveMore()"
+                              class="btn btn-success btn-icon"
+                              title="Accepter la réservation">
+                        <span class="btn-icon">✓</span>
+                        Accepter
+                      </button>
+                      <button (click)="reject(r)" 
+                              [disabled]="r.status === 'REJECTED'"
+                              class="btn btn-danger btn-icon"
+                              title="Refuser la réservation">
+                        <span class="btn-icon">✗</span>
+                        Refuser
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

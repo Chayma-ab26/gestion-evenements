@@ -140,3 +140,21 @@ button:hover {
 .status-button:hover {
   background-color: #5a32a3;
 }
+
+.free-badge {
+  background-color: #28a745;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.price-column {
+  text-align: center;
+  font-weight: 600;
+}
+
+.price-column .free-badge {
+  display: inline-block;
+}
