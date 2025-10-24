@@ -25,62 +25,28 @@ public class AvisController {
     @Autowired
     private UserClient userClient;
 
-    /**
-     * Crée un avis pour l'utilisateur connecté
-     */
     @PostMapping("/create")
-    public ResponseEntity<?> createAvis(
-            @RequestBody AvisEntity avis,
-            @RequestHeader(value = "Authorization", required = false) String bearerToken) {
-
+    public ResponseEntity<?> createAvis(@RequestBody AvisEntity avis) {
         try {
-            // 1️⃣ Récupération de l'utilisateur connecté depuis UserClient
-            if (bearerToken == null || bearerToken.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("error", "Aucun token fourni"));
-            }
-
-            ResponseEntity<Map<String, Object>> userResponse = userClient.getCurrentUser(bearerToken);
-            if (!userResponse.getStatusCode().is2xxSuccessful() || userResponse.getBody() == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("error", "Impossible de récupérer l'utilisateur connecté"));
-            }
-
-            Map<String, Object> userMap = userResponse.getBody();
-            Long userId = Long.valueOf(userMap.get("id").toString());
-            String keycloakId = userMap.get("keycloakid").toString();
-
-            // 2️⃣ Vérifier que l'événement existe
-            Object event = eventClient.getEventById(avis.getEventId());
-            if (event == null) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Événement non trouvé"));
-            }
-
-            // 3️⃣ Affecter les infos utilisateur et sauvegarder l'avis
-            avis.setUserId(userId);
-            avis.setUserKeycloakId(keycloakId);
+            // Optionnel : laisser userId null si tu ne veux pas l'enregistrer
+            // avis.setUserId(null);
+            // avis.setUserKeycloakId(null);
 
             AvisEntity savedAvis = avisService.createAvis(avis);
             return ResponseEntity.ok(savedAvis);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity.status(500)
                     .body(Map.of("error", "Erreur lors de la création de l'avis : " + e.getMessage()));
         }
     }
 
-    /**
-     * Récupère tous les avis
-     */
     @GetMapping("/getall")
     public List<AvisEntity> getAllAvis() {
         return avisService.getAll();
     }
 
-    /**
-     * Récupère les avis d'un événement
-     */
     @GetMapping("/event/{eventId}")
     public List<AvisEntity> getAvisByEvent(@PathVariable Long eventId) {
         return avisService.getAll().stream()

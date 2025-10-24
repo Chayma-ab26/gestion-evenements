@@ -31,6 +31,9 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public List<ReservationEntity> getReservationsByKeycloakId(String keycloakId) {
+        return reservationRepository.findByUserKeycloakId(keycloakId);
+    }
     /**
      * Récupérer une réservation par ID
      */

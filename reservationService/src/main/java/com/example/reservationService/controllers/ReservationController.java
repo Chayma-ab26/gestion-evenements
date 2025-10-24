@@ -73,6 +73,46 @@ public class ReservationController {
         return reservationService.getAllReservations();
     }
 
+
+    @GetMapping("/user/{keycloakId}")
+    public ResponseEntity<?> getReservationsByUser(@PathVariable String keycloakId) {
+        try {
+            List<ReservationEntity> reservations = reservationService.getReservationsByKeycloakId(keycloakId);
+            return ResponseEntity.ok(reservations);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de la récupération des réservations"));
+        }
+    }
+
+    /**
+     * Récupère les réservations de l'utilisateur connecté
+     */
+    @GetMapping("/my-reservations")
+    public ResponseEntity<?> getMyReservations(@RequestHeader("Authorization") String bearerToken) {
+        try {
+            // Récupération de l'utilisateur connecté
+            ResponseEntity<Map<String, Object>> userResponse = userClient.getCurrentUser(bearerToken);
+            if (!userResponse.getStatusCode().is2xxSuccessful() || userResponse.getBody() == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Impossible de récupérer l'utilisateur connecté"));
+            }
+
+            Map<String, Object> userMap = userResponse.getBody();
+            String keycloakId = userMap.get("keycloakid").toString();
+
+            // Récupération des réservations
+            List<ReservationEntity> reservations = reservationService.getReservationsByKeycloakId(keycloakId);
+            return ResponseEntity.ok(reservations);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Erreur lors de la récupération des réservations"));
+        }
+    }
+
     /**
      * Gestion du format LocalDateTime
      */

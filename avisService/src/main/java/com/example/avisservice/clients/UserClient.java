@@ -10,7 +10,6 @@ import java.util.Map;
 
 @FeignClient(name = "userService")
 public interface UserClient {
-
     @GetMapping("/users/me")
     ResponseEntity<Map<String, Object>> getCurrentUser(@RequestHeader("Authorization") String bearerToken);
 

@@ -11,6 +11,7 @@ public class EventDTO {
     private String description;
     private LocalDateTime datedebut;
     private LocalDateTime datefin;
+    private float prix;
     private String status;
     private CategoryDTO category;
     private LocalDTO local;
@@ -58,7 +59,13 @@ public class EventDTO {
         this.description = description;
     }
 
+    public float getPrix() {
+        return prix;
+    }
 
+    public void setPrix(float prix) {
+        this.prix = prix;
+    }
 
     public LocalDateTime getDatedebut() {
         return datedebut;

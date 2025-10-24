@@ -15,6 +15,7 @@ public class EventEntity {
     private String description;
     private LocalDateTime datedebut;
     private LocalDateTime datefin;
+    private float prix;
     private String status;
 
     private Long userId;  //  userservice
@@ -24,7 +25,7 @@ public class EventEntity {
     public EventEntity() {
     }
 
-    public EventEntity(Long id, String title, String description, LocalDateTime datedebut, LocalDateTime datefin, String status, Long userId, Long categoryId,Long localId) {
+    public EventEntity(Long id, String title, String description, LocalDateTime datedebut, LocalDateTime datefin, float prix,String status, Long userId, Long categoryId,Long localId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -34,6 +35,7 @@ public class EventEntity {
         this.userId = userId;
         this.categoryId = categoryId;
         this.localId = localId;
+        this.prix = prix;
 
     }
 
@@ -108,5 +110,13 @@ public class EventEntity {
 
     public void setLocalId(Long localId) {
         this.localId = localId;
+    }
+
+    public float getPrix() {
+        return prix;
+    }
+
+    public void setPrix(float prix) {
+        this.prix = prix;
     }
 }
