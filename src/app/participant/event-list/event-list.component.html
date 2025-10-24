@@ -1,97 +1,120 @@
 <app-header-part></app-header-part>
 
-<h1 class="page-title text-center mt-4 mb-4">Liste des Événements</h1>
+<div class="events-page-container">
+  <h1 class="page-title">Liste des Événements</h1>
 
-<div *ngIf="isLoading" class="loading-container">
-  <div class="spinner-border text-primary" role="status"></div>
-  <p>Chargement des événements...</p>
-</div>
-
-<div *ngIf="!isLoading && filteredEvents.length > 0" class="events-container container">
-  <div *ngFor="let event of filteredEvents; trackBy: trackByEventId" class="event-card shadow-sm mb-4">
-
-    <!-- Image -->
-    <div class="event-image-container">
-      <ng-container *ngIf="getLocalImages(event).length > 0; else noLocalBlock">
-        <div class="local-gallery">
-          <div class="main-image">
-            <img [src]="getMainImage(event)" [alt]="getLocalName(event)" class="event-image rounded-top" />
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-template #noLocalBlock>
-        <div class="no-image-placeholder text-center p-3">
-          <i class="fas fa-map-marker-alt fa-2x text-muted"></i>
-          <p class="text-muted mt-2">Aucune image disponible</p>
-        </div>
-      </ng-template>
-    </div>
-
-    <!-- Contenu -->
-    <div class="event-content p-4">
-      <h3 class="event-title text-primary fw-bold">{{ event.title }}</h3>
-      <p class="event-description text-muted">{{ event.description }}</p>
-      <p><i class="fas fa-map-marker-alt text-danger"></i> {{ getLocalName(event) }}</p>
-      <p><i class="fas fa-calendar-alt text-primary"></i> {{ event.date | date:'mediumDate' }}</p>
-
-      <!-- Moyenne des avis -->
-      <div class="average-rating mb-2" *ngIf="event.avis?.length > 0">
-        <i class="fas fa-star text-warning" *ngFor="let s of [1,2,3,4,5]" [class.text-secondary]="s > event.averageRating"></i>
-        <small class="text-muted">({{ event.totalReviews }} avis)</small>
-      </div>
-
-      <!-- Avis -->
-      <div class="rating-section mt-3 border-top pt-3">
-        <div class="star-rating mb-2">
-          <i class="fas fa-star"
-             *ngFor="let star of [1,2,3,4,5]; let i = index"
-             [class.active]="i < (newRating[event.id] || 0)"
-             (click)="newRating[event.id] = i + 1"
-             (mouseenter)="hoverRating[event.id] = i + 1"
-             (mouseleave)="hoverRating[event.id] = 0"></i>
-        </div>
-
-        <input [(ngModel)]="newCommentaire[event.id]" placeholder="Donnez votre avis..." class="form-control mb-2" />
-        <button class="btn btn-outline-primary w-100"
-                (click)="submitAvis(event.id, newRating[event.id], newCommentaire[event.id])">
-          <i class="fas fa-paper-plane"></i> Envoyer l’avis
-        </button>
-
-        <!-- ✅ Affichage immédiat des avis envoyés -->
-        <div class="avis-list mt-3" *ngIf="event.avis?.length > 0">
-          <h6 class="fw-bold mb-2">Avis récents :</h6>
-          <div *ngFor="let avis of event.avis" class="border rounded p-2 mb-2 bg-light">
-            <i class="fas fa-user-circle text-secondary"></i> 
-            <strong>{{ avis.note }}/5</strong> ⭐ — {{ avis.commentaire }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Boutons d’action -->
-      <div class="event-actions mt-4 d-flex justify-content-between gap-2">
-        <button class="btn btn-success flex-fill shadow-sm"
-                (click)="participateEvent(event.id)">
-          <i class="fas fa-user-plus"></i> Participer
-        </button>
-
-        <button class="btn btn-info flex-fill shadow-sm"
-                (click)="viewDetails(event)">
-          <i class="fas fa-info-circle"></i> Détails
-        </button>
-
-        <button class="btn btn-warning flex-fill shadow-sm">
-          <i class="fas fa-credit-card"></i> Payer
-        </button>
-      </div>
-    </div>
-
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Chargement des événements...</p>
   </div>
-</div>
 
-<div *ngIf="!isLoading && filteredEvents.length === 0" class="empty-state text-center mt-5">
-  <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-  <h3>Aucun événement trouvé</h3>
+  <div *ngIf="!isLoading && filteredEvents.length > 0" class="events-container">
+    <div *ngFor="let event of filteredEvents; trackBy: trackByEventId" class="event-card shadow-sm">
+
+      <!-- Image -->
+      <div class="event-image-container">
+        <ng-container *ngIf="getLocalImages(event).length > 0; else noLocalBlock">
+          <div class="local-gallery">
+            <div class="main-image">
+              <img [src]="getMainImage(event)" [alt]="getLocalName(event)" class="event-image" />
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noLocalBlock>
+          <div class="no-image-placeholder">
+            <i class="fas fa-map-marker-alt fa-2x"></i>
+            <p>Aucune image disponible</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Contenu -->
+      <div class="event-content">
+        <h3 class="event-title">{{ event.title }}</h3>
+        <p class="event-description">{{ event.description }}</p>
+        
+        <div class="event-details">
+          <div class="detail-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ getLocalName(event) }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>{{ event.date | date:'mediumDate' }}</span>
+          </div>
+        </div>
+
+        <!-- Moyenne des avis -->
+        <div class="average-rating" *ngIf="event.avis?.length > 0">
+          <div class="rating-display">
+            <div class="stars">
+              <i class="fas fa-star" *ngFor="let s of [1,2,3,4,5]" 
+                 [class.active]="s <= event.averageRating"></i>
+            </div>
+            <span class="rating-value">{{ event.averageRating | number:'1.1-1' }}</span>
+            <span class="rating-count">({{ event.totalReviews }} avis)</span>
+          </div>
+        </div>
+
+        <!-- Avis -->
+        <div class="rating-section">
+          <div class="star-rating">
+            <i class="fas fa-star star-item"
+               *ngFor="let star of [1,2,3,4,5]; let i = index"
+               [class.active]="i < (newRating[event.id] || 0)"
+               (click)="newRating[event.id] = i + 1"
+               (mouseenter)="hoverRating[event.id] = i + 1"
+               (mouseleave)="hoverRating[event.id] = 0"></i>
+          </div>
+
+          <input [(ngModel)]="newCommentaire[event.id]" placeholder="Donnez votre avis..." class="review-input" />
+          <button class="btn btn-primary send-review-btn"
+                  (click)="submitAvis(event.id, newRating[event.id], newCommentaire[event.id])">
+            <i class="fas fa-paper-plane"></i> Envoyer l'avis
+          </button>
+
+          <!-- Affichage immédiat des avis envoyés -->
+          <div class="avis-list" *ngIf="event.avis?.length > 0">
+            <h6>Avis récents :</h6>
+            <div *ngFor="let avis of event.avis" class="review-item">
+              <div class="review-header">
+                <div class="review-stars">
+                  <i class="fas fa-star" *ngFor="let s of [1,2,3,4,5]" 
+                     [class.active]="s <= avis.note"></i>
+                </div>
+                <span class="review-date">{{ avis.date | date:'shortDate' }}</span>
+              </div>
+              <p class="review-text">{{ avis.commentaire }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="event-actions">
+          <button class="btn btn-success"
+                  (click)="participateEvent(event.id)">
+            <i class="fas fa-user-plus"></i> Participer
+          </button>
+
+          <button class="btn btn-info"
+                  (click)="viewDetails(event)">
+            <i class="fas fa-info-circle"></i> Détails
+          </button>
+
+          <button class="btn btn-warning">
+            <i class="fas fa-credit-card"></i> Payer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && filteredEvents.length === 0" class="empty-state">
+    <i class="fas fa-calendar-times"></i>
+    <h3>Aucun événement trouvé</h3>
+    <p>Essayez de modifier vos critères de recherche</p>
+  </div>
 </div>
 
 <app-footer></app-footer>

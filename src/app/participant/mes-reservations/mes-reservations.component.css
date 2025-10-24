@@ -1,0 +1,691 @@
+/* Variables CSS étendues avec plus de couleurs */
+:root {
+  --primary: #667eea;
+  --primary-light: #a3bffa;
+  --primary-dark: #5a67d8;
+  --secondary: #764ba2;
+  --secondary-light: #b794f4;
+  --accent: #f093fb;
+  --accent-light: #fbb6ce;
+  --success: #48bb78;
+  --success-light: #9ae6b4;
+  --warning: #f6ad55;
+  --warning-light: #fbd38d;
+  --danger: #f56565;
+  --danger-light: #fc8181;
+  --info: #4299e1;
+  --info-light: #90cdf4;
+  
+  --purple: #9f7aea;
+  --pink: #ed64a6;
+  --teal: #38b2ac;
+  --orange: #ed8936;
+  --indigo: #5a67d8;
+  
+  --light: #f7fafc;
+  --dark: #2d3748;
+  --gray: #a0aec0;
+  --gray-light: #e2e8f0;
+  --gray-lighter: #f8f9fa;
+  
+  --border-radius: 16px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s ease;
+}
+
+/* Header fixe coloré */
+app-header-part {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+  border-bottom: 3px solid var(--accent);
+}
+
+/* Contenu principal avec fond dégradé */
+.reservations-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  margin-top: 80px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e3e8f0 50%, #d5dbe7 100%);
+}
+
+/* Header de la page avec dégradé coloré */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 2.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid var(--accent-light);
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.header-content h1 {
+  margin: 0;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header-content p {
+  margin: 0.5rem 0 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+/* Bouton principal avec dégradé vibrant */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--pink));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(237, 100, 166, 0.3);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: 0.5s;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(237, 100, 166, 0.4);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Statistiques avec couleurs vives et bordures */
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  border: 3px solid;
+}
+
+/* Bordures colorées différentes pour chaque carte */
+.stat-card:nth-child(1) {
+  border-color: var(--primary-light);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(163, 191, 250, 0.1));
+}
+
+.stat-card:nth-child(2) {
+  border-color: var(--success-light);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(154, 230, 180, 0.1));
+}
+
+.stat-card:nth-child(3) {
+  border-color: var(--warning-light);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(251, 211, 141, 0.1));
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-card:nth-child(1):hover { border-color: var(--primary); }
+.stat-card:nth-child(2):hover { border-color: var(--success); }
+.stat-card:nth-child(3):hover { border-color: var(--warning); }
+
+/* Icônes de statistiques colorées */
+.stat-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: var(--transition);
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.stat-icon.total {
+  background: linear-gradient(135deg, var(--primary), var(--indigo));
+}
+
+.stat-icon.upcoming {
+  background: linear-gradient(135deg, var(--success), var(--teal));
+}
+
+.stat-icon.amount {
+  background: linear-gradient(135deg, var(--warning), var(--orange));
+}
+
+.stat-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--gray);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-number {
+  margin: 0 0 0.25rem 0;
+  color: var(--dark);
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+/* Section filtres avec fond coloré */
+.filters-section {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 147, 251, 0.05));
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border-left: 5px solid var(--accent);
+  border-right: 2px solid var(--accent-light);
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-btn {
+  padding: 1rem 2rem;
+  border: 3px solid;
+  border-radius: 50px;
+  background: white;
+  color: var(--dark);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Couleurs de bordure différentes pour chaque bouton de filtre */
+.filter-btn:nth-child(1) { border-color: var(--primary-light); }
+.filter-btn:nth-child(2) { border-color: var(--success-light); }
+.filter-btn:nth-child(3) { border-color: var(--warning-light); }
+.filter-btn:nth-child(4) { border-color: var(--danger-light); }
+.filter-btn:nth-child(5) { border-color: var(--info-light); }
+.filter-btn:nth-child(6) { border-color: var(--purple); }
+
+.filter-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  opacity: 0.1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.filter-btn:hover::before {
+  transform: scaleX(1);
+}
+
+.filter-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.filter-btn.active {
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Couleurs d'arrière-plan pour les boutons actifs */
+.filter-btn:nth-child(1).active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+.filter-btn:nth-child(2).active { background: linear-gradient(135deg, var(--success), var(--teal)); }
+.filter-btn:nth-child(3).active { background: linear-gradient(135deg, var(--warning), var(--orange)); }
+.filter-btn:nth-child(4).active { background: linear-gradient(135deg, var(--danger), #e53e3e); }
+.filter-btn:nth-child(5).active { background: linear-gradient(135deg, var(--info), #3182ce); }
+.filter-btn:nth-child(6).active { background: linear-gradient(135deg, var(--purple), var(--secondary)); }
+
+/* Liste des réservations avec cartes colorées */
+.reservations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.reservation-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+  border-left: 8px solid;
+  border-right: 2px solid;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Bordures colorées basées sur le statut */
+.reservation-card:has(.status-badge.confirmed) {
+  border-left-color: var(--success);
+  border-right-color: var(--success-light);
+  border-top-color: var(--success-light);
+  border-bottom-color: var(--success-light);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(72, 187, 120, 0.05));
+}
+
+.reservation-card:has(.status-badge.pending) {
+  border-left-color: var(--warning);
+  border-right-color: var(--warning-light);
+  border-top-color: var(--warning-light);
+  border-bottom-color: var(--warning-light);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(246, 173, 85, 0.05));
+}
+
+.reservation-card:has(.status-badge.cancelled) {
+  border-left-color: var(--danger);
+  border-right-color: var(--danger-light);
+  border-top-color: var(--danger-light);
+  border-bottom-color: var(--danger-light);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 101, 101, 0.05));
+}
+
+.reservation-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.reservation-card:hover::before {
+  opacity: 1;
+}
+
+.reservation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.reservation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.event-info {
+  flex: 1;
+}
+
+.event-title {
+  margin: 0 0 0.5rem 0;
+  color: var(--dark);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Badges de statut améliorés */
+.status-badge {
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+}
+
+.status-badge.confirmed {
+  background: linear-gradient(135deg, var(--success-light), var(--success));
+  color: white;
+  border: 2px solid var(--success);
+}
+
+.status-badge.pending {
+  background: linear-gradient(135deg, var(--warning-light), var(--warning));
+  color: white;
+  border: 2px solid var(--warning);
+}
+
+.status-badge.cancelled {
+  background: linear-gradient(135deg, var(--danger-light), var(--danger));
+  color: white;
+  border: 2px solid var(--danger);
+}
+
+.status-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Actions de réservation colorées */
+.reservation-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-secondary, .btn-danger, .btn-success {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--info-light), var(--info));
+  color: white;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger-light), var(--danger));
+  color: white;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success-light), var(--success));
+  color: white;
+}
+
+.btn-secondary:hover, .btn-danger:hover, .btn-success:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-sm {
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Détails de réservation avec icônes colorées */
+.reservation-details {
+  margin-bottom: 1.5rem;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--dark);
+  padding: 1rem;
+  background: var(--gray-lighter);
+  border-radius: 10px;
+  transition: var(--transition);
+  border-left: 4px solid var(--primary);
+}
+
+.detail-item:hover {
+  background: var(--gray-light);
+  transform: translateX(5px);
+  border-left-color: var(--accent);
+}
+
+.detail-item i {
+  color: var(--primary);
+  width: 20px;
+  text-align: center;
+  font-size: 1.2rem;
+  transition: var(--transition);
+}
+
+.detail-item:hover i {
+  color: var(--accent);
+  transform: scale(1.2);
+}
+
+/* Messages d'alerte colorés */
+.alert-message {
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid;
+}
+
+.alert-message.cancelled {
+  background: linear-gradient(135deg, var(--danger-light), #fed7d7);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.alert-message.past {
+  background: linear-gradient(135deg, var(--warning-light), #feebc8);
+  color: var(--warning);
+  border-color: var(--warning);
+}
+
+/* États de chargement colorés */
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(102, 126, 234, 0.05));
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border: 3px dashed var(--primary-light);
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid var(--primary-light);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* État vide coloré */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(159, 122, 234, 0.05));
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border: 3px dashed var(--purple);
+}
+
+.empty-icon {
+  font-size: 5rem;
+  color: var(--purple);
+  margin-bottom: 1rem;
+  opacity: 0.7;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.empty-state h3 {
+  margin: 1rem 0;
+  color: var(--dark);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.empty-state p {
+  margin-bottom: 1.5rem;
+  color: var(--gray);
+  font-size: 1.1rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-state .btn-primary {
+  background: linear-gradient(135deg, var(--purple), var(--secondary));
+}
+
+.empty-state .btn-primary:hover {
+  box-shadow: 0 12px 25px rgba(159, 122, 234, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reservations-container {
+    padding: 1rem;
+    margin-top: 70px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .stats-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-buttons {
+    justify-content: center;
+  }
+
+  .reservation-header {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .reservation-actions {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .detail-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .reservations-container {
+    margin-top: 60px;
+  }
+
+  .header-content h1 {
+    font-size: 2rem;
+  }
+
+  .filter-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .reservation-card {
+    padding: 1.5rem;
+  }
+}

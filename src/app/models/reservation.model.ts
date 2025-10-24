@@ -6,5 +6,6 @@ export interface Reservation {
     reservationDate?: string; // ISO format
     status?: string;
     userKeycloakId?: string;
+    Prix :number;
 }
   

@@ -1,5 +1,6 @@
-/* Variables CSS pour une cohérence des couleurs */
+/* Variables CSS */
 :root {
+  /* Couleurs principales existantes */
   --primary: #667eea;
   --primary-dark: #5a67d8;
   --secondary: #764ba2;
@@ -12,6 +13,27 @@
   --dark: #2d3748;
   --gray: #a0aec0;
   --gray-light: #e2e8f0;
+  
+  /* NOUVELLES COULEURS POUR BORDURES */
+  --border-primary: #e2e8f0;
+  --border-secondary: #cbd5e0;
+  --border-accent: #d6bcfa;
+  --border-success: #9ae6b4;
+  --border-warning: #fbd38d;
+  --border-info: #90cdf4;
+  --border-gradient: linear-gradient(135deg, #667eea, #764ba2);
+  
+  /* COULEURS POUR ACTIONS RAPIDES */
+  --action-primary: #4fd1c7;
+  --action-secondary: #f687b3;
+  --action-success: #68d391;
+  --action-warning: #f6ad55;
+  --action-info: #63b3ed;
+  --action-gradient-1: linear-gradient(135deg, #4fd1c7, #4299e1);
+  --action-gradient-2: linear-gradient(135deg, #f687b3, #ed64a6);
+  --action-gradient-3: linear-gradient(135deg, #68d391, #48bb78);
+  --action-gradient-4: linear-gradient(135deg, #f6ad55, #ed8936);
+  
   --border-radius: 16px;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   --transition: all 0.3s ease;
@@ -71,6 +93,7 @@ body {
 }
 
 .stat-card {
+  border: 2px solid var(--border-primary);
   background: rgba(255, 255, 255, 0.95);
   border-radius: var(--border-radius);
   padding: 1.5rem;
@@ -80,7 +103,6 @@ body {
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
   transition: var(--transition);
-  border: 1px solid rgba(255, 255, 255, 0.5);
   position: relative;
   overflow: hidden;
 }
@@ -98,6 +120,7 @@ body {
 .stat-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary);
 }
 
 .stat-card:hover::after {
@@ -110,6 +133,14 @@ body {
 
 .stat-card.info::after {
   background: linear-gradient(135deg, var(--info), #3182ce);
+}
+
+.stat-card.primary {
+  border-color: var(--border-info);
+}
+
+.stat-card.info {
+  border-color: var(--border-success);
 }
 
 .stat-icon {
@@ -169,6 +200,7 @@ body {
 }
 
 .nav-item {
+  border: 2px solid var(--border-secondary);
   background: rgba(255, 255, 255, 0.9);
   border-radius: var(--border-radius);
   padding: 1.5rem;
@@ -176,7 +208,6 @@ body {
   cursor: pointer;
   transition: var(--transition);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -198,6 +229,7 @@ body {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 1);
+  border-color: var(--primary);
 }
 
 .nav-item:hover::before {
@@ -237,18 +269,19 @@ body {
 }
 
 .chart-container {
+  border: 2px solid var(--border-primary);
   background: rgba(255, 255, 255, 0.95);
   border-radius: var(--border-radius);
   padding: 2rem;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
   transition: var(--transition);
 }
 
 .chart-container:hover {
   transform: translateY(-3px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  border-color: var(--border-info);
 }
 
 .chart-container h3 {
@@ -261,23 +294,22 @@ body {
 
 /* Section des événements à venir */
 .upcoming-section,
-.recent-section,
-.quick-actions {
+.recent-section {
+  border: 2px solid var(--border-success);
   background: rgba(255, 255, 255, 0.95);
   border-radius: var(--border-radius);
   padding: 2rem;
   margin-bottom: 2rem;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
   transition: var(--transition);
 }
 
 .upcoming-section:hover,
-.recent-section:hover,
-.quick-actions:hover {
+.recent-section:hover {
   transform: translateY(-3px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  border-color: var(--success);
 }
 
 .section-header {
@@ -285,6 +317,8 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border-primary);
+  padding-bottom: 1rem;
 }
 
 .section-header h3 {
@@ -325,11 +359,11 @@ body {
 }
 
 .event-card {
+  border: 2px solid var(--border-secondary);
   background: #f8f9fa;
   border-radius: var(--border-radius);
   overflow: hidden;
   transition: var(--transition);
-  border: 1px solid var(--gray-light);
   position: relative;
 }
 
@@ -348,6 +382,7 @@ body {
 .event-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary);
 }
 
 .event-card:hover::before {
@@ -404,6 +439,7 @@ body {
 }
 
 .event-item {
+  border: 2px solid var(--border-primary);
   background: #f8f9fa;
   border-radius: var(--border-radius);
   padding: 1.5rem;
@@ -411,12 +447,12 @@ body {
   justify-content: space-between;
   align-items: center;
   transition: var(--transition);
-  border: 1px solid var(--gray-light);
 }
 
 .event-item:hover {
   background: #e9ecef;
   transform: translateX(5px);
+  border-color: var(--border-info);
 }
 
 .event-info h4 {
@@ -592,7 +628,24 @@ body {
   margin-right: auto;
 }
 
-/* Actions rapides */
+/* ACTIONS RAPIDES AVEC COULEURS SPÉCIALES */
+.quick-actions {
+  border: 2px solid var(--border-accent);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+}
+
+.quick-actions:hover {
+  border-color: var(--accent);
+  box-shadow: 0 15px 30px rgba(240, 147, 251, 0.15);
+  transform: translateY(-3px);
+}
+
 .quick-actions h3 {
   margin: 0 0 1.5rem 0;
   color: var(--dark);
@@ -608,8 +661,6 @@ body {
 }
 
 .quick-action-btn {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
   border: none;
   border-radius: var(--border-radius);
   padding: 1.5rem;
@@ -621,37 +672,59 @@ body {
   gap: 0.75rem;
   font-size: 1rem;
   font-weight: 600;
+  color: white;
   position: relative;
   overflow: hidden;
 }
 
-.quick-action-btn::before {
+/* Dégradés colorés pour chaque bouton d'action */
+.quick-action-btn:nth-child(1) {
+  background: var(--action-gradient-1); /* Découvrir Événements */
+}
+
+.quick-action-btn:nth-child(2) {
+  background: var(--action-gradient-2); /* Mes Favoris */
+}
+
+.quick-action-btn:nth-child(3) {
+  background: var(--action-gradient-3); /* Modifier Profil */
+}
+
+.quick-action-btn:nth-child(4) {
+  background: var(--action-gradient-4); /* Exporter Historique */
+}
+
+/* Effets de hover pour les boutons d'actions rapides */
+.quick-action-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1);
+}
+
+.quick-action-btn:hover::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
-  transition: var(--transition);
-}
-
-.quick-action-btn:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-}
-
-.quick-action-btn:hover::before {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .quick-action-btn i {
   font-size: 2rem;
   transition: var(--transition);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .quick-action-btn:hover i {
-  transform: scale(1.2);
+  transform: scale(1.2) rotate(5deg);
 }
 
 /* Animations */
@@ -724,6 +797,18 @@ body {
   .view-all-btn {
     align-self: flex-end;
   }
+
+  .stat-card,
+  .chart-container,
+  .upcoming-section,
+  .recent-section,
+  .quick-actions {
+    border-width: 1px;
+  }
+  
+  .quick-action-btn {
+    padding: 1.25rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -753,5 +838,18 @@ body {
 
   .chart-container {
     padding: 1.5rem;
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-action-btn {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .quick-action-btn i {
+    font-size: 1.75rem;
   }
 }

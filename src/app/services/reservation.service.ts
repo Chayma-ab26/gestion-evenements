@@ -34,15 +34,28 @@ export class ReservationService {
   }
 
   // Obtenir toutes les réservations
+  // Obtenir toutes les réservations (AJOUTEZ LE TOKEN)
+   // Obtenir toutes les réservations
   getAllReservations(): Observable<Reservation[]> {
-    return this.http.get<Reservation[]>(`${this.apiUrl}/getall`);
+    const token = this.keycloakService.getToken();
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<Reservation[]>(`${this.apiUrl}/getall`, { headers });
   }
 
   // Obtenir une réservation par ID
   getReservationById(id: number): Observable<Reservation> {
-    return this.http.get<Reservation>(`${this.apiUrl}/getbyid/${id}`);
-  }
+    const token = this.keycloakService.getToken();
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
 
+    return this.http.get<Reservation>(`${this.apiUrl}/getbyid/${id}`, { headers });
+  }
   // Mettre à jour le statut d'une réservation
   updateStatus(id: number, status: string): Observable<Reservation> {
     return this.http.put<Reservation>(`${this.apiUrl}/updatestatus/${id}?status=${status}`, null);
@@ -52,4 +65,26 @@ export class ReservationService {
   deleteReservation(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
+
+  // OBTENIR les réservations par utilisateur (AVEC TOKEN)
+ getReservationsByUser(userId: string): Observable<Reservation[]> {
+    const token = this.keycloakService.getToken();
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<Reservation[]>(`${this.apiUrl}/user/${userId}`, { headers });
+  }
+
+  getMyReservations(): Observable<Reservation[]> {
+    const token = this.keycloakService.getToken();
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<Reservation[]>(`${this.apiUrl}/my-reservations`, { headers });
+  }
+
 }
