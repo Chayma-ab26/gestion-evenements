@@ -13,7 +13,10 @@ import { Router } from '@angular/router';
 import { KeycloakService } from '../../services/keycloak.service';
 import { FormsModule } from '@angular/forms';
 import { HeaderPartComponent } from '../header-part/header-part.component';
+import { StripeService } from '../../services/stripe.service';
 
+
+declare var Stripe: any;
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
@@ -35,7 +38,9 @@ export class EventListComponent implements OnInit {
   hoverRating: { [eventId: number]: number } = {};
   selectedImageIndex: { [eventId: number]: number } = {};
   avisParEvent: { [key: number]: any[] } = {};
-
+ 
+  reservationId = 1; // ID de la réservation
+  price: number = 0;
   constructor(
     private eventService: EventService,
     private categoryService: CategoryService,
@@ -45,7 +50,8 @@ export class EventListComponent implements OnInit {
     private ngzone: NgZone,
     private router: Router,
     private keycloakService: KeycloakService,
-    private http: HttpClient
+    private http: HttpClient,
+  private stripeService: StripeService
   ) {}
 
   ngOnInit(): void {
@@ -257,5 +263,20 @@ viewDetails(event: any) {
   });
 }
 
+
+payReservation() {
+    this.stripeService.createCheckoutSession(this.reservationId).subscribe(
+      (session: any) => {
+        this.price = session.amount; // prix renvoyé par ton backend
+
+        // Initialiser Stripe.js
+        const stripe = Stripe('pk_test_51SJixHR9CPMR5lYBgz1MdDJB3U7lerfOSi1UxDs2iodSB5C518MRd5DlrxmF9w9dkotuKzGxTMRUhhtQ8XYX3VwC00YQiAF1cs'); // ta clé publique Stripe
+        stripe.redirectToCheckout({ sessionId: session.id });
+      },
+      (err) => {
+        console.error('Erreur création session Stripe', err);
+      }
+    );
+  }
 
 }
