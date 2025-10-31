@@ -38,6 +38,10 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+
+
+
+
         <!-- Base de données -->
        <!-- <dependency>
             <groupId>com.mysql</groupId>
@@ -92,6 +96,12 @@
             <artifactId>spring-beans</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>24.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -103,6 +113,8 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
