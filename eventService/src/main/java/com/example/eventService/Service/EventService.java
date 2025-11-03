@@ -117,7 +117,9 @@ public EventDTO createEventWithCategory(EventDTO dto) {
         dto.setLocal(localDTO);
         return dto;
     }
-
+    public EventEntity getOne(Long id) {
+        return eventRepository.findById(id).orElse(null);
+    }
  /* public EventEntity createEvent(EventEntity event) {
         // Vérification si la catégorie existe
         if (categoryClient.getCategoryById(event.getCategoryId()) == null) {

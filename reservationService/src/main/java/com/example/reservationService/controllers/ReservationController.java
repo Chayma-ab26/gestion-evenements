@@ -11,6 +11,7 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -18,20 +19,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.beans.PropertyEditorSupport;
+import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static io.smallrye.config.ConfigLogging.log;
 
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    @Value("${stripe.secret.key}")
-    private String stripeApiKey;
-
+    private final String stripeApiKey = "sk_test_51SJixHR9CPMR5lYB8h8z6Cu42TXdzBva7WVnIfnSggGUZbwfsqB0wHFEQwqlBhGv8i054PFDj9wvJh8X3WX9a6IB00JQDZzoHL";
+//    @Value("${stripe.secret-key}")
+//    private String stripeApiKey;
     @Value("${stripe.success.url}")
     private String successUrl;
 
@@ -133,57 +142,68 @@ public class ReservationController {
                     .body(Map.of("error", "Erreur lors de la récupération des réservations"));
         }
     }
-
-
-
-    @PostMapping ("/create-checkout-session/{reservationId}")
+    @PostMapping("/create-checkout-session/{reservationId}")
     public ResponseEntity<?> createCheckoutSession(@PathVariable Long reservationId) {
         try {
+            // 1. Récupérer la réservation
             ReservationEntity reservation = reservationService.getReservationById(reservationId);
             if (reservation == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("error", "Réservation non trouvée"));
+                return ResponseEntity.status(404).body(Map.of("error", "Réservation non trouvée"));
             }
+
+            // 2. Récupérer l'événement
             EventDTO event = eventClient.getEventById(reservation.getEventId());
             if (event == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("error", "Événement non trouvé"));
+                return ResponseEntity.status(404).body(Map.of("error", "Événement introuvable"));
             }
 
-            long priceInCents = (long) (event.getPrix() * 100);
+            // 3. Calculer le prix
+            long priceCents = (long) (event.getPrix() * 100);
+            if (priceCents <= 0) priceCents = 1000; // 10.00€ par défaut
 
-            Stripe.apiKey = stripeApiKey;
+            // 4. CONTOURNER SSL (DEV SEULEMENT)
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() { return null; }
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
 
+            // 5. CLÉ STRIPE
+            Stripe.apiKey = "sk_test_51SJixHR9CPMR5lYB8h8z6Cu42TXdzBva7WVnIfnSggGUZbwfsqB0wHFEQwqlBhGv8i054PFDj9wvJh8X3WX9a6IB00JQDZzoHL";
+
+            // 6. CONSTRUIRE LES PARAMÈTRES
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl(successUrl)
-                    .setCancelUrl(cancelUrl)
+                    .setSuccessUrl("http://localhost:4200/success")
+                    .setCancelUrl("http://localhost:4200/cancel")
                     .addLineItem(
                             SessionCreateParams.LineItem.builder()
                                     .setPriceData(
                                             SessionCreateParams.LineItem.PriceData.builder()
                                                     .setCurrency("eur")
-                                                    .setUnitAmount(priceInCents)
+                                                    .setUnitAmount(priceCents)
                                                     .setProductData(
                                                             SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                    .setName("Paiement réservation #" + reservationId)
-                                                                    .build()
-                                                    )
-                                                    .build()
-                                    )
+                                                                    .setName(event.getTitle() + " - Réservation #" + reservationId)
+                                                                    .build())
+                                                    .build())
                                     .setQuantity(1L)
-                                    .build()
-                    )
+                                    .build())
                     .build();
 
+            // 7. CRÉER LA SESSION
             Session session = Session.create(params);
-
-            return ResponseEntity.ok(Map.of("id", session.getId()));
+            return ResponseEntity.ok(Map.of("url", session.getUrl()));
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Erreur lors de la création de la session Stripe"));
+            log.error("Erreur Stripe", e);
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
     /**

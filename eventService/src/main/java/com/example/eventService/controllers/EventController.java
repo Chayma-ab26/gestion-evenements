@@ -65,6 +65,10 @@ public class EventController {
         });
 
     }
+    @GetMapping("/getbyid/{id}")
+    public EventEntity getEventById(@PathVariable Long id) {
+        return eventService.getOne(id);
+    }
 
     ////////////////////////////
     /*@PostMapping("/create")
