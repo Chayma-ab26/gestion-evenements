@@ -88,33 +88,38 @@
       <div class="reservation-header">
         <div class="event-info">
           <h3 class="event-title">{{ reservation.eventTitle || 'Événement sans nom' }}</h3>
-          <span [class]="getStatusBadgeClass(reservation.status)">
-            {{ getStatusText(reservation.status) }}
-          </span>
         </div>
         <div class="reservation-actions">
-          <button 
-            (click)="viewEventDetails(reservation.eventId)" 
+          <button
+            (click)="viewEventDetails(reservation.eventId)"
             class="btn-secondary btn-sm"
             title="Voir les détails"
           >
             <i class="fas fa-eye"></i>
           </button>
-          <button 
+          <button
             *ngIf="reservation.status !== 'CANCELLED' && isEventUpcoming(reservation.eventDate)"
-            (click)="cancelReservation(reservation)" 
+            (click)="cancelReservation(reservation)"
             class="btn-danger btn-sm"
             title="Annuler la réservation"
           >
             <i class="fas fa-times"></i>
           </button>
-          <button 
+          <button
             *ngIf="reservation.status === 'CONFIRMED'"
-            (click)="downloadTicket(reservation)" 
+            (click)="downloadTicket(reservation)"
             class="btn-success btn-sm"
             title="Télécharger le billet"
           >
             <i class="fas fa-download"></i>
+          </button>
+          <button
+            *ngIf="reservation.status !== 'CANCELLED'"
+            (click)="payReservation(reservation)"
+            class="btn-pay btn-sm"
+            title="Payer la réservation"
+          >
+            <i class="fas fa-credit-card"></i> Payer
           </button>
         </div>
       </div>

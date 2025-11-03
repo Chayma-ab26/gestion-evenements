@@ -14,9 +14,6 @@ import { KeycloakService } from '../../services/keycloak.service';
 import { FormsModule } from '@angular/forms';
 import { HeaderPartComponent } from '../header-part/header-part.component';
 import { StripeService } from '../../services/stripe.service';
-
-
-declare var Stripe: any;
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
@@ -39,8 +36,6 @@ export class EventListComponent implements OnInit {
   selectedImageIndex: { [eventId: number]: number } = {};
   avisParEvent: { [key: number]: any[] } = {};
  
-  reservationId = 1; // ID de la réservation
-  price: number = 0;
   constructor(
     private eventService: EventService,
     private categoryService: CategoryService,
@@ -172,16 +167,15 @@ export class EventListComponent implements OnInit {
         console.warn("⚠️ Aucun événement trouvé avec l'id :", eventId);
       }
     },
-    error: (error) => {
-      console.error("❌ Erreur lors de l'envoi de l'avis :", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text: 'Impossible d\'envoyer votre avis. Vérifiez le backend.',
-        confirmButtonColor: '#e74c3c'
-      });
-    }
+    
   });
+  
+      Swal.fire({
+        icon: 'success',
+        title: 'Merci !',
+        text: 'Votre avis a été enregistré avec succès.',
+        confirmButtonColor: '#28a745'
+      });
 }
 
 
@@ -264,19 +258,6 @@ viewDetails(event: any) {
 }
 
 
-payReservation() {
-    this.stripeService.createCheckoutSession(this.reservationId).subscribe(
-      (session: any) => {
-        this.price = session.amount; // prix renvoyé par ton backend
 
-        // Initialiser Stripe.js
-        const stripe = Stripe('pk_test_51SJixHR9CPMR5lYBgz1MdDJB3U7lerfOSi1UxDs2iodSB5C518MRd5DlrxmF9w9dkotuKzGxTMRUhhtQ8XYX3VwC00YQiAF1cs'); // ta clé publique Stripe
-        stripe.redirectToCheckout({ sessionId: session.id });
-      },
-      (err) => {
-        console.error('Erreur création session Stripe', err);
-      }
-    );
-  }
 
 }

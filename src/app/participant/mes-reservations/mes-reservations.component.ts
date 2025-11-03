@@ -6,7 +6,13 @@ import { KeycloakService } from '../../services/keycloak.service';
 import { Reservation } from '../../models/reservation.model';
 import Swal from 'sweetalert2';
 import { HeaderPartComponent } from '../header-part/header-part.component';
+import { StripeService } from '../../services/stripe.service';
+import { HttpClientModule } from '@angular/common/http';
+import { loadStripe,Stripe } from '@stripe/stripe-js';
 
+
+
+declare const Stripe: any;
 // Interface étendue pour inclure les données de l'événement
 interface ReservationWithEvent extends Reservation {
   eventTitle?: string;
@@ -42,8 +48,8 @@ export class MesReservationsComponent implements OnInit {
   constructor(
     private reservationService: ReservationService,
     private keycloakService: KeycloakService,
-    private router: Router
-    // ← HttpClient supprimé
+    private router: Router,
+    private stripeService: StripeService
   ) {}
 
   ngOnInit() {
@@ -297,7 +303,7 @@ export class MesReservationsComponent implements OnInit {
   getStatusText(status: string = ''): string {
     switch (status) {
       case 'CONFIRMED':
-        return 'Confirmée';
+        return 'Payé';
       case 'PENDING':
         return 'En attente';
       case 'CANCELLED':
@@ -406,4 +412,53 @@ export class MesReservationsComponent implements OnInit {
   refreshReservations() {
     this.loadReservations();
   }
+
+  async payReservation(reservation: ReservationWithEvent) {
+  if (!reservation.id) {
+    Swal.fire('Erreur', 'ID de réservation manquant', 'error');
+    return;
+  }
+
+  try {
+    const response = await this.stripeService.createCheckoutSession(reservation.id).toPromise();
+    if (response.url) {
+      window.location.href = response.url;  // Redirect to Stripe Checkout
+    } else {
+      Swal.fire('Erreur', 'URL de paiement non reçue', 'error');
+    }
+  } catch (err: any) {
+    console.error('Erreur création session Stripe', err);
+    let message = 'Impossible de créer la session de paiement.';
+    if (err.status === 404 && err.error?.error?.includes('Événement introuvable')) {
+      message = `Événement associé (ID ${reservation.eventId}) non trouvé. Vérifiez les données de l'événement ou contactez l'admin.`;
+    }
+    Swal.fire('Erreur', message, 'error');
+  }
+}
+
+  getStatusIcon(status: string): string {
+  switch (status?.toUpperCase()) {
+    case 'CONFIRMED':
+      return 'fas fa-check-circle';
+    case 'PENDING':
+      return 'fas fa-clock';
+    case 'CANCELLED':
+      return 'fas fa-times-circle';
+    default:
+      return 'fas fa-question-circle';
+  }
+}
+/* 
+getStatusText(status: string): string {
+  switch (status?.toUpperCase()) {
+    case 'CONFIRMED':
+      return 'Confirmée';
+    case 'PENDING':
+      return 'En attente';
+    case 'CANCELLED':
+      return 'Annulée';
+    default:
+      return 'Inconnu';
+  }
+} */
 }

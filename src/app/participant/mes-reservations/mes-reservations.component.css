@@ -1,76 +1,97 @@
-/* Variables CSS étendues avec plus de couleurs */
+/* Variables CSS pour un design moderne et original avec thème clair et vibrant */
 :root {
-  --primary: #667eea;
-  --primary-light: #a3bffa;
-  --primary-dark: #5a67d8;
-  --secondary: #764ba2;
-  --secondary-light: #b794f4;
-  --accent: #f093fb;
-  --accent-light: #fbb6ce;
-  --success: #48bb78;
-  --success-light: #9ae6b4;
-  --warning: #f6ad55;
-  --warning-light: #fbd38d;
-  --danger: #f56565;
-  --danger-light: #fc8181;
-  --info: #4299e1;
-  --info-light: #90cdf4;
-  
-  --purple: #9f7aea;
-  --pink: #ed64a6;
-  --teal: #38b2ac;
-  --orange: #ed8936;
-  --indigo: #5a67d8;
-  
-  --light: #f7fafc;
-  --dark: #2d3748;
-  --gray: #a0aec0;
-  --gray-light: #e2e8f0;
-  --gray-lighter: #f8f9fa;
-  
-  --border-radius: 16px;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
-  --transition: all 0.3s ease;
+  --primary: #4f46e5; /* Indigo vibrant */
+  --primary-light: #a5b4fc;
+  --primary-dark: #4338ca;
+  --primary-50: #eef2ff;
+  --primary-100: #e0e7ff;
+  --primary-200: #c7d2fe;
+  --secondary: #ec4899; /* Rose vibrant */
+  --secondary-light: #f9a8d4;
+  --accent: #eab308; /* Jaune doré */
+  --accent-light: #fde047;
+  --success: #22c55e; /* Vert vif */
+  --success-light: #86efac;
+  --success-50: #ecfdf5;
+  --warning: #f59e0b; /* Orange doux */
+  --warning-light: #fcd34d;
+  --warning-50: #fffbeb;
+  --danger: #ef4444; /* Rouge vif */
+  --danger-light: #fca5a5;
+  --danger-50: #fef2f2;
+  --info: #3b82f6; /* Bleu clair */
+  --info-light: #93c5fd;
+  --info-50: #eff6ff;
+
+  --purple: #a855f7;
+  --pink: #ec4899;
+  --teal: #14b8a6;
+  --orange: #f97316;
+  --indigo: #6366f1;
+  --cyan: #06b6d4;
+  --lime: #84cc16;
+
+  --light: #ffffff; /* Fond clair */
+  --dark: #1f2937;
+  --gray: #6b7280;
+  --gray-light: #d1d5db;
+  --gray-lighter: #f3f4f6;
+  --gray-50: #f9fafb;
+
+  --border-radius: 12px; /* Coins arrondis modernes */
+  --border-radius-lg: 20px;
+  --border-radius-sm: 8px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Ombre douce */
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --backdrop-blur: blur(20px);
+  --backdrop-blur-sm: blur(10px);
+  --transition: all 0.3s ease-in-out; /* Transition fluide */
+  --transition-fast: all 0.15s ease-in-out;
+  --transition-slow: all 0.5s ease-in-out;
+  --animation-stagger: 0.1s;
 }
 
-/* Header fixe coloré */
+/* Header fixe avec fond clair */
 app-header-part {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-lg);
-  border-bottom: 3px solid var(--accent);
+  border-bottom: 1px solid var(--gray-light);
 }
 
-/* Contenu principal avec fond dégradé */
+/* Contenu principal avec fond clair et dégradé subtil */
 .reservations-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
   min-height: 100vh;
   margin-top: 80px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e3e8f0 50%, #d5dbe7 100%);
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  color: var(--dark);
 }
 
-/* Header de la page avec dégradé coloré */
+/* Header de la page avec fond clair et bordure vibrante */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
   padding: 2.5rem;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: var(--light);
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-lg);
-  color: white;
+  box-shadow: var(--shadow);
+  color: var(--dark);
   position: relative;
   overflow: hidden;
-  border: 3px solid var(--accent-light);
+  border: 2px solid var(--primary-light);
 }
 
 .page-header::before {
@@ -80,38 +101,37 @@ app-header-part {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  opacity: 0.3;
+  background: radial-gradient(circle, rgba(165, 180, 252, 0.1) 0%, transparent 70%);
+  opacity: 0.5;
 }
 
 .header-content h1 {
   margin: 0;
-  color: white;
+  color: var(--primary-dark);
   font-size: 2.5rem;
   font-weight: 800;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: none;
 }
 
 .header-content p {
   margin: 0.5rem 0 0 0;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--gray);
   font-size: 1.2rem;
   font-weight: 500;
 }
 
-/* Bouton principal avec dégradé vibrant */
+/* Bouton principal avec dégradé vibrant sur clair */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--pink));
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 1rem 2rem;
   font-weight: 700;
-  box-shadow: 0 8px 20px rgba(237, 100, 166, 0.3);
+  box-shadow: var(--shadow);
   transition: var(--transition);
   position: relative;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-primary::before {
@@ -121,7 +141,7 @@ app-header-part {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: 0.5s;
 }
 
@@ -130,12 +150,11 @@ app-header-part {
 }
 
 .btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px rgba(237, 100, 166, 0.4);
-  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
-/* Statistiques avec couleurs vives et bordures */
+/* Statistiques avec fonds colorés et bordures vibrantes */
 .stats-overview {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -144,72 +163,71 @@ app-header-part {
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+  backdrop-filter: var(--backdrop-blur-sm);
   border-radius: var(--border-radius);
   padding: 2rem;
   display: flex;
   align-items: center;
   gap: 1.5rem;
   box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
   transition: var(--transition);
   position: relative;
   overflow: hidden;
-  border: 3px solid;
+  border: 2px solid transparent;
+  animation: slideInFromBottom 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-/* Bordures colorées différentes pour chaque carte */
 .stat-card:nth-child(1) {
-  border-color: var(--primary-light);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(163, 191, 250, 0.1));
+  background: linear-gradient(135deg, rgba(165, 180, 252, 0.1), rgba(79, 70, 229, 0.05));
+  border-color: var(--primary);
+  animation-delay: 0.1s;
 }
 
 .stat-card:nth-child(2) {
-  border-color: var(--success-light);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(154, 230, 180, 0.1));
+  background: linear-gradient(135deg, rgba(134, 239, 172, 0.1), rgba(34, 197, 94, 0.05));
+  border-color: var(--success);
+  animation-delay: 0.2s;
 }
 
 .stat-card:nth-child(3) {
-  border-color: var(--warning-light);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(251, 211, 141, 0.1));
+  background: linear-gradient(135deg, rgba(253, 212, 77, 0.1), rgba(245, 158, 11, 0.05));
+  border-color: var(--warning);
+  animation-delay: 0.3s;
 }
 
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+@keyframes slideInFromBottom {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .stat-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: var(--backdrop-blur);
 }
 
-.stat-card:nth-child(1):hover { border-color: var(--primary); }
-.stat-card:nth-child(2):hover { border-color: var(--success); }
-.stat-card:nth-child(3):hover { border-color: var(--warning); }
-
-/* Icônes de statistiques colorées */
 .stat-icon {
   width: 80px;
   height: 80px;
-  border-radius: 20px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  color: white;
+  color: rgb(144, 214, 247);
   flex-shrink: 0;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   transition: var(--transition);
+  box-shadow: var(--shadow-md);
 }
 
 .stat-card:hover .stat-icon {
   transform: scale(1.1) rotate(5deg);
+  box-shadow: var(--shadow-lg);
 }
 
 .stat-icon.total {
@@ -217,7 +235,7 @@ app-header-part {
 }
 
 .stat-icon.upcoming {
-  background: linear-gradient(135deg, var(--success), var(--teal));
+  background: linear-gradient(135deg, var(--success), var(--lime));
 }
 
 .stat-icon.amount {
@@ -226,7 +244,7 @@ app-header-part {
 
 .stat-info h3 {
   margin: 0 0 0.5rem 0;
-  color: var(--gray);
+  color: var(--dark);
   font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -238,17 +256,31 @@ app-header-part {
   color: var(--dark);
   font-size: 2.5rem;
   font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Section filtres avec fond coloré */
+/* Section filtres avec fond clair et glassmorphism */
 .filters-section {
   margin-bottom: 2rem;
   padding: 2rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 147, 251, 0.05));
+  background: rgba(240, 240, 242, 0.95);
+  backdrop-filter: var(--backdrop-blur-sm);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
-  border-left: 5px solid var(--accent);
-  border-right: 2px solid var(--accent-light);
+  border: 1px solid var(--gray-light);
+  animation: fadeInScale 0.5s ease-out forwards;
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+@keyframes fadeInScale {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .filter-buttons {
@@ -259,9 +291,9 @@ app-header-part {
 
 .filter-btn {
   padding: 1rem 2rem;
-  border: 3px solid;
+  border: 1px solid var(--gray-light);
   border-radius: 50px;
-  background: white;
+  background: var(--gray-lighter);
   color: var(--dark);
   cursor: pointer;
   transition: var(--transition);
@@ -272,10 +304,8 @@ app-header-part {
   font-size: 1rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Couleurs de bordure différentes pour chaque bouton de filtre */
 .filter-btn:nth-child(1) { border-color: var(--primary-light); }
 .filter-btn:nth-child(2) { border-color: var(--success-light); }
 .filter-btn:nth-child(3) { border-color: var(--warning-light); }
@@ -283,44 +313,26 @@ app-header-part {
 .filter-btn:nth-child(5) { border-color: var(--info-light); }
 .filter-btn:nth-child(6) { border-color: var(--purple); }
 
-.filter-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: currentColor;
-  opacity: 0.1;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-
-.filter-btn:hover::before {
-  transform: scaleX(1);
-}
-
 .filter-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  background: rgb(242, 212, 212);
 }
 
 .filter-btn.active {
-  color: white;
+  color: rgb(217, 248, 208);
   border-color: transparent;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow);
 }
 
-/* Couleurs d'arrière-plan pour les boutons actifs */
-.filter-btn:nth-child(1).active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
-.filter-btn:nth-child(2).active { background: linear-gradient(135deg, var(--success), var(--teal)); }
-.filter-btn:nth-child(3).active { background: linear-gradient(135deg, var(--warning), var(--orange)); }
-.filter-btn:nth-child(4).active { background: linear-gradient(135deg, var(--danger), #e53e3e); }
-.filter-btn:nth-child(5).active { background: linear-gradient(135deg, var(--info), #3182ce); }
-.filter-btn:nth-child(6).active { background: linear-gradient(135deg, var(--purple), var(--secondary)); }
+.filter-btn:nth-child(1).active { background: var(--primary); }
+.filter-btn:nth-child(2).active { background: var(--success); }
+.filter-btn:nth-child(3).active { background: var(--warning); }
+.filter-btn:nth-child(4).active { background: var(--danger); }
+.filter-btn:nth-child(5).active { background: var(--info); }
+.filter-btn:nth-child(6).active { background: var(--purple); }
 
-/* Liste des réservations avec cartes colorées */
+/* Liste des réservations avec cartes claires et animations stagger */
 .reservations-list {
   display: flex;
   flex-direction: column;
@@ -329,63 +341,52 @@ app-header-part {
 
 .reservation-card {
   background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: var(--backdrop-blur-sm);
   border-radius: var(--border-radius);
   padding: 2rem;
   box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
   transition: var(--transition);
-  border-left: 8px solid;
-  border-right: 2px solid;
-  border-top: 1px solid;
-  border-bottom: 1px solid;
+  border: 2px solid var(--gray-light);
   position: relative;
   overflow: hidden;
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
 }
 
-/* Bordures colorées basées sur le statut */
+.reservation-card:nth-child(1) { animation-delay: 0s; }
+.reservation-card:nth-child(2) { animation-delay: var(--animation-stagger); }
+.reservation-card:nth-child(3) { animation-delay: calc(2 * var(--animation-stagger)); }
+.reservation-card:nth-child(4) { animation-delay: calc(3 * var(--animation-stagger)); }
+.reservation-card:nth-child(5) { animation-delay: calc(4 * var(--animation-stagger)); }
+.reservation-card:nth-child(6) { animation-delay: calc(5 * var(--animation-stagger)); }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .reservation-card:has(.status-badge.confirmed) {
-  border-left-color: var(--success);
-  border-right-color: var(--success-light);
-  border-top-color: var(--success-light);
-  border-bottom-color: var(--success-light);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(72, 187, 120, 0.05));
+  border-color: var(--success);
+  background: linear-gradient(135deg, rgba(193, 249, 183, 0.95), rgba(236, 253, 245, 0.3));
 }
 
 .reservation-card:has(.status-badge.pending) {
-  border-left-color: var(--warning);
-  border-right-color: var(--warning-light);
-  border-top-color: var(--warning-light);
-  border-bottom-color: var(--warning-light);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(246, 173, 85, 0.05));
+  border-color: var(--warning);
+  background: linear-gradient(135deg, rgba(187, 231, 248, 0.95), rgba(255, 251, 235, 0.3));
 }
 
 .reservation-card:has(.status-badge.cancelled) {
-  border-left-color: var(--danger);
-  border-right-color: var(--danger-light);
-  border-top-color: var(--danger-light);
-  border-bottom-color: var(--danger-light);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(245, 101, 101, 0.05));
-}
-
-.reservation-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
-  opacity: 0;
-  transition: var(--transition);
-}
-
-.reservation-card:hover::before {
-  opacity: 1;
+  border-color: var(--danger);
+  background: linear-gradient(135deg, rgba(249, 168, 168, 0.95), rgba(254, 242, 242, 0.3));
 }
 
 .reservation-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: var(--backdrop-blur);
 }
 
 .reservation-header {
@@ -401,7 +402,7 @@ app-header-part {
 
 .event-title {
   margin: 0 0 0.5rem 0;
-  color: var(--dark);
+  color: var(--info);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -416,31 +417,24 @@ app-header-part {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: var(--transition);
+  color: rgb(245, 183, 233);
 }
 
 .status-badge.confirmed {
-  background: linear-gradient(135deg, var(--success-light), var(--success));
-  color: white;
-  border: 2px solid var(--success);
+  background: #0f5132; /* Dark green for paid status */
 }
 
 .status-badge.pending {
-  background: linear-gradient(135deg, var(--warning-light), var(--warning));
-  color: white;
-  border: 2px solid var(--warning);
+  background: var(--warning);
 }
 
 .status-badge.cancelled {
-  background: linear-gradient(135deg, var(--danger-light), var(--danger));
-  color: white;
-  border: 2px solid var(--danger);
+  background: var(--danger);
 }
 
 .status-badge:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
 }
 
 /* Actions de réservation colorées */
@@ -452,7 +446,7 @@ app-header-part {
 .btn-secondary, .btn-danger, .btn-success {
   padding: 0.75rem 1rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   transition: var(--transition);
   display: flex;
@@ -460,32 +454,46 @@ app-header-part {
   gap: 0.5rem;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: rgb(253, 181, 185);
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, var(--info-light), var(--info));
-  color: white;
+  background: linear-gradient(135deg, var(--primary-dark), var(--indigo));
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, var(--danger-light), var(--danger));
-  color: white;
+  background: var(--danger);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, var(--success-light), var(--success));
-  color: white;
+  background: var(--success);
 }
 
-.btn-secondary:hover, .btn-danger:hover, .btn-success:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+.btn-secondary:hover, .btn-danger:hover, .btn-success:hover, .btn-pay:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .btn-sm {
   padding: 0.6rem 1rem;
   font-size: 0.9rem;
+}
+
+.btn-pay {
+  background: linear-gradient(135deg, #0f5132, #0a3d2a);
+  color: rgb(143, 215, 246);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: rgb(239, 238, 239);
 }
 
 /* Détails de réservation avec icônes colorées */
@@ -506,16 +514,18 @@ app-header-part {
   gap: 1rem;
   color: var(--dark);
   padding: 1rem;
-  background: var(--gray-lighter);
-  border-radius: 10px;
+  background: linear-gradient(135deg, var(--gray-lighter), rgba(255, 255, 255, 0.8));
+  border-radius: 8px;
   transition: var(--transition);
-  border-left: 4px solid var(--primary);
+  border-left: 4px solid var(--primary-light);
+  box-shadow: var(--shadow);
 }
 
 .detail-item:hover {
-  background: var(--gray-light);
-  transform: translateX(5px);
-  border-left-color: var(--accent);
+  background: linear-gradient(135deg, var(--gray-light), rgba(255, 255, 255, 0.9));
+  transform: translateX(3px) scale(1.02);
+  border-left-color: var(--primary);
+  box-shadow: var(--shadow-md);
 }
 
 .detail-item i {
@@ -524,46 +534,56 @@ app-header-part {
   text-align: center;
   font-size: 1.2rem;
   transition: var(--transition);
+  background: linear-gradient(135deg, var(--primary), var(--indigo));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
 }
 
 .detail-item:hover i {
-  color: var(--accent);
-  transform: scale(1.2);
+  color: var(--primary-dark);
+  transform: scale(1.2) rotate(10deg);
 }
+
+/* Specific icon colors */
+.detail-item:has(.fa-calendar) i { background: linear-gradient(135deg, var(--primary), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.detail-item:has(.fa-map-marker-alt) i { background: linear-gradient(135deg, var(--danger), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.detail-item:has(.fa-users) i { background: linear-gradient(135deg, var(--success), var(--lime)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.detail-item:has(.fa-clock) i { background: linear-gradient(135deg, var(--warning), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.detail-item:has(.fa-euro-sign) i { background: linear-gradient(135deg, var(--success), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.detail-item:has(.fa-hashtag) i { background: linear-gradient(135deg, var(--purple), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
 /* Messages d'alerte colorés */
 .alert-message {
   padding: 1rem 1.5rem;
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 1rem;
   font-weight: 600;
   margin-top: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 2px solid;
+  color: var(--dark);
 }
 
 .alert-message.cancelled {
-  background: linear-gradient(135deg, var(--danger-light), #fed7d7);
-  color: var(--danger);
-  border-color: var(--danger);
+  background: var(--danger-light);
+  border: 1px solid var(--danger);
 }
 
 .alert-message.past {
-  background: linear-gradient(135deg, var(--warning-light), #feebc8);
-  color: var(--warning);
-  border-color: var(--warning);
+  background: var(--warning-light);
+  border: 1px solid var(--warning);
 }
 
 /* États de chargement colorés */
 .loading-state {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(102, 126, 234, 0.05));
+  background: var(--light);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
-  border: 3px dashed var(--primary-light);
+  border: 1px dashed var(--primary-light);
 }
 
 .spinner {
@@ -591,17 +611,16 @@ app-header-part {
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(159, 122, 234, 0.05));
+  background: var(--light);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
-  border: 3px dashed var(--purple);
+  border: 1px dashed var(--purple);
 }
 
 .empty-icon {
   font-size: 5rem;
   color: var(--purple);
   margin-bottom: 1rem;
-  opacity: 0.7;
   animation: bounce 2s ease-in-out infinite;
 }
 
@@ -631,7 +650,7 @@ app-header-part {
 }
 
 .empty-state .btn-primary:hover {
-  box-shadow: 0 12px 25px rgba(159, 122, 234, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Responsive */
