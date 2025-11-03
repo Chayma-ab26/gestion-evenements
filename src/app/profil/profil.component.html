@@ -1,3 +1,4 @@
+<app-header-part></app-header-part>
 <div class="profile-container">
   <h2>Mon Profil</h2>
 
@@ -24,17 +25,10 @@
     </div>
 
     <div class="profile-details">
-      <div class="detail-item">
-        <label>Email:</label>
-        <span>{{ user?.email }}</span>
-      </div>
+    
       <div class="detail-item">
         <label>Rôle:</label>
         <span>{{ user?.role }}</span>
-      </div>
-      <div class="detail-item" *ngIf="user?.phone">
-        <label>Téléphone:</label>
-        <span>{{ user?.phone }}</span>
       </div>
     </div>
   </div>

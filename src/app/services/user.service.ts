@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { environment } from '../../../environments/environment';
+import { KeycloakService } from './keycloak.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,15 @@ import { environment } from '../../../environments/environment';
 export class UserService {
  private apiUrl = '/api/users';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private keycloakService: KeycloakService) {}
+
+  private getHeaders(): HttpHeaders {
+    const token = this.keycloakService.getToken();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
 
   // ✅ Get all users
   getAll() {
@@ -19,7 +28,12 @@ export class UserService {
 
   // ✅ Get user by ID
   getById(id: String) {
-    return this.http.get(`${this.apiUrl}/getbyid/${id}`);
+    return this.http.get(`${this.apiUrl}/getbyid/${id}`, { headers: this.getHeaders() });
+  }
+
+  // ✅ Get current logged-in user
+  getMe(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`, { headers: this.getHeaders() });
   }
 
 

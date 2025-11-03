@@ -19,6 +19,7 @@ import { CreateEventComponent } from './organisateur/create-event/create-event.c
 import { ListUsersComponent } from './admin/users/list-users/list-users.component';
 import { ListCategoryComponent } from './admin/category/list-category/list-category.component';
 import { MesReservationsComponent } from './participant/mes-reservations/mes-reservations.component';
+import { ProfilComponent } from './profil/profil.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,6 +36,7 @@ export const routes: Routes = [
     {path: 'users', component: ListUsersComponent},
     { path: 'category', component: ListCategoryComponent},
     {path:'mes-reservations',component:MesReservationsComponent},
+    {path:'profile',component:ProfilComponent},
     
  
   { path: '**', redirectTo: '' }

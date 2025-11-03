@@ -205,8 +205,10 @@ export class ParticipantDashboardComponent implements OnInit, AfterViewInit {
   }
 
   goToProfile() {
-    // Navigation vers le profil (à implémenter)
-    Swal.fire('Info', 'Page du profil à implémenter', 'info');
+    // Navigation vers le profil
+    this.ngZone.run(() => {
+      this.router.navigate(['/profile']);
+    });
   }
 
   // Méthodes d'action

@@ -136,7 +136,7 @@ export class KeycloakService {
   }
 
  // keycloak.service.ts
-getUsername(): string | null {
+  getUsername(): string | null {
   const profile = this.keycloak?.profile;
   if (profile) {
     return profile.username ?? profile.email ?? profile.firstName ?? null;
@@ -144,43 +144,12 @@ getUsername(): string | null {
   return null;
 }
 
+  getUserId(): string | undefined {
+    return this.keycloak.tokenParsed?.sub;
+  }
 
 
 
-/* private redirectByRole(): void {
-  if (!this.keycloak.token) return;
-
-  this.http.get<any>('api/users/me', {
-    headers: { Authorization: `Bearer ${this.keycloak.token}` }
-  }).subscribe({
-    next: user => {
-      const role = user.role;
-
-      // Utilisation du router Angular uniquement
-      switch (role) {
-        case 'admin':
-          this.router.navigate(['/dashboard-admin']);
-          break;
-        case 'organisateur':
-          this.router.navigate(['/dashboard-org']);
-          break;
-        case 'participant':
-          this.router.navigate(['/participant-dashboard']);
-          break;
-        default:
-          this.router.navigate(['/not-authorized']);
-          break;
-      }
-    },
-    error: err => {
-      console.error('Erreur récupération rôle:', err);
-      this.router.navigate(['/not-authorized']);
-    }
-  });
-}
- */
-// Exemple dans ton keycloak.service.ts
-//////
 
 async getCurrentUser(): Promise<any> {
   const token = this.getToken();

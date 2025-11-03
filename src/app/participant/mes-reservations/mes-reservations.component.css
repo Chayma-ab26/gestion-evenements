@@ -253,12 +253,12 @@ app-header-part {
 
 .stat-number {
   margin: 0 0 0.25rem 0;
-  color: var(--dark);
+  color: var(--primary-dark);
   font-size: 2.5rem;
   font-weight: 800;
   background: linear-gradient(135deg, var(--primary), var(--purple));
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: rgb(17, 85, 29);
   background-clip: text;
 }
 
