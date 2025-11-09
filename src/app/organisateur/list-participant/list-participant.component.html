@@ -5,20 +5,12 @@
   <!-- Header avec statistiques -->
   <div class="page-header">
     <div class="header-content">
-      <h1 class="page-title">Gestion des Participants</h1>
       <div class="header-stats" *ngIf="selectedEvent">
         <div class="stat-card">
           <div class="stat-value">{{ reservations.length }}</div>
           <div class="stat-label">Total Réservations</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-value">{{ approvedCount }}</div>
-          <div class="stat-label">Approuvés</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">{{ eventCapacity }}</div>
-          <div class="stat-label">Capacité</div>
-        </div>
+      
       </div>
     </div>
   </div>
@@ -104,7 +96,6 @@
                   <th>Participant</th>
                   <th>Contact</th>
                   <th>Statut</th>
-                  <th class="text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -129,22 +120,7 @@
                     </span>
                   </td>
                   <td class="actions-cell">
-                    <div class="action-buttons">
-                      <button (click)="approve(r)" 
-                              [disabled]="r.status === 'APPROVED' || !canApproveMore()"
-                              class="btn btn-success btn-icon"
-                              title="Accepter la réservation">
-                        <span class="btn-icon">✓</span>
-                        Accepter
-                      </button>
-                      <button (click)="reject(r)" 
-                              [disabled]="r.status === 'REJECTED'"
-                              class="btn btn-danger btn-icon"
-                              title="Refuser la réservation">
-                        <span class="btn-icon">✗</span>
-                        Refuser
-                      </button>
-                    </div>
+                   
                   </td>
                 </tr>
               </tbody>

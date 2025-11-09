@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
@@ -71,7 +71,8 @@ export class DashboardAdminComponent implements OnInit, AfterViewInit, OnDestroy
     private userService: UserService,
     private localService: LocalService,
     private categoryService: CategoryService,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private ngZone:NgZone
   ) {}
 
   ngOnInit() {
@@ -129,6 +130,12 @@ export class DashboardAdminComponent implements OnInit, AfterViewInit, OnDestroy
           resolve();
         }
       });
+    });
+  }
+  goToProfile() {
+    // Navigation vers le profil
+    this.ngZone.run(() => {
+      this.router.navigate(['/profile']);
     });
   }
 

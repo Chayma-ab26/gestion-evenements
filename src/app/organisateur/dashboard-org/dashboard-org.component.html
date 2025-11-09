@@ -1,192 +1,92 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Organisateur</title>
-  <link rel="stylesheet" href="dashboard-org.component.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-    <app-header-org></app-header-org>
+<app-header-org></app-header-org>
 
-<body>
-  <div class="dashboard">
-    <!-- Header du dashboard -->
-    <div class="dashboard-header">
-      <div class="header-content">
-        <h1>Tableau de Bord Organisateur</h1>
-        <p class="welcome-text">Bienvenue sur votre espace de gestion d'événements</p>
-      </div>
-      <div class="header-actions">
-        <button (click)="createEvent()" class="action-btn create-btn">
-          <i class="fas fa-plus"></i>
-          Créer un événement
-        </button>
-        <button (click)="goToEventManagement()" class="action-btn manage-btn">
-          <i class="fas fa-cog"></i>
-          Gérer les événements
-        </button>
-      </div>
+<div class="dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+
     </div>
-
-    <!-- Menu de navigation rapide -->
-    <div class="quick-nav">
-      <div class="nav-item" (click)="goToEventManagement()">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Événements</span>
-      </div>
-      <div class="nav-item" (click)="goToParticipants()">
-        <i class="fas fa-users"></i>
-        <span>Participants</span>
-      </div>
-      <div class="nav-item" (click)="goToReservations()">
-        <i class="fas fa-building"></i>
-        <span>Locaux</span>
-      </div>
-      <div class="nav-item" (click)="goToAnalytics()">
-        <i class="fas fa-chart-line"></i>
-        <span>Analyses</span>
-      </div>
-    </div>
-
-    <!-- Cartes de statistiques principales -->
-    <div class="stats-grid">
-      <div class="stat-card primary">
-        <div class="stat-icon">
-          <i class="fas fa-calendar-check"></i>
-        </div>
-        <div class="stat-content">
-          <h3>Total Événements</h3>
-          <p class="stat-number">{{ totalEvents }}</p>
-          <span class="stat-change" [class.positive]="totalEvents > 0">
-            <i class="fas fa-arrow-up"></i> {{ totalEvents > 0 ? 'Actifs' : 'Aucun' }}
-          </span>
-        </div>
-      </div>
-
-      <div class="stat-card success">
-        <div class="stat-icon">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="stat-content">
-          <h3>Total Participants</h3>
-          <p class="stat-number">{{ totalParticipants }}</p>
-          <span class="stat-change" [class.positive]="totalParticipants > 0">
-            <i class="fas fa-arrow-up"></i> {{ totalParticipants > 0 ? 'Inscrits' : 'Aucun' }}
-          </span>
-        </div>
-      </div>
-
-      <div class="stat-card warning">
-        <div class="stat-icon">
-          <i class="fas fa-clock"></i>
-        </div>
-        <div class="stat-content">
-          <h3>Événements à Venir</h3>
-          <p class="stat-number">{{ upcomingEvents }}</p>
-          <span class="stat-change" [class.positive]="upcomingEvents > 0">
-            <i class="fas fa-arrow-up"></i> {{ upcomingEvents > 0 ? 'Programmés' : 'Aucun' }}
-          </span>
-        </div>
-      </div>
-
-      <div class="stat-card info">
-        <div class="stat-icon">
-          <i class="fas fa-chart-pie"></i>
-        </div>
-        <div class="stat-content">
-          <h3>Taux de Remplissage</h3>
-          <p class="stat-number">{{ getFillRate() }}%</p>
-          <span class="stat-change" [class.positive]="getFillRate() > 50">
-            <i class="fas fa-arrow-up"></i> {{ getFillRate() > 50 ? 'Élevé' : 'Faible' }}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Graphiques -->
-    <div class="charts-section">
-      <div class="chart-container">
-        <h3>Participants par Événement</h3>
-        <canvas #eventChart></canvas>
-      </div>
-      <div class="chart-container">
-        <h3>Répartition des Événements</h3>
-        <canvas #statusChart></canvas>
-      </div>
-    </div>
-
-    <!-- Événements récents -->
-    <div class="recent-section">
-      <div class="section-header">
-        <h3>Événements Récents</h3>
-        <button (click)="goToEventManagement()" class="view-all-btn">
-          Voir tout <i class="fas fa-arrow-right"></i>
-        </button>
-      </div>
-
-      <div class="recent-events">
-        <div *ngFor="let event of recentEvents" class="event-item" (click)="viewEvent(event)">
-          <div class="event-info">
-            <h4>{{ event.name }}</h4>
-            <p class="event-date">
-              <i class="fas fa-calendar"></i>
-              {{ formatDate(event.datedebut) }}
-            </p>
-            <p class="event-participants">
-              <i class="fas fa-users"></i>
-              {{ event.participants }} participants
-            </p>
-          </div>
-          <div class="event-actions">
-            <button class="btn btn-sm btn-primary" (click)="viewEvent( event)">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-sm btn-secondary" (click)="(event)">
-              <i class="fas fa-edit"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="recentEvents.length === 0" class="empty-state">
-        <div class="empty-icon">
-          <i class="fas fa-calendar-xmark"></i>
-        </div>
-        <h3>Aucun événement trouvé</h3>
-        <p>Commencez par créer votre premier événement pour voir les statistiques.</p>
-        <button (click)="createEvent()" class="action-btn create-btn">
-          <i class="fas fa-plus"></i>
-          Créer un événement
-        </button>
-      </div>
-    </div>
-
-    <!-- Actions rapides -->
-    <div class="quick-actions">
-      <h3>Actions Rapides</h3>
-      <div class="actions-grid">
-        <button (click)="createEvent()" class="quick-action-btn">
-          <i class="fas fa-plus-circle"></i>
-          <span>Nouvel Événement</span>
-        </button>
-        <button (click)="goToParticipants()" class="quick-action-btn">
-          <i class="fas fa-user-check"></i>
-          <span>Gérer Participants</span>
-        </button>
-        <button (click)="goToReservations()" class="quick-action-btn">
-          <i class="fas fa-building"></i>
-          <span>Réserver Local</span>
-        </button>
-        <button (click)="exportData()" class="quick-action-btn">
-          <i class="fas fa-download"></i>
-          <span>Exporter Données</span>
-        </button>
-      </div>
+    <div class="header-actions">
+      <button (click)="createEvent()" class="btn primary">
+        <i class="fas fa-plus"></i> Créer un événement
+      </button>
+      <button (click)="goToEventManagement()" class="btn secondary">
+        <i class="fas fa-cog"></i> Gérer
+      </button>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="dashboard-org.component.js"></script>
-</body>
-</html>
+  <!-- Navigation rapide -->
+  <div class="quick-nav">
+    <div class="nav-item" (click)="goToEventManagement()">
+      <i class="fas fa-calendar-alt"></i>
+      <span>Événements</span>
+    </div>
+    <div class="nav-item" (click)="goToParticipants()">
+      <i class="fas fa-users"></i>
+      <span>Participants</span>
+    </div>
+    <div class="nav-item" (click)="goToReservations()">
+      <i class="fas fa-building"></i>
+      <span>Locaux</span>
+    </div>
+    <button (click)="exportData()" class="nav-item export">
+      <i class="fas fa-download"></i>
+      <span>Exporter</span>
+    </button>
+  </div>
+
+  <!-- Statistiques -->
+  <div class="stats">
+    <div class="stat">
+      <div class="icon-wrapper"><i class="fas fa-calendar-check"></i></div>
+      <div class="content">
+        <p class="label">Total Événements</p>
+        <p class="value">{{ totalEvents }}</p>
+      </div>
+    </div>
+   
+    <div class="stat">
+      <div class="icon-wrapper"><i class="fas fa-clock"></i></div>
+      <div class="content">
+        <p class="label">À Venir</p>
+        <p class="value">{{ upcomingEvents }}</p>
+      </div>
+    </div>
+  
+     <div>
+       <button class="nav-item2" (click)="goToProfile()">
+          <i class="fas fa-user"></i> <span>Profil</span>
+        </button>
+    </div>
+   
+  </div>
+
+  <!-- Événements récents -->
+  <div class="recent">
+    <div class="section-title">
+      <h3>Événements Récents</h3>
+      <button (click)="goToEventManagement()" class="link-btn">Voir tout</button>
+    </div>
+
+    <div class="events-list">
+      <div *ngFor="let event of recentEvents" class="event" (click)="viewEvent(event)">
+        <div class="info">
+          <h4>{{ event.name }}</h4>
+          <p class="meta"><i class="fas fa-calendar"></i> {{ formatDate(event.datedebut) }}</p>
+          <p class="meta"><i class="fas fa-users"></i> {{ event.participants }} participants</p>
+        </div>
+        
+      </div>
+    </div>
+
+    <div *ngIf="recentEvents.length === 0" class="empty-state">
+      <div class="empty-icon"><i class="fas fa-calendar-xmark"></i></div>
+      <h4>Aucun événement</h4>
+      <p>Commencez par créer votre premier événement.</p>
+      <button (click)="createEvent()" class="btn primary small">
+        <i class="fas fa-plus"></i> Créer un événement
+      </button>
+    </div>
+  </div>
+</div>

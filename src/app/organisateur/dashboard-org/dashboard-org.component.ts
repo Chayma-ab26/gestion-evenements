@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
 import Swal from 'sweetalert2';
@@ -49,7 +49,8 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
     private reservationService: ReservationService,
     private localService: LocalService,
     private categoryService: CategoryService,
-    private avisService: AvisService
+    private avisService: AvisService,
+    private ngZone :NgZone
   ) {}
 
   ngOnInit() {
@@ -200,10 +201,7 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['/reservations']);
   }
 
-  goToAnalytics() {
-    this.router.navigate(['/analytics']);
-  }
-
+  
   viewEvent(event: Event, e?: MouseEvent) {
     if (e) {
       e.stopPropagation();
@@ -227,6 +225,12 @@ export class DashboardOrgComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['/edit-event', event.id]);
   }
 
+   goToProfile() {
+    // Navigation vers le profil
+    this.ngZone.run(() => {
+      this.router.navigate(['/profile']);
+    });
+  }
   exportData() {
     // Generate CSV data
     const headers = ['Nom', 'Date', 'Participants', 'Capacité maximale', 'Status'];

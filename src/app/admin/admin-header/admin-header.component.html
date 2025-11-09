@@ -12,7 +12,7 @@
     <nav class="header-nav" [class.active]="isMenuOpen">
       <ul class="nav-list">
         <li class="nav-item">
-          <a routerLink="/" routerLinkActive="active" class="nav-link">
+          <a routerLink="/dashboard-admin" routerLinkActive="active" class="nav-link">
             <i class="fas fa-home nav-icon"></i>
             <span class="nav-text">Home</span>
           </a>
@@ -29,12 +29,7 @@
             <span class="nav-text">Local</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a routerLink="/events" routerLinkActive="active" class="nav-link">
-            <i class="fas fa-calendar-alt nav-icon"></i>
-            <span class="nav-text">Events</span>
-          </a>
-        </li>
+      
         <li class="nav-item">
           <a routerLink="/users" routerLinkActive="active" class="nav-link">
             <i class="fas fa-users nav-icon"></i>
@@ -47,10 +42,7 @@
     <!-- Section utilisateur et actions -->
     <div class="header-actions">
       <!-- Bouton site principal -->
-      <button class="action-btn site-btn" (click)="goToMainSite()">
-        <i class="fas fa-external-link-alt"></i>
-        <span class="btn-text">Site Principal</span>
-      </button>
+     
 
       <!-- Menu utilisateur -->
       <div class="user-menu">
