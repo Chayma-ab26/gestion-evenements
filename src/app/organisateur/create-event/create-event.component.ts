@@ -596,16 +596,7 @@ private escapeHtml(unsafe: string): string {
       if (result.isConfirmed && result.value) {
         const newStatus = result.value;
 
-       /*  this.eventService.updateStatus(event.id + '', newStatus).subscribe({
-          next: () => {
-            Swal.fire('Succès!', `Statut changé vers ${newStatus}`, 'success');
-            this.allmyeventsfromback(); // Recharger la liste
-          },
-          error: (err) => {
-            console.error('Erreur changement statut:', err);
-            Swal.fire('Erreur', err.error?.message || 'Échec du changement de statut', 'error');
-          }
-        }); */
+      
       }
     });
   }

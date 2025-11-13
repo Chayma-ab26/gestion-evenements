@@ -39,13 +39,8 @@ export class EventService {
   participate(eventId: string, formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/${eventId}/participate`, formData);
   }
-  // Nouvelles méthodes pour la gestion des participants
   getParticipants(eventId: string): Observable<any[]> {
-    // Essayez ces différents endpoints selon votre API
     return this.http.get<any[]>(`${this.apiUrl}/${eventId}/participants`);
-    // Ou peut-être :
-    // return this.http.get<any[]>(`${this.apiUrl}/participants/${eventId}`);
-    // return this.http.get<any[]>(`${this.apiUrl}/${eventId}/users`);
   }
 
   approveParticipant(eventId: string, participantId: string): Observable<any> {

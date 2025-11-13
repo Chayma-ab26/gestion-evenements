@@ -448,17 +448,5 @@ export class MesReservationsComponent implements OnInit {
       return 'fas fa-question-circle';
   }
 }
-/* 
-getStatusText(status: string): string {
-  switch (status?.toUpperCase()) {
-    case 'CONFIRMED':
-      return 'Confirmée';
-    case 'PENDING':
-      return 'En attente';
-    case 'CANCELLED':
-      return 'Annulée';
-    default:
-      return 'Inconnu';
-  }
-} */
+
 }

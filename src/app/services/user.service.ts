@@ -37,9 +37,7 @@ export class UserService {
   }
 
 
- /* create(user: any): any {
-    return this.http.post(`${this.apiUrl}/create`, user);
-  } */
+ 
 
  create(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/create`, formData);

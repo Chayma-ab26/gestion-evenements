@@ -14,7 +14,5 @@ import { KeycloakService } from '../services/keycloak.service';
 export class HomeComponent {
   constructor(public keycloakService: KeycloakService) {}
 
-/*   login() {
-    this.keycloakService.login();
-  } */
+
 }
