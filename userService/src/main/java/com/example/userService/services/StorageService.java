@@ -41,21 +41,7 @@ public class StorageService {
             throw new RuntimeException("FAIL!");
         }
     }
-/*
-    public String store(MultipartFile file) {
-        try {
-            Path root = Paths.get("upload");
-            if (!Files.exists(root)) {
-                Files.createDirectories(root);
-            }
-            Files.copy(file.getInputStream(), root.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
-            return file.getOriginalFilename();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Echec du stockage du fichier : " + e.getMessage());
-        }
-    }
-*/
+
 
     public Resource loadFile(String filename) {
         try {

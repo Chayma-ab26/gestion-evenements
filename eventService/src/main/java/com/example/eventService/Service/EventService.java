@@ -120,25 +120,5 @@ public EventDTO createEventWithCategory(EventDTO dto) {
     public EventEntity getOne(Long id) {
         return eventRepository.findById(id).orElse(null);
     }
- /* public EventEntity createEvent(EventEntity event) {
-        // Vérification si la catégorie existe
-        if (categoryClient.getCategoryById(event.getCategoryId()) == null) {
-            throw new RuntimeException("Catégorie non trouvée avec l'ID : " + event.getCategoryId());
-        }
 
-        return eventRepository.save(event);
-    }
-    public EventEntity getOne(Long id) {
-        return eventRepository.findById(id).orElse(null);
-    }
-*/
-  /*  public EventEntity updateEvent(EventEntity event) {
-        // Vérification si la catégorie existe
-        if (categoryClient.getCategoryById(event.getCategoryId()) == null) {
-            throw new RuntimeException("Catégorie non trouvée avec l'ID : " + event.getCategoryId());
-        }
-
-        return eventRepository.save(event);
-    }
-    */
 }

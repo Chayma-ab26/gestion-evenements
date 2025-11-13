@@ -16,10 +16,7 @@ public class CategoryController {
 @Autowired
     private CategoryService categoryService;
 
-   /* @PostMapping("/create")
-    public CategoryEntity createCategory(@RequestBody CategoryEntity category) {
-        return categoryService.createCategory(category);
-    }*/
+
    @PreAuthorize("hasRole('admin')")
    @PostMapping("/create")
    public CategoryEntity createCategory(@RequestParam("name") String name,
@@ -45,16 +42,7 @@ public class CategoryController {
         categoryService.deleteCategory(id);
     }
 
-   /* @PutMapping("/update/{id}")
-    public CategoryEntity updateCategoryById(@PathVariable Long id, @RequestBody CategoryEntity category) {
-        category.setId(id);
-        CategoryEntity old = categoryService.getOne(id);
 
-        if (category.getName() == null) category.setName(old.getName());
-        if (category.getDescription() == null) category.setDescription(old.getDescription());
-
-        return categoryService.updateCategory(category);
-    }*/
    @PreAuthorize("hasRole('admin')")
    @PutMapping("/update/{id}")
    public CategoryEntity updateCategoryById(

@@ -117,37 +117,7 @@ public UserEntity createUser(@ModelAttribute UserEntity user, @RequestParam("fil
 
     }
 
-//    @GetMapping("/me")
-//    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
-//        return localUserRoleService.findUserByToken(jwt)
-//                .map(user -> ResponseEntity.ok().body(Map.of(
-//                        "id", user.getId(),
-//                        "firstname", user.getFirstname(),
-//                        "lastname", user.getLastname(),
-//                        "username", user.getUsername(),
-//                        "role", user.getRole()
-//                )))
-//                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                        .body(Map.of("error", "Utilisateur introuvable dans la base locale")));
-//    }
-//
-//
 
-//    @GetMapping("/me")
-//    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
-//        return localUserRoleService.findUserByToken(jwt)
-//                .map(user -> ResponseEntity.ok().body(Map.of(
-//                        "id", user.getId(),
-//                        "firstname", user.getFirstname(),
-//                        "lastname", user.getLastname(),
-//                        "username", user.getUsername(),
-//                        "role", user.getRole(),
-//                        "keycloakid", user.getKeycloakid()
-//                )))
-//                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                        .body(Map.of("error", "Utilisateur introuvable dans la base locale")));
-//    }
-//
 @GetMapping("/me")
 public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
     try {

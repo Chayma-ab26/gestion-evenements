@@ -70,33 +70,5 @@ public class EventController {
         return eventService.getOne(id);
     }
 
-    ////////////////////////////
-    /*@PostMapping("/create")
-    public EventEntity createEvent(@ModelAttribute EventEntity event) {
-        return eventService.createEvent(event);
-    }
-
-    @GetMapping("/getbyid/{id}")
-    public EventEntity getEventById(@PathVariable Long id) {
-        return eventService.getOne(id);
-    }
-
-*/
-   /* @PutMapping("/update/{id}")
-    public EventEntity updateEventById(@PathVariable Long id, @ModelAttribute  EventEntity event) {
-        // sauvegarder l'id
-        event.setId(id);
-        // récupération ancienne version
-        EventEntity old = eventService.getOne(id);
-        if (event.getTitle() == null) event.setTitle(old.getTitle());
-        if (event.getDescription() == null) event.setDescription(old.getDescription());
-        if (event.getDatedebut() == null) event.setDatedebut(old.getDatedebut());
-        if (event.getDatefin() == null) event.setDatefin(old.getDatefin());
-        if (event.getLocation() == null) event.setLocation(old.getLocation());
-        if (event.getStatus() == null) event.setStatus(old.getStatus());
-        if (event.getCategoryId() == null) event.setCategoryId(old.getCategoryId());
-        return eventService.updateEvent(event);
-    }
-*/
 
 }
